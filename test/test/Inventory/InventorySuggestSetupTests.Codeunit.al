@@ -11,7 +11,7 @@ using System.TestLibraries.Utilities;
 using System.Upgrade;
 
 /// <summary>Issue 267: Inventory domains are off by default, Suggest Setup turns on what the company can use. Each test rolls back in an owned company.</summary>
-codeunit 97900 "Inventory Suggest Setup Tests"
+codeunit 97901 "Inventory Suggest Setup Tests"
 {
     Subtype = Test;
     TestPermissions = Disabled;

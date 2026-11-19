@@ -39,6 +39,24 @@ codeunit 10076964 "Phys Order Contract ori"
         TargetLbl: Label 'The native physical inventory order number.', Comment = 'is-IS=Staðlað númer birgðatalningarpöntunar.';
         ExampleLbl: Label 'Select one item, finish its recording with the counted quantity and post one order.', Comment = 'is-IS=Veldu eina vöru, ljúktu skráningu hennar með töldu magni og bókaðu eina pöntun.';
 
+    /// <summary>Returns comma-separated search terms without description sentences or count guidance.</summary>
+    /// <param name="Operation">Create, Finish or Post.</param>
+    procedure Keywords(Operation: Text): Text
+    var
+        CreateKeywordsLbl: Label 'create physical inventory order, calculate expected inventory, create inventory recording', Comment = 'is-IS=stofna birgðatalningarpöntun, reikna væntar birgðir, stofna birgðaskráningu';
+        FinishKeywordsLbl: Label 'finish physical inventory order, finish inventory recording, calculate inventory differences', Comment = 'is-IS=ljúka birgðatalningarpöntun, ljúka birgðaskráningu, reikna birgðamismun';
+        PostKeywordsLbl: Label 'post physical inventory order, post inventory differences, posted inventory order', Comment = 'is-IS=bóka birgðatalningarpöntun, bóka birgðamismun, bókuð birgðatalningarpöntun';
+    begin
+        case Operation of
+            'Create':
+                exit(CreateKeywordsLbl);
+            'Finish':
+                exit(FinishKeywordsLbl);
+            'Post':
+                exit(PostKeywordsLbl);
+        end;
+    end;
+
     /// <summary>Returns a localized operation description.</summary>
     procedure Description(Operation: Text): Text[250]
     begin

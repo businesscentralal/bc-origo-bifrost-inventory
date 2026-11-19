@@ -27,6 +27,6 @@ enumextension 10076841 "MsgType.PhysInvt.EnumExt ori" extends "Message Type ori"
     value(10076924; "Inventory.PhysInventory.RecordCount")
     {
         Caption = 'Inventory.PhysInventory.RecordCount', Locked = true;
-        Implementation = "Msg Interface ori" = "Phys. Invt. Record Impl ori", "Msg Discovery ori" = "Phys. Invt. Record Impl ori", "Msg Contract ori" = "Phys. Invt. Record Impl ori";
+        Implementation = "Msg Interface ori" = "Phys. Count Record Impl ori", "Msg Discovery ori" = "Phys. Invt. Record Impl ori", "Msg Contract ori" = "Phys. Invt. Record Impl ori";
     }
 }

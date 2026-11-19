@@ -74,11 +74,12 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the parameters chapter of the public tracking contract.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
+        Parts: Codeunit "Inventory Contract Parts ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
         EntryParameter: JsonObject;
         Children: JsonArray;
     begin
-        Parameters.Add(ContractMgt.Parameter('source', 'object', true, 'Existing line: type is SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine, systemId is its GUID. TransferLine optionally accepts transferDirection Outbound (default) or Inbound.'));
+        Parameters.Add(Parts.TrackingSourceParameter());
         Parameters.Add(ContractMgt.Parameter('itemNo', 'string', false, 'Optional item consistency check; must match the selected source line.'));
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', false, 'Positive base quantity for one tracking assignment. Required unless entries is supplied. A serial number requires exactly one base unit.'));
         Parameters.Add(ContractMgt.Parameter('lotNo', 'string', false, 'Lot number, at most 50 characters; at least one tracking number is required.'));
@@ -183,8 +184,10 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Assign a lot to a sales line using entries; replace systemId with your own line GUID', Comment = 'is-IS=Úthluta lotu á sölulínu með entries; notaðu eigin GUID-línuauðkenni í systemId';
     begin
         Examples.Add(ContractMgt.Example('Use your own purchase line SystemId and tracking entry', '{"type":"Inventory.Tracking.Assign","data":{"source":{"type":"PurchaseLine","systemId":"11111111-1111-1111-1111-111111111111"},"quantity":2,"lotNo":"LOT-A"}}', '{"status":"Success","entryNo":210,"itemNo":"1000","lotNo":"LOT-A","serialNo":"","packageNo":""}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Tracking.Assign","data":{"source":{"type":"SalesLine","systemId":"11111111-1111-1111-1111-111111111111"},"entries":[{"quantity":2,"lotNo":"XLOT"}]}}', '{"status":"Success","entryNo":210,"itemNo":"1000","lotNo":"XLOT","serialNo":"","packageNo":"","quantity":2,"entriesAssigned":1}'));
         exit(true);
     end;
 

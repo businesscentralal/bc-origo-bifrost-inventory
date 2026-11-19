@@ -248,12 +248,14 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        ParameterExample1Lbl: Label 'Select journal lines by their own SystemIds in the selected batch', Comment = 'is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Check the reclassification batch DEFAULT',
             '{"type":"Inventory.Reclassification.Check","data":{"templateName":"RECLASS","batchName":"DEFAULT"}}',
             '{"status":"Success","messageType":"Inventory.Reclassification.Check","templateName":"RECLASS","batchName":"DEFAULT","validationResult":"Ready","lineCount":2,"errorCount":0,"warningCount":0,"errors":[],"warnings":[],"postedLineCount":2}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.Reclassification.Check","data":{"templateName":"RECLASS","batchName":"DEFAULT","lineSystemIds":["11111111-1111-1111-1111-111111111111"]}}', '{"status":"Success","messageType":"Inventory.Reclassification.Check","templateName":"RECLASS","batchName":"DEFAULT","validationResult":"Ready","lineCount":1,"errorCount":0,"warningCount":0,"errors":[],"warnings":[],"postedLineCount":1}'));
         exit(true);
     end;
 

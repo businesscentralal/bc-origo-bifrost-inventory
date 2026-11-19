@@ -9,7 +9,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.', Comment = 'is-IS=Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.';
+        DescriptionLbl: Label 'Records physical inventory counts using counts or the legacy lineNo and quantity parameters; nothing is posted.', Comment = 'is-IS=Skráir birgðatalningu með counts eða eldri færibreytunum lineNo og quantity; ekkert er bókað.';
         SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
         KeywordsLbl: Label 'enter counted quantity, record count, record physical count, set counted quantity, count lines', Comment = 'is-IS=skrá talið magn, skrá talningu, skrá birgðatalningu, setja talið magn, talningarlínur';
         OverviewLbl: Label 'Sets the counted quantity on lines of a Phys. Inventory journal batch, for both Inventory.PhysInventory.RecordCount and the legacy Inventory.PhysInventory.Record. An entry without qtyCounted leaves its line unchanged, zero is written as counted zero, and nothing is posted.', Comment = 'is-IS=Stillir talið magn á línum í bókarkeyrslu af gerðinni Phys. Inventory, bæði fyrir Inventory.PhysInventory.RecordCount og eldri gerðina Inventory.PhysInventory.Record. Færsla án qtyCounted skilur línuna eftir óbreytta, núll er skráð sem talið núll og ekkert er bókað.';
@@ -260,6 +260,7 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
     procedure GetExamples(var Examples: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        LegacyCountsExampleLbl: Label 'Use counts with the legacy Record type; replace the batch and line with your own', Comment = 'is-IS=Nota counts með eldri Record-gerðinni; notaðu eigin keyrslu og línu';
     begin
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
@@ -269,6 +270,9 @@ codeunit 10076882 "Phys. Invt. Record Impl ori" implements "Msg Interface ori", 
         Examples.Add(ContractMgt.Example(
             'Legacy single-line count with Inventory.PhysInventory.Record',
             '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"lineNo":10000,"quantity":0}}',
+            '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
+        Examples.Add(ContractMgt.Example(LegacyCountsExampleLbl,
+            '{"type":"Inventory.PhysInventory.Record","subject":"PHYS. INV.|DEFAULT","data":{"counts":[{"lineNo":10000,"qtyCounted":0}]}}',
             '{"status":"Success","templateName":"PHYS. INV.","batchName":"DEFAULT","result":[{"systemId":"6f1c1d2e-0000-0000-0000-000000000001","lineNo":10000,"counted":true,"before":10,"after":0,"quantityCalculated":10,"adjustmentQuantity":10}],"lineNo":10000,"quantity":0,"quantityCalculated":10}'));
         exit(true);
     end;

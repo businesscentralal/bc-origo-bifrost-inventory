@@ -184,9 +184,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Table Inventory Valuation Buffer ori - Field Variant Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Codeunit 4011415181 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
-          <source>For a named request subject, expectedCount counts the one cost adjustment run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
-          <target>Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
+          <source>For named requests, omitting expectedCount returns a confirmation preview only when the company setting Require Irreversible Confirm is enabled. When confirmation is not required, omitting expectedCount runs the operation immediately after normal validation and permission checks. For a named request subject, expectedCount counts the one cost adjustment run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
+          <target>Fyrir nafngreindar beiðnir skilar það að sleppa expectedCount aðeins staðfestingarforskoðun þegar fyrirtækisstillingin Require Irreversible Confirm er virk. Þegar staðfestingar er ekki krafist keyrir aðgerðin strax eftir venjulega sannprófun og heimildaathuganir ef expectedCount er sleppt. Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir nafngreindar beiðnir skilar það að sleppa expectedCount aðeins staðfestingarforskoðun þegar fyrirtækisstillingin Require Irreversible Confirm er virk. Þegar staðfestingar er ekki krafist keyrir aðgerðin strax eftir venjulega sannprófun og heimildaathuganir ef expectedCount er sleppt. Fyrir beiðni með nafngreindu subject telur expectedCount eina kostnaðarleiðréttingarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Adjust Cost Run Impl ori - Method ConfirmationCountNote - NamedType CountNoteLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4011415181 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -2194,9 +2194,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method CheckUnsupportedParameters - NamedType NextStepLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 3936688048 - NamedType 2880659275" size-unit="char" translate="yes" xml:space="preserve">
-          <source>For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
-          <target>Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
+          <source>For named requests, omitting expectedCount returns a confirmation preview only when the company setting Require Irreversible Confirm is enabled. When confirmation is not required, omitting expectedCount runs the operation immediately after normal validation and permission checks. For a named request subject, expectedCount counts the one posting run (1), not the items or value entries selected by the filters. It does not bound the number of entries changed. An unnamed request follows Foundation no-subject confirmation behavior; do not assume that omitting expectedCount previews an unnamed run.</source>
+          <target>Fyrir nafngreindar beiðnir skilar það að sleppa expectedCount aðeins staðfestingarforskoðun þegar fyrirtækisstillingin Require Irreversible Confirm er virk. Þegar staðfestingar er ekki krafist keyrir aðgerðin strax eftir venjulega sannprófun og heimildaathuganir ef expectedCount er sleppt. Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir nafngreindar beiðnir skilar það að sleppa expectedCount aðeins staðfestingarforskoðun þegar fyrirtækisstillingin Require Irreversible Confirm er virk. Þegar staðfestingar er ekki krafist keyrir aðgerðin strax eftir venjulega sannprófun og heimildaathuganir ef expectedCount er sleppt. Fyrir beiðni með nafngreindu subject telur expectedCount eina bókunarkeyrslu (1), ekki vörurnar eða virðisfærslurnar sem síurnar velja. Það takmarkar ekki fjölda færslna sem breytast. Beiðni án subject fylgir staðfestingarhegðun Foundation fyrir ónafngreindar beiðnir; ekki gera ráð fyrir að það að sleppa expectedCount forskoði ónafngreinda keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cost To GL Post Impl ori - Method ConfirmationCountNote - NamedType CountNoteLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1727056033 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
@@ -2631,6 +2631,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina endurmatskeyrslu sem kallið bókar, ekki línur hennar eða virðisfærslurnar sem það býr til.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method CountUnitRevaluation - NamedType UnitLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read named attributes; replace the item and attribute names with your own</source>
+          <target>Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa nafngreindar eigindir; notaðu eigin vöru- og eigindaheiti</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 3255554567 - NamedType 1259707851" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Read attributes by ID; replace the item and attribute IDs with your own</source>
+          <target>Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Lesa eigindir eftir auðkenni; notaðu eigin vöru- og eigindaauðkenni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method GetExamples - NamedType ParameterExample2Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 1229433394 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
           <target>%1 er nauðsynlegt.</target>
@@ -2660,6 +2672,30 @@
           <target>Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu tilgreind gildi beiðninnar áður en þú reynir aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method RespondToProblems - NamedType ProblemsErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 159820405 - NamedType 1895768393" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Existing source record selected by its type and SystemId. Send a source object, not top-level sourceType or sourceNo.</source>
+          <target>Fyrirliggjandi upprunafærsla valin með type og SystemId. Sendu source-hlut, ekki sourceType eða sourceNo á efsta stigi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrirliggjandi upprunafærsla valin með type og SystemId. Sendu source-hlut, ekki sourceType eða sourceNo á efsta stigi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TrackingSourceParameter - NamedType SourceLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 159820405 - NamedType 961827798" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required source record type: SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine or ItemJournalLine. Use the line SystemId, except AssemblyHeader uses the header SystemId.</source>
+          <target>Áskilin gerð upprunafærslu: SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine eða ItemJournalLine. Notaðu SystemId línunnar, nema AssemblyHeader notar SystemId haussins.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilin gerð upprunafærslu: SalesLine, PurchaseLine, TransferLine, AssemblyHeader, AssemblyLine eða ItemJournalLine. Notaðu SystemId línunnar, nema AssemblyHeader notar SystemId haussins.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TrackingSourceParameter - NamedType TypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 159820405 - NamedType 2790193734" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required GUID of the existing source record; a document number or item number is not a SystemId. Replace the placeholder GUID in examples with your own record SystemId.</source>
+          <target>Áskilið GUID fyrirliggjandi upprunafærslu; skjalanúmer eða vörunúmer er ekki SystemId. Skiptu út GUID-dæmisauðkenninu fyrir SystemId eigin færslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Áskilið GUID fyrirliggjandi upprunafærslu; skjalanúmer eða vörunúmer er ekki SystemId. Skiptu út GUID-dæmisauðkenninu fyrir SystemId eigin færslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TrackingSourceParameter - NamedType SystemIdLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1115573132 - Method 159820405 - NamedType 4059303513" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Optional Outbound or Inbound; default Outbound. Selects the shipment or receipt side of TransferLine. Other source types do not use the direction.</source>
+          <target>Valfrjálst Outbound eða Inbound; sjálfgefið Outbound. Velur afhendingar- eða móttökuhlið TransferLine. Aðrar upprunagerðir nota ekki stefnuna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjálst Outbound eða Inbound; sjálfgefið Outbound. Velur afhendingar- eða móttökuhlið TransferLine. Aðrar upprunagerðir nota ekki stefnuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inventory Contract Parts ori - Method TrackingSourceParameter - NamedType DirectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1115573132 - Method 3606448188 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
@@ -8943,6 +8979,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lokar birgðatímabilinu sem endingDate vísar á með því að endurgera athuganir og skrif Close Inventory Period (5820). Skilaboðin keyra ekki 5820, svo samþættingaratburðurinn OnRunOnBeforeCheck er ekki vakinn. Lokunin lokar einnig hverju eldra opnu birgðatímabili og skrifar birgðatímabilsfærslu fyrir hvert tímabil sem hún lokar. Höfnun, svo sem óleiðréttur kostnaður, óleiðrétt lokin pöntun eða opin neikvæð birgðastaða, kemur til baka sem villa og skrifar ekkert. Kallið er óbreytilegt: tímabili sem er þegar lokað er ekki breytt og lokunin er ekki framkvæmd aftur. Aðeins tímabil sem þegar er til er hægt að breyta og engin skilaboð stofna tímabil, svo endingDate sem passar við ekkert tímabil fær svarið RecordNotFound. Lénið Inventory Period verður að vera kveikt í Inventory Setup (vöntun á uppsetningarlínu telst sem slökkt). Kallarinn þarf skrifheimild á töfluna Inventory Period; ekki er krafist bókunarheimildar. Breytingin er vistuð með færslu kallandans. Notaðu Inventory.Period.Get fyrst til að sjá tímabilin og Inventory.Period.Reopen til að afturkalla breytinguna.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetNotes - NamedType NotesLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1188505705 - Method 3650283039 - NamedType 2882830447" size-unit="char" translate="yes" xml:space="preserve">
+          <source>This type declares a reversible write, not an irreversible operation. It accepts endingDate only, has no expectedCount parameter and does not return a confirmation preview. A valid call closes periods immediately even when Require Irreversible Confirm is enabled; use Inventory.Period.Reopen to reopen them.</source>
+          <target>Þessi gerð skilgreinir afturkræfa skrifaðgerð, ekki óafturkræfa aðgerð. Hún tekur aðeins við endingDate, hefur enga expectedCount-færibreytu og skilar ekki staðfestingarforskoðun. Gilt kall lokar tímabilum strax þótt Require Irreversible Confirm sé virk; notaðu Inventory.Period.Reopen til að opna þau aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Þessi gerð skilgreinir afturkræfa skrifaðgerð, ekki óafturkræfa aðgerð. Hún tekur aðeins við endingDate, hefur enga expectedCount-færibreytu og skilar ekki staðfestingarforskoðun. Gilt kall lokar tímabilum strax þótt Require Irreversible Confirm sé virk; notaðu Inventory.Period.Reopen til að opna þau aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Period Close Impl ori - Method GetNotes - NamedType ConfirmationLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1188505705 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
           <source>Closes an inventory period. An already closed period returns success.</source>
           <target>Lokar birgðatímabili. Tímabil sem er þegar lokað skilar árangri.</target>
@@ -9207,6 +9249,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Taka með núll í væntu magni. Sjálfgefið false.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ZeroLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 4055054472" size-unit="char" translate="yes" xml:space="preserve">
+          <source>create physical inventory order, calculate expected inventory, create inventory recording</source>
+          <target>stofna birgðatalningarpöntun, reikna væntar birgðir, stofna birgðaskráningu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=stofna birgðatalningarpöntun, reikna væntar birgðir, stofna birgðaskráningu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType CreateKeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 1091367205" size-unit="char" translate="yes" xml:space="preserve">
+          <source>finish physical inventory order, finish inventory recording, calculate inventory differences</source>
+          <target>ljúka birgðatalningarpöntun, ljúka birgðaskráningu, reikna birgðamismun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ljúka birgðatalningarpöntun, ljúka birgðaskráningu, reikna birgðamismun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType FinishKeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 1038723708" size-unit="char" translate="yes" xml:space="preserve">
+          <source>post physical inventory order, post inventory differences, posted inventory order</source>
+          <target>bóka birgðatalningarpöntun, bóka birgðamismun, bókuð birgðatalningarpöntun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðatalningarpöntun, bóka birgðamismun, bókuð birgðatalningarpöntun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType PostKeywordsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4167889448 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
           <source>Correct the physical inventory order, recording or inventory setup in Business Central, then retry the same operation.</source>
           <target>Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</target>
@@ -9291,6 +9351,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra um staðlaðar heimildir fyrir birgðatalningarpantanir og skráningar og vörubókunarheimild fyrir Post.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - Method AssertPermission - NamedType PermissionNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 485528778 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Records physical inventory counts using the counts array; omitted qtyCounted leaves a line unchanged, zero records a zero count, and nothing is posted.</source>
+          <target>Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Count Record Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.</source>
           <target>Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.</target>
@@ -9339,6 +9405,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 449648083 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Check Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1026798855 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Previews posting a physical inventory journal: returns the ledger entries it would create, then rolls everything back.</source>
           <target>Forskoðar bókun talningarbókar: skilar þeim færslum sem hún myndi stofna og bakfærir síðan allt.</target>
@@ -9362,6 +9434,12 @@
           <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1026798855 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Inv. Preview Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3047890013 - NamedType 464307472" size-unit="char" translate="yes" xml:space="preserve">
           <source>expectedCount counts the one physical inventory journal batch this call posts, even when lineSystemIds selects only some lines. The value is 1.</source>
@@ -9393,10 +9471,16 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3047890013 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.</source>
-          <target>Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</note>
+          <source>Records physical inventory counts using counts or the legacy lineNo and quantity parameters; nothing is posted.</source>
+          <target>Skráir birgðatalningu með counts eða eldri færibreytunum lineNo og quantity; ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir birgðatalningu með counts eða eldri færibreytunum lineNo og quantity; ekkert er bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -9416,6 +9500,12 @@
           <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1628414762 - Method 3255554567 - NamedType 2127881145" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use counts with the legacy Record type; replace the batch and line with your own</source>
+          <target>Nota counts með eldri Record-gerðinni; notaðu eigin keyrslu og línu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nota counts með eldri Record-gerðinni; notaðu eigin keyrslu og línu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - Method GetExamples - NamedType LegacyCountsExampleLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - Method 3936508997 - NamedType 3085223924" size-unit="char" translate="yes" xml:space="preserve">
           <source>Physical inventory line was not found.</source>
@@ -9740,6 +9830,12 @@
           <target>Athugaðu pantanirnar sem urðu til og línurnar sem enn eru á keyrslunni áður en þú reynir aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu pantanirnar sem urðu til og línurnar sem enn eru á keyrslunni áður en þú reynir aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType NativeFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3545945205 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select existing line numbers from your own document or worksheet</source>
+          <target>Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 807217974" size-unit="char" translate="yes" xml:space="preserve">
           <source>Name of an existing planning template that is not recurring, at most 10 characters. Send it with worksheetName unless subject identifies the worksheet.</source>
@@ -11247,6 +11343,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetErrors - NamedType ErrorHelp17Lbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 274045509 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Check Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 274045509 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reclassification journal, change item location, change lot</source>
           <target>endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu</target>
@@ -11421,6 +11523,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetErrors - NamedType ErrorHelp18Lbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>reclassification journal, post reclassification</source>
           <target>endurflokkunarbók, bóka endurflokkun</target>
@@ -11558,6 +11666,12 @@
           <target>Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu heiti bókarsniðmáts eða keyrslu með að hámarki 10 stöfum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetErrors - NamedType ErrorHelp16Lbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2678178361 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select journal lines by their own SystemIds in the selected batch</source>
+          <target>Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja bókarlínur með eigin SystemId-auðkennum í valinni keyrslu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Preview Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>preview reclassification, reclass journal preview</source>
@@ -12080,6 +12194,12 @@
           <target>Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3785446061 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select existing line numbers from your own document or worksheet</source>
+          <target>Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1789494434 - NamedType 3777985252" size-unit="char" translate="yes" xml:space="preserve">
           <source>The selected worksheet has no lines to carry out.</source>
@@ -15159,6 +15279,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 887019790 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assign a lot to a sales line using entries; replace systemId with your own line GUID</source>
+          <target>Úthluta lotu á sölulínu með entries; notaðu eigin GUID-línuauðkenni í systemId</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Úthluta lotu á sölulínu með entries; notaðu eigin GUID-línuauðkenni í systemId</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Assign Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 887019790 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>assign lot, assign serial, assign package, item tracking</source>
           <target>úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki</target>
@@ -15254,6 +15380,12 @@
           <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á vörurakningu í uppsetningu birgða.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetErrors - NamedType DisabledFixLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2461511710 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remove selected tracking from a sales line; use your own line GUID and entry numbers</source>
+          <target>Fjarlægja valda rakningu af sölulínu; notaðu eigin GUID-línuauðkenni og færslunúmer</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fjarlægja valda rakningu af sölulínu; notaðu eigin GUID-línuauðkenni og færslunúmer</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Tracking Delete Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2461511710 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>delete tracking, delete lot, delete serial, delete package</source>
@@ -15669,6 +15801,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2522822823 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a transfer with a line; use your own locations, item and unit of measure</source>
+          <target>Stofna flutning með línu; notaðu eigin birgðageymslur, vöru og mælieiningu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofna flutning með línu; notaðu eigin birgðageymslur, vöru og mælieiningu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Create Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2522822823 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>transfer order, move stock, transfer between locations, move goods to another warehouse, stock transfer, relocate inventory</source>
           <target>millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, færa birgðir til</target>
@@ -15849,6 +15987,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 3255554567 - NamedType 318667182" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Select existing line numbers from your own document or worksheet</source>
+          <target>Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetExamples - NamedType ParameterExample1Lbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 1027590672 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
           <source>undo transfer shipment</source>
           <target>afturkalla millifærsluafhendingu</target>
@@ -15928,9 +16072,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read only. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
-          <target>Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
+          <source>Read only. To select an item, send itemFilter (for example {"itemFilter":"XITEM"}), not itemNo. itemNo is a response field, not a request parameter. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
+          <target>Eingöngu lestur. Til að velja vöru skal senda itemFilter (til dæmis {"itemFilter":"XITEM"}), ekki itemNo. itemNo er svarreitur, ekki færibreyta beiðni. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Til að velja vöru skal senda itemFilter (til dæmis {"itemFilter":"XITEM"}), ekki itemNo. itemNo er svarreitur, ekki færibreyta beiðni. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 3872630915" size-unit="char" translate="yes" xml:space="preserve">
@@ -16006,9 +16150,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param0Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2430905912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Business Central filter on Item No.; omitted means all inventory items.</source>
-          <target>Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</note>
+          <source>Business Central filter on Item No.; use itemFilter, not itemNo. For one item send {"itemFilter":"XITEM"}. Omitted means all inventory items.</source>
+          <target>Business Central-sía á vörunúmer; notaðu itemFilter, ekki itemNo. Fyrir eina vöru skal senda {"itemFilter":"XITEM"}. Ef sleppt eru allar birgðavörur valdar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á vörunúmer; notaðu itemFilter, ekki itemNo. Fyrir eina vöru skal senda {"itemFilter":"XITEM"}. Ef sleppt eru allar birgðavörur valdar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2484602009" size-unit="char" translate="yes" xml:space="preserve">

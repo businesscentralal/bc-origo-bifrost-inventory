@@ -12,7 +12,7 @@ using System.Upgrade;
 /// filtered IsEmpty check. Suggest Setup only turns switches on, so running it twice gives the same result and an
 /// administrator's switch is never turned off.
 /// </summary>
-codeunit 10076950 "Inventory Suggest Setup ori"
+codeunit 10076951 "Inventory Suggest Setup ori"
 {
     Access = Internal;
     Permissions = tabledata Item = R,
