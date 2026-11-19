@@ -4,6 +4,10 @@
 
 ### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)
 - `Inv. Source Tracking Tests ori` (96974) clears orphan `Item Entry Relation` rows inside its own rolled-back transaction before posting, so leftovers from earlier suites no longer collide with new ledger entry numbers. New test `RoundTripSurvivesLeftoverEntryRelations` seeds only free relation keys, retaining any existing leftovers until transactional cleanup. No app object added; no assertion changed.
+### Fixed (2026-11-18) - Sales Get Shipment Tests rerun-safe on reused tenants (#252, found by #242)
+
+- 96995 Sales Get Shipment Tests: the 20-character invoice and shipment numbers are generated per run instead of fixed, so a rerun on the same company no longer collides with the previous run's documents (#252).
+- Test code only. No app object, ID, page or message type changes; no assertion was removed or weakened.
 
 ### Fixed (2026-11-18) - Inv. 186 Blank Line Tests rerun on a reused company (#247)
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.

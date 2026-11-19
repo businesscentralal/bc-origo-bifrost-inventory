@@ -312,9 +312,9 @@ codeunit 96995 "Sales Get Shipment Tests"
         // Story #132, AC04 | Time: WorkDate only for fixture creation | Risk: None
         // [GIVEN] Existing invoice and shipment numbers exactly 20 characters long
         LibrarySales.CreateCustomer(Customer);
-        CreateInvoiceWithNo(Invoice, Customer."No.", 'B2I132-INVOICE-12345');
+        CreateInvoiceWithNo(Invoice, Customer."No.", UniqueMaxLengthNo('B2I132I'));
         Shipment.Init();
-        Shipment."No." := 'B2I132-SHIPMENT-1234';
+        Shipment."No." := UniqueMaxLengthNo('B2I132S');
         Shipment."Bill-to Customer No." := Customer."No.";
         Shipment.Insert(false);
 
@@ -352,7 +352,7 @@ codeunit 96995 "Sales Get Shipment Tests"
         // [GIVEN] An open invoice with a 20-character number and an uninvoiced shipment
         LibrarySales.CreateCustomer(Customer);
         ShipOrder(Customer."No.", 2);
-        CreateInvoiceWithNo(Invoice, Customer."No.", 'B2I132-INVOICE-67890');
+        CreateInvoiceWithNo(Invoice, Customer."No.", UniqueMaxLengthNo('B2I132I'));
 
         // [WHEN] The invoice is selected by systemId
         RequestJson.Add('systemId', Format(Invoice.SystemId, 0, 4));
@@ -436,6 +436,12 @@ codeunit 96995 "Sales Get Shipment Tests"
         Invoice.Insert(true);
         Invoice.Validate("Sell-to Customer No.", CustomerNo);
         Invoice.Modify(true);
+    end;
+
+    local procedure UniqueMaxLengthNo(Prefix: Text): Code[20]
+    begin
+        // A fresh 20-character number per run, so a rerun on the same company never collides (inventory#252).
+        exit(CopyStr(Prefix + DelChr(Format(CreateGuid()), '=', '{}-'), 1, 20));
     end;
 
     local procedure CountInvoiceLines(SalesHeader: Record "Sales Header"): Integer
