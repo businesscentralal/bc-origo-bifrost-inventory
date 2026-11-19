@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)
+- `Inv. Source Tracking Tests ori` (96974) clears orphan `Item Entry Relation` rows inside its own rolled-back transaction before posting, so leftovers from earlier suites no longer collide with new ledger entry numbers. New test `RoundTripSurvivesLeftoverEntryRelations` seeds only free relation keys, retaining any existing leftovers until transactional cleanup. No app object added; no assertion changed.
 ### Fixed (2026-11-18) - Sales Get Shipment Tests rerun-safe on reused tenants (#252, found by #242)
 
 - 96995 Sales Get Shipment Tests: the 20-character invoice and shipment numbers are generated per run instead of fixed, so a rerun on the same company no longer collides with the previous run's documents (#252).
@@ -11,6 +13,8 @@
 - `Inv. 186 Blank Line Tests ori` (96964) failed on a second run with "The record in table Post Value Entry to G/L already exists" because earlier runs left cost-posting queue rows whose value entry no longer exists. The fixture now calls the new test-library procedure `RemoveOrphanedPostValueEntries` (queue rows without a Value Entry only; rows with a ledger parent stay). No app object, test or assertion changed, skipped or weakened.
 ### Changed (2026-11-18) - second Inventory test ID block (#261)
 - `test/app.json` `idRanges` gains 97900-97999 (block 2, allocated by Claude Code in the object-ID register, row #99009); 96900-96999 is full. No object added or renumbered.
+### Fixed (2026-11-18) - price write restriction test reruns on the same tenant (#250)
+- `UpdatePrice_RestrictedField_PreservesPrice` in test codeunit 96939 reuses an existing Field Access row for the user, Item and Unit Price instead of inserting a duplicate key, so the codeunit passes on a tenant that already ran the suite. No new object; the assertions are unchanged.
 
 ### Fixed - Icelandic release wording (#244)
 
