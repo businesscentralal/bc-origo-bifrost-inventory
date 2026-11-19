@@ -8,6 +8,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Purchases.Document;
+using Microsoft.Purchases.History;
 using Microsoft.Sales.Document;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
@@ -657,12 +658,62 @@ codeunit 96974 "Inv. Source Tracking Tests ori"
             Assert.IsTrue(StrPos(Token.AsValue().AsText(), 'turn the domain on') > 0, 'English recovery explains how to enable the domain.');
     end;
 
+    /// <summary>Item Entry Relation rows left committed by other suites without a ledger entry would collide with the next posted entry number; clear them inside this test transaction only.</summary>
+    local procedure RemoveOrphanEntryRelations()
+    var
+        EntryRelation: Record "Item Entry Relation";
+        Ledger: Record "Item Ledger Entry";
+    begin
+        if EntryRelation.FindSet() then
+            repeat
+                if not Ledger.Get(EntryRelation."Item Entry No.") then
+                    EntryRelation.Delete();
+            until EntryRelation.Next() = 0;
+    end;
+
+    /// <summary>Leftover relation rows at the next ledger entry numbers (a rerun on a used database) cannot break self-posted tracking.</summary>
+    [Test]
+    procedure RoundTripSurvivesLeftoverEntryRelations()
+    var
+        PurchaseLine: Record "Purchase Line";
+        Header: Record "Sales Header";
+        Line: Record "Sales Line";
+        Ledger: Record "Item Ledger Entry";
+        EntryRelation: Record "Item Entry Relation";
+        LibrarySales: Codeunit "Library - Sales";
+        NextEntryNo: Integer;
+        Offset: Integer;
+    begin
+        // Story #251 | Time: WorkDate unchanged | Risk: relation keys can already be occupied on a reused company.
+        if Ledger.FindLast() then
+            NextEntryNo := Ledger."Entry No.";
+        for Offset := 1 to 20 do begin
+            NextEntryNo += 1;
+            // Keep existing leftovers and seed only at free keys above the ledger.
+            while EntryRelation.Get(NextEntryNo) do
+                NextEntryNo += 1;
+            EntryRelation.Init();
+            EntryRelation."Item Entry No." := NextEntryNo;
+            EntryRelation."Source Type" := Database::"Purch. Rcpt. Line";
+            EntryRelation."Source ID" := 'LEFTOVER';
+            EntryRelation.Insert();
+        end;
+
+        CreatePurchaseLine(PurchaseLine, false);
+        PostTrackedReceipt(PurchaseLine, 10);
+        LibrarySales.CreateSalesHeader(Header, Header."Document Type"::Order, '');
+        LibrarySales.CreateSalesLine(Line, Header, Line.Type::Item, PurchaseLine."No.", 10);
+
+        AssertTrackingRoundTrip(GenericSource('SalesLine', Line.SystemId), Database::"Sales Line", Line."Document No.", Line."Line No.", false);
+    end;
+
     local procedure CreatePurchaseLine(var PurchaseLine: Record "Purchase Line"; SerialTracking: Boolean)
     var
         Item: Record Item;
         ItemTrackingCode: Record "Item Tracking Code";
         PurchaseHeader: Record "Purchase Header";
     begin
+        RemoveOrphanEntryRelations();
         LibraryInventory.CreateItemTrackingCode(ItemTrackingCode);
         ItemTrackingCode."SN Specific Tracking" := SerialTracking;
         ItemTrackingCode."Lot Specific Tracking" := not SerialTracking;
