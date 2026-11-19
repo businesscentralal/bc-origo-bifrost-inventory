@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-19) - Inventory UAT help corrections (#266)
+- Physical inventory Record and RecordCount now have distinct English and Icelandic descriptions. New codeunit 10076950 `Phys. Count Record Impl ori` delegates to the existing count execution; the request and response contracts are unchanged.
+- Physical inventory order discovery uses dedicated translated keyword lists instead of splitting description sentences. Existing StandardCost and Tracking discovery translations are retained and covered in both languages.
+- Valuation help explicitly selects items with `itemFilter`, with a one-item example; `itemNo` is a response field. Existing AdjustCost response declarations for `itemsProcessed` and `errors[]` are covered by regression tests.
+- New test codeunit 97900 `Inv. 266 Help Tests ori` covers the bilingual descriptions, discovery, response contract and valuation selector. No posting or journal behavior changes.
+- AC02 (`Inventory.ItemJournal.Update`) belongs to Bifrost Foundation codeunit 10077952 and requires a separate core-repository correction.
+
+
 ### Fixed (2026-11-19) - confirmation boundary costing selection (#36, PR #245)
 - Test codeunit 96978 now supplies an explicitly empty item selection to the AdjustCost and CostToGL boundary requests, which ignore Subject. Preconditions prove that neither an item nor a pending value entry matches the filter. Confirmed requests cannot adjust unrelated demo items on a reused company; the company-wide item-ledger and value-entry no-write assertions remain. No new object or product change.
 ### Fixed (2026-11-18) - source tracking tests rerun on a used database (#251)

@@ -9093,6 +9093,24 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Taka með núll í væntu magni. Sjálfgefið false.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - NamedType ZeroLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 4055054472" size-unit="char" translate="yes" xml:space="preserve">
+          <source>create physical inventory order, calculate expected inventory, create inventory recording</source>
+          <target>stofna birgðatalningarpöntun, reikna væntar birgðir, stofna birgðaskráningu</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=stofna birgðatalningarpöntun, reikna væntar birgðir, stofna birgðaskráningu</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType CreateKeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 1091367205" size-unit="char" translate="yes" xml:space="preserve">
+          <source>finish physical inventory order, finish inventory recording, calculate inventory differences</source>
+          <target>ljúka birgðatalningarpöntun, ljúka birgðaskráningu, reikna birgðamismun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=ljúka birgðatalningarpöntun, ljúka birgðaskráningu, reikna birgðamismun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType FinishKeywordsLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 362723782 - Method 1009384294 - NamedType 1038723708" size-unit="char" translate="yes" xml:space="preserve">
+          <source>post physical inventory order, post inventory differences, posted inventory order</source>
+          <target>bóka birgðatalningarpöntun, bóka birgðamismun, bókuð birgðatalningarpöntun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=bóka birgðatalningarpöntun, bóka birgðamismun, bókuð birgðatalningarpöntun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Contract ori - Method Keywords - NamedType PostKeywordsLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 4167889448 - Method 3571782927 - NamedType 680257497" size-unit="char" translate="yes" xml:space="preserve">
           <source>Correct the physical inventory order, recording or inventory setup in Business Central, then retry the same operation.</source>
           <target>Leiðréttu birgðatalningarpöntun, skráningu eða birgðauppsetningu í Business Central og reyndu síðan sömu aðgerð aftur.</target>
@@ -9176,6 +9194,12 @@
           <target>Biðjið kerfisstjóra um staðlaðar heimildir fyrir birgðatalningarpantanir og skráningar og vörubókunarheimild fyrir Post.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Biðjið kerfisstjóra um staðlaðar heimildir fyrir birgðatalningarpantanir og skráningar og vörubókunarheimild fyrir Post.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys Order Process ori - Method AssertPermission - NamedType PermissionNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 485528778 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Records physical inventory counts using the counts array; omitted qtyCounted leaves a line unchanged, zero records a zero count, and nothing is posted.</source>
+          <target>Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Count Record Impl ori - Method GetDescription - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 177427374 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.</source>
@@ -9280,9 +9304,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Post Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Records counted quantities on lines of a physical inventory journal; an omitted quantity leaves the count unchanged and zero counts as counted zero.</source>
-          <target>Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Skráir talið magn á línur í talningarbók; magn sem er sleppt skilur talninguna eftir óbreytta og núll telst talið núll.</note>
+          <source>Records physical inventory counts using counts or the legacy lineNo and quantity parameters; nothing is posted.</source>
+          <target>Skráir birgðatalningu með counts eða eldri færibreytunum lineNo og quantity; ekkert er bókað.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skráir birgðatalningu með counts eða eldri færibreytunum lineNo og quantity; ekkert er bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Phys. Invt. Record Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1628414762 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -15814,9 +15838,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Read only. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
-          <target>Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
+          <source>Read only. To select an item, send itemFilter (for example {"itemFilter":"XITEM"}), not itemNo. itemNo is a response field, not a request parameter. Like the Inventory Valuation report, sums Value Entry Item Ledger Entry Quantity, Cost Amount (Actual) and Cost Amount (Expected) through asOfDate by Posting Date, not Valuation Date. Costs are in LCY and quantity is in the base unit. Includes adjustments and expected-cost reversals posted by that date; does not run cost adjustment. Filters inventory items using their current Inventory Posting Group. Groups by item, location and variant, including blank codes and zero balances with entries. Items without matching value entries produce no row. Rows sort by item, location, variant; skip/take apply after aggregation. Paging is not a snapshot: postings between calls can change results. Omitted or empty filters select all; use the BC filter consisting of two single quotes to select a blank code. Costing must be enabled and the caller needs Item and Value Entry read permission.</source>
+          <target>Eingöngu lestur. Til að velja vöru skal senda itemFilter (til dæmis {"itemFilter":"XITEM"}), ekki itemNo. itemNo er svarreitur, ekki færibreyta beiðni. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Eingöngu lestur. Til að velja vöru skal senda itemFilter (til dæmis {"itemFilter":"XITEM"}), ekki itemNo. itemNo er svarreitur, ekki færibreyta beiðni. Eins og skýrslan Birgðamat er magn vörufærslu, raunverulegur kostnaður og áætlaður kostnaður lagt saman úr virðisfærslum til og með asOfDate eftir bókunardagsetningu, ekki matsdagsetningu. Kostnaður er í staðbundnum gjaldmiðli og magn í grunneiningu. Leiðréttingar og bakfærslur áætlaðs kostnaðar bókaðar fyrir dagsetninguna eru með; kostnaðarleiðrétting er ekki keyrð. Birgðavörur eru síaðar eftir núverandi birgðabókunarflokki. Hópað er eftir vöru, birgðageymslu og afbrigði, einnig auðum kóðum og núllstöðu með færslum. Vörur án samsvarandi virðisfærslna mynda enga línu. Röðun er eftir vöru, birgðageymslu og afbrigði; skip/take gilda eftir samlagningu. Síðuskipting er ekki föst mynd: nýjar bókanir milli kalla geta breytt niðurstöðum. Engin eða auð sía velur allt; notaðu BC-síu með tveimur einföldum gæsalöppum til að velja auðan kóða. Kveikt verður að vera á kostnaðarsviði og notandi þarf lesheimild á vörur og virðisfærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - NamedType 3872630915" size-unit="char" translate="yes" xml:space="preserve">
@@ -15892,9 +15916,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param0Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2430905912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Business Central filter on Item No.; omitted means all inventory items.</source>
-          <target>Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á vörunúmer; ef sleppt eru allar birgðavörur valdar.</note>
+          <source>Business Central filter on Item No.; use itemFilter, not itemNo. For one item send {"itemFilter":"XITEM"}. Omitted means all inventory items.</source>
+          <target>Business Central-sía á vörunúmer; notaðu itemFilter, ekki itemNo. Fyrir eina vöru skal senda {"itemFilter":"XITEM"}. Ef sleppt eru allar birgðavörur valdar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Business Central-sía á vörunúmer; notaðu itemFilter, ekki itemNo. Fyrir eina vöru skal senda {"itemFilter":"XITEM"}. Ef sleppt eru allar birgðavörur valdar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Valuation Get Impl ori - Method GetParameters - NamedType Param1Lbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 650354099 - Method 3615801952 - NamedType 2484602009" size-unit="char" translate="yes" xml:space="preserve">
