@@ -3,7 +3,6 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
-using Microsoft.Inventory.Transfer;
 using Microsoft.Projects.Project.Job;
 using Microsoft.Projects.Project.Planning;
 using Microsoft.Sales.Customer;
@@ -171,8 +170,6 @@ codeunit 97902 "Reserv. Project Line Tests"
 
     local procedure CreatePlanningLine(var Item: Record Item; var Job: Record Job; var JobPlanningLine: Record "Job Planning Line"; OnHand: Decimal; LineQuantity: Decimal; UsageLink: Boolean)
     var
-        TransferHeader: Record "Transfer Header";
-        TransferLine: Record "Transfer Line";
         FromLocation: Record Location;
         ToLocation: Record Location;
         InTransitLocation: Record Location;

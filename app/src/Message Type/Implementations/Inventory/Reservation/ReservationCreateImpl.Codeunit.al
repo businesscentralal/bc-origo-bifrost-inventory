@@ -96,8 +96,9 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        SourceTargetLbl: Label 'The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), Item Journal Line (83) or Job Planning Line (1003). Add sourceBatchName for journals, sourceProdOrderLine for production and sourceTaskNo for project planning lines. For project planning lines, sourceNo is the project number and sourceLineNo is the planning line number. For production lines and assembly headers, sourceLineNo is 0.', Comment = 'is-IS=Upprunatilvísunin: sölulína (37), innkaupalína (39), millifærslulína (5741), samsetningarhaus (900), samsetningarlína (901), þjónustulína (5902), framleiðslupöntunarlína (5406), framleiðsluíhlutur (5407), vörubókarlína (83) eða verkáætlunarlína (1003). Bættu við sourceBatchName fyrir bókarlínur, sourceProdOrderLine fyrir framleiðslu og sourceTaskNo fyrir verkáætlunarlínur. Fyrir verkáætlunarlínur er sourceNo verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar. Fyrir framleiðslulínur og samsetningarhausa er sourceLineNo 0.';
     begin
-        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', 'The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407) or Item Journal Line (83). Add sourceBatchName for journals and sourceProdOrderLine for production. For production lines and assembly headers, sourceLineNo is 0.'));
+        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', SourceTargetLbl));
         exit(true);
     end;
 
@@ -145,6 +146,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        SourceTaskResponseLbl: Label 'The project task number for a project planning line (sourceType 1003); omitted for other sources.', Comment = 'is-IS=Verkþáttarnúmer fyrir verkáætlunarlínu (sourceType 1003); sleppt fyrir aðra uppruna.';
         Fields: JsonArray;
         StatusLbl: Label 'Success when at least one reservation entry was created.', Comment = 'is-IS=Success þegar a.m.k. ein frátekningarfærsla var búin til.';
         EntryNoLbl: Label 'First created reservation entry number. Pass it to Inventory.Reservation.Cancel.', Comment = 'is-IS=Númer fyrstu frátekningarfærslunnar sem var búin til. Sendu það í Inventory.Reservation.Cancel.';
@@ -165,6 +167,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Fields.Add(ContractMgt.ResponseField('sourceSubtype', 'integer', 'The source subtype that was used, including the default.'));
         Fields.Add(ContractMgt.ResponseField('sourceNo', 'string', 'The source document number, in upper case.'));
         Fields.Add(ContractMgt.ResponseField('sourceLineNo', 'integer', 'The native Source Ref. No., as sent.'));
+        Fields.Add(ContractMgt.ResponseField('sourceTaskNo', 'string', SourceTaskResponseLbl));
         Fields.Add(ContractMgt.ResponseField('sourceBatchName', 'string', 'The journal batch, or blank.'));
         Fields.Add(ContractMgt.ResponseField('sourceProdOrderLine', 'integer', 'The parent production order line, or zero.'));
         Response.Add('fields', Fields);
