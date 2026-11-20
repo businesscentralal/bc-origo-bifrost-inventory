@@ -907,4 +907,37 @@ codeunit 96970 "Inv. Contract Parity Tests ori"
         if Token.IsArray() then
             Result := Token.AsArray();
     end;
+
+    /// <summary>Issue272 AC1: a turned-off domain never refuses execution (#267), so these error chapters no longer describe such a refusal.</summary>
+    [Test]
+    procedure Scenario_272_AC01_ErrorsListNoDomainOffRefusal()
+    begin
+        // Issue272 AC01 | Time: no date dependency | Risk: metadata only, no data touched.
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.AdjustCost.Run");
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.CostToGL.Post");
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.ItemCharge.Get");
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.ItemSubstitution.Get");
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.Tracking.Get");
+        AssertNoDomainOffRefusal("Message Type ori"::"Inventory.TrackingAvailability.Get");
+    end;
+
+    local procedure AssertNoDomainOffRefusal(MessageType: Enum "Message Type ori")
+    var
+        ContractMgt: Codeunit "Msg Contract Mgt ori";
+        Contract: JsonObject;
+        Errors: JsonArray;
+        ErrorsText: Text;
+        TypeName: Text;
+    begin
+        TypeName := TypeNameOf(MessageType);
+        ContractMgt.GetContract(MessageType, Contract);
+        Errors := ArrayOf(Contract, 'errors');
+        Assert.IsTrue(Errors.Count() > 0, TypeName + ' still lists the refusals that can happen.');
+        Errors.WriteTo(ErrorsText);
+        ErrorsText := LowerCase(ErrorsText);
+        Assert.IsFalse(ErrorsText.Contains('domain is turned off'), TypeName + ' errors must not describe a turned-off domain refusal: ' + ErrorsText);
+        Assert.IsFalse(ErrorsText.Contains('domain is disabled'), TypeName + ' errors must not describe a disabled domain refusal: ' + ErrorsText);
+        Assert.IsFalse(ErrorsText.Contains('enable costing'), TypeName + ' errors must not ask to enable Costing: ' + ErrorsText);
+        Assert.IsFalse(ErrorsText.Contains('turn on costing'), TypeName + ' errors must not ask to turn on Costing: ' + ErrorsText);
+    end;
 }
