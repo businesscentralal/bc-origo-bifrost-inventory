@@ -5,6 +5,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Manufacturing.Document;
 using Microsoft.Inventory.Transfer;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 using Microsoft.Service.Document;
@@ -17,6 +18,11 @@ using Origo.Bifrost;
 codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", "Msg Discovery ori", "Msg Contract ori"
 {
     Access = Internal;
+
+    var
+        ProjectSubtype: Integer;
+        ProjectContractEntryNo: Integer;
+        SourceTaskNo: Code[20];
 
     var
         SourceExpectedLbl: Label 'An existing eligible item source line and valid reservation values.', Comment = 'is-IS=Fyrirliggjandi gjaldgeng upprunalína vöru og gild frátektargildi.';
@@ -61,7 +67,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>The selection description.</returns>
     procedure GetSelectionDescription(): Text
     var
-        SelectionDescriptionLbl: Label 'Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production or item journal source).', Comment = 'is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).';
+        SelectionDescriptionLbl: Label 'Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production, item journal or project planning line source; a project planning line also needs sourceTaskNo).', Comment = 'is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu-, vörubókar- eða verkáætlunarlínuuppruni; verkáætlunarlína þarf einnig sourceTaskNo).';
     begin
         exit(SelectionDescriptionLbl);
     end;
@@ -90,8 +96,9 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetTarget(var Target: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        SourceTargetLbl: Label 'The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), Item Journal Line (83) or Job Planning Line (1003). Add sourceBatchName for journals, sourceProdOrderLine for production and sourceTaskNo for project planning lines. For project planning lines, sourceNo is the project number and sourceLineNo is the planning line number. For production lines and assembly headers, sourceLineNo is 0.', Comment = 'is-IS=Upprunatilvísunin: sölulína (37), innkaupalína (39), millifærslulína (5741), samsetningarhaus (900), samsetningarlína (901), þjónustulína (5902), framleiðslupöntunarlína (5406), framleiðsluíhlutur (5407), vörubókarlína (83) eða verkáætlunarlína (1003). Bættu við sourceBatchName fyrir bókarlínur, sourceProdOrderLine fyrir framleiðslu og sourceTaskNo fyrir verkáætlunarlínur. Fyrir verkáætlunarlínur er sourceNo verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar. Fyrir framleiðslulínur og samsetningarhausa er sourceLineNo 0.';
     begin
-        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', 'The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407) or Item Journal Line (83). Add sourceBatchName for journals and sourceProdOrderLine for production. For production lines and assembly headers, sourceLineNo is 0.'));
+        Target.Add(ContractMgt.TargetEntry('data.sourceType + data.sourceSubtype + data.sourceNo + data.sourceLineNo', 'table no., subtype, document no. and line no.', SourceTargetLbl));
         exit(true);
     end;
 
@@ -101,7 +108,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        SourceTypeLbl: Label 'Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line.', Comment = 'is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.';
+        SourceTypeLbl: Label 'Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line, 1003 Job Planning Line (project planning line).', Comment = 'is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína, 1003 verkáætlunarlína.';
+        SourceTaskNoLbl: Label 'Required for a project planning line (sourceType 1003): the project task number. sourceNo is the project number and sourceLineNo the planning line number.', Comment = 'is-IS=Nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003): verkþáttarnúmer. sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.';
         SourceSubtypeLbl: Label 'Source subtype: document type ordinal (default 1 = Order for sales, purchase, assembly and service), or transfer direction (default 0 outbound, 1 inbound). Required for production (status ordinal) and item journals (entry type ordinal).', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (sjálfgefið 1 = pöntun fyrir sölu, innkaup, samsetningu og þjónustu), eða stefna millifærslu (sjálfgefið 0 út, 1 inn). Nauðsynlegt fyrir framleiðslu (stöðuröð) og vörubækur (færslutegund).';
         SourceNoLbl: Label 'Source document number, or journal template name (at most 10 characters) for an item journal source.', Comment = 'is-IS=Númer upprunaskjals eða bókarsniðmát (að hámarki 10 stafir) fyrir vörubókaruppruna.';
         SourceLineNoLbl: Label 'Native Source Ref. No.; use 0 for a production order line or assembly header.', Comment = 'is-IS=Source Ref. No.; notaðu 0 fyrir framleiðslupöntunarlínu eða samsetningarhaus.';
@@ -119,6 +127,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Parameters.Add(ContractMgt.Parameter('sourceSubtype', 'integer', false, SourceSubtypeLbl));
         Parameters.Add(ContractMgt.Parameter('sourceNo', 'string', true, SourceNoLbl));
         Parameters.Add(ContractMgt.Parameter('sourceLineNo', 'integer', true, SourceLineNoLbl));
+        Parameters.Add(ContractMgt.Parameter('sourceTaskNo', 'string', false, SourceTaskNoLbl));
         Parameters.Add(ContractMgt.Parameter('sourceBatchName', 'string', false, BatchNameLbl));
         Parameters.Add(ContractMgt.Parameter('sourceProdOrderLine', 'integer', false, ProdLineLbl));
         Parameters.Add(ContractMgt.Parameter('quantity', 'number', true, QuantityLbl));
@@ -137,6 +146,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     procedure GetResponse(var Response: JsonObject): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
+        SourceTaskResponseLbl: Label 'The project task number for a project planning line (sourceType 1003); omitted for other sources.', Comment = 'is-IS=Verkþáttarnúmer fyrir verkáætlunarlínu (sourceType 1003); sleppt fyrir aðra uppruna.';
         Fields: JsonArray;
         StatusLbl: Label 'Success when at least one reservation entry was created.', Comment = 'is-IS=Success þegar a.m.k. ein frátekningarfærsla var búin til.';
         EntryNoLbl: Label 'First created reservation entry number. Pass it to Inventory.Reservation.Cancel.', Comment = 'is-IS=Númer fyrstu frátekningarfærslunnar sem var búin til. Sendu það í Inventory.Reservation.Cancel.';
@@ -157,6 +167,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         Fields.Add(ContractMgt.ResponseField('sourceSubtype', 'integer', 'The source subtype that was used, including the default.'));
         Fields.Add(ContractMgt.ResponseField('sourceNo', 'string', 'The source document number, in upper case.'));
         Fields.Add(ContractMgt.ResponseField('sourceLineNo', 'integer', 'The native Source Ref. No., as sent.'));
+        Fields.Add(ContractMgt.ResponseField('sourceTaskNo', 'string', SourceTaskResponseLbl));
         Fields.Add(ContractMgt.ResponseField('sourceBatchName', 'string', 'The journal batch, or blank.'));
         Fields.Add(ContractMgt.ResponseField('sourceProdOrderLine', 'integer', 'The parent production order line, or zero.'));
         Response.Add('fields', Fields);
@@ -322,6 +333,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceType: Integer;
         SourceSubtype: Integer;
         SourceLineNo: Integer;
+        SourceRefNo: Integer;
+        SourceTaskText: Text;
         SourceNoMaxLength: Integer;
         LastEntryNo: Integer;
         AvailabilityDate: Date;
@@ -362,6 +375,9 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
             ReadOk := false;
         if not ReadCode(Argument, RequestJson, 'locationCode', false, 10, LocationCode) then
             ReadOk := false;
+        if not ReadCode(Argument, RequestJson, 'sourceTaskNo', SourceType = Database::"Job Planning Line", 20, SourceTaskText) then
+            ReadOk := false;
+        SourceTaskNo := CopyStr(SourceTaskText, 1, MaxStrLen(SourceTaskNo));
         if not ReadCode(Argument, RequestJson, 'sourceBatchName', SourceType = Database::"Item Journal Line", 10, SourceBatchName) then
             ReadOk := false;
         if not ReadInteger(Argument, RequestJson, 'sourceProdOrderLine', SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component"], SourceProdOrderLine) then
@@ -382,6 +398,12 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         end;
         if not ReadSourceLine(Argument, SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, CopyStr(SourceBatchName, 1, 10), SourceProdOrderLine, ItemNo, LocationCode, AvailabilityDate, QtyPerUOM, Description) then
             exit;
+        SourceRefNo := SourceLineNo;
+        if SourceType = Database::"Job Planning Line" then begin
+            // Project planning lines are reserved under their status and job contract entry number.
+            SourceSubtype := ProjectSubtype;
+            SourceRefNo := ProjectContractEntryNo;
+        end;
         if (SerialNo <> '') and (Round(Quantity * QtyPerUOM, 0.00001) <> 1) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, SerialQuantityErr, 'quantity', Format(Quantity, 0, 9), QuantityExpectedTok, SourceNextStepLbl);
             exit;
@@ -394,7 +416,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         if ReservationEntry.FindLast() then
             LastEntryNo := ReservationEntry."Entry No.";
         Process.SetOperation('ReservationCreate');
-        Process.SetReservation(SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceLineNo, Quantity, Round(Quantity * QtyPerUOM, 0.00001), AvailabilityDate, Description);
+        Process.SetReservation(SourceType, SourceSubtype, CopyStr(SourceNoText, 1, 20), SourceRefNo, Quantity, Round(Quantity * QtyPerUOM, 0.00001), AvailabilityDate, Description);
         Process.SetReservationSourceDetails(CopyStr(SourceBatchName, 1, 10), SourceProdOrderLine);
         Process.SetReservationSupply(SupplyEntryNo, CopyStr(LotNo, 1, 50), CopyStr(SerialNo, 1, 50), CopyStr(PackageNo, 1, 50));
         if Argument."Omit Commit" then
@@ -411,7 +433,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ReservationEntry.SetRange("Source Type", SourceType);
         ReservationEntry.SetRange("Source Subtype", SourceSubtype);
         ReservationEntry.SetRange("Source ID", CopyStr(SourceNoText, 1, 20));
-        ReservationEntry.SetRange("Source Ref. No.", SourceLineNo);
+        ReservationEntry.SetRange("Source Ref. No.", SourceRefNo);
         if SourceType = Database::"Item Journal Line" then
             ReservationEntry.SetRange("Source Batch Name", CopyStr(SourceBatchName, 1, 10));
         if SourceType in [Database::"Prod. Order Line", Database::"Prod. Order Component"] then
@@ -441,6 +463,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         ResponseJson.Add('sourceSubtype', SourceSubtype);
         ResponseJson.Add('sourceNo', SourceNoText);
         ResponseJson.Add('sourceLineNo', SourceLineNo);
+        if SourceType = Database::"Job Planning Line" then
+            ResponseJson.Add('sourceTaskNo', SourceTaskNo);
         ResponseJson.Add('sourceBatchName', SourceBatchName);
         ResponseJson.Add('sourceProdOrderLine', SourceProdOrderLine);
         Argument.SetResponseJson(ResponseJson);
@@ -470,8 +494,8 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
         SourceItemNo: Code[20];
         SourceLocationCode: Code[10];
         Found: Boolean;
-        UnsupportedSourceErr: Label 'sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83.', Comment = '%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.';
-        UnsupportedSourceExpectedTok: Label '37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83', Locked = true;
+        UnsupportedSourceErr: Label 'sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 or 1003.', Comment = '%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 eða 1003.';
+        UnsupportedSourceExpectedTok: Label '37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 or 1003', Locked = true;
         SubtypeErr: Label 'sourceSubtype %1 is not valid for sourceType %2.', Comment = '%1 = subtype; %2 = source table number; is-IS=sourceSubtype %1 á ekki við sourceType %2.';
         SourceNotFoundErr: Label 'Source line %1 %2 %3 was not found.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 fannst ekki.';
         NotItemErr: Label 'Source line %1 %2 %3 is not an item line.', Comment = '%1 = source table number; %2 = document number; %3 = line number; is-IS=Upprunalína %1 %2 %3 er ekki vörulína.';
@@ -620,6 +644,12 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
                         AvailabilityDate := AssemblyLine."Due Date";
                         Description := AssemblyLine.Description;
                     end;
+                end;
+            Database::"Job Planning Line":
+                begin
+                    if not ReservationPolicy.ResolveProjectPlanningLine(Argument, SourceNo, SourceTaskNo, SourceLineNo, true, ProjectSubtype, ProjectContractEntryNo, SourceItemNo, SourceLocationCode, AvailabilityDate, QtyPerUOM, Description) then
+                        exit(false);
+                    Found := true;
                 end;
             else begin
                 Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(UnsupportedSourceErr, SourceType), 'sourceType', Format(SourceType, 0, 9), UnsupportedSourceExpectedTok, SourceNextStepLbl);

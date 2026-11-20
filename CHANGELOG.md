@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-20) - project reservation amendment (#278)
+- Removed unused test variables and import; reservation Create/Cancel target help now describes project planning line selection and Create response help includes `sourceTaskNo`. Corrected the Cancel source-type separator in both languages.
+
+### Added (2026-11-20) - Reservation Create and Cancel accept a project planning line (#276)
+- `Inventory.Reservation.Create` and `Inventory.Reservation.Cancel` accept `sourceType` 1003 (Job Planning Line) with the new `sourceTaskNo`; Create refuses non-item lines, Usage Link off, Reserve Never and completed projects with a nextStep. No new objects (IDs unchanged); is-IS XLF and help updated.
+- Tests: new codeunit 97902 `Reserv. Project Line Tests`.
+
 ### Changed (2026-11-20) - PlanningWorksheet.CarryOut points production lines to Manufacturing (#275)
 - The production-line refusal of Inventory.PlanningWorksheet.CarryOut now names Manufacturing.PlanningWorksheet.CarryOut in its nextStep, and the help says production lines are carried out by the Manufacturing app (text only, no dependency; no object IDs added). is-IS translations updated. New test `CarryOut_ProdOrderLine_RefusalNamesManufacturing_BothLanguages` in codeunit `Plan Wksh Tests`.
 ### Fixed (2026-11-20) - contract docs no longer describe a domain-off refusal (#272)

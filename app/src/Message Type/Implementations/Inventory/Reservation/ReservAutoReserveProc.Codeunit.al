@@ -2,6 +2,8 @@ namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Projects.Project.Job;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Sales.Document;
 using Origo.Bifrost;
 
@@ -91,6 +93,68 @@ codeunit 10076896 "Reserv. AutoReserve Proc ori"
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, NothingOutstandingErr, 'lineNo', Format(SalesLine."Line No.", 0, 9), ReservableExpectedLbl, PreconditionNextStepLbl);
             exit(false);
         end;
+        exit(true);
+    end;
+
+    /// <summary>Resolves a project planning line (project, task, line) to its reservation source values.</summary>
+    /// <param name="Argument">The message argument that receives a typed refusal.</param>
+    /// <param name="JobNo">The project number.</param>
+    /// <param name="JobTaskNo">The project task number.</param>
+    /// <param name="PlanningLineNo">The planning line number.</param>
+    /// <param name="ForReserve">True to also check that the line can be reserved; false for a cancel lookup.</param>
+    /// <param name="SourceSubtype">Receives the reservation source subtype (the planning line status).</param>
+    /// <param name="ContractEntryNo">Receives the job contract entry number used as the reservation source reference.</param>
+    /// <param name="ItemNo">Receives the item number.</param>
+    /// <param name="LocationCode">Receives the location code.</param>
+    /// <param name="AvailabilityDate">Receives the planning date.</param>
+    /// <param name="QtyPerUOM">Receives the quantity per unit of measure.</param>
+    /// <param name="Description">Receives the line description.</param>
+    /// <returns>True when the line resolved; otherwise a typed refusal with a nextStep was set.</returns>
+    procedure ResolveProjectPlanningLine(var Argument: Record "Message Argument ori"; JobNo: Code[20]; JobTaskNo: Code[20]; PlanningLineNo: Integer; ForReserve: Boolean; var SourceSubtype: Integer; var ContractEntryNo: Integer; var ItemNo: Code[20]; var LocationCode: Code[10]; var AvailabilityDate: Date; var QtyPerUOM: Decimal; var Description: Text[100]): Boolean
+    var
+        Job: Record Job;
+        JobPlanningLine: Record "Job Planning Line";
+        Item: Record Item;
+        NotFoundErr: Label 'Project planning line %1 %2 %3 was not found.', Comment = '%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 fannst ekki.';
+        NotFoundNextStepLbl: Label 'Check sourceNo (project), sourceTaskNo and sourceLineNo, and read the project planning lines first.', Comment = 'is-IS=Athugaðu sourceNo (verkefni), sourceTaskNo og sourceLineNo og lestu verkáætlunarlínurnar fyrst.';
+        NotItemErr: Label 'Project planning line %1 %2 %3 is not an item line. Only item lines can be reserved.', Comment = '%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 er ekki vörulína. Aðeins vörulínur er hægt að taka frá.';
+        NoUsageLinkErr: Label 'Project planning line %1 %2 %3 has Usage Link off. Reservation needs a usage-linked line.', Comment = '%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 er án notkunartengingar. Frátekning krefst línu með notkunartengingu.';
+        CompletedErr: Label 'Project %1 is completed, so its planning lines cannot be reserved.', Comment = '%1 = project no.; is-IS=Verkefni %1 er lokið svo ekki er hægt að taka frá fyrir verkáætlunarlínur þess.';
+        ReserveNeverErr: Label 'Reserve is set to Never for item %1 or for the project planning line.', Comment = '%1 = item no.; is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða verkáætlunarlínuna.';
+        LineExpectedTok: Label 'an item planning line with Usage Link on in an open project', Comment = 'is-IS=vöruáætlunarlína með notkunartengingu í opnu verkefni';
+        PreconditionNextStepLbl: Label 'Use an item planning line with Usage Link on in a project that is not completed, or reserve manually.', Comment = 'is-IS=Notaðu vöruáætlunarlínu með notkunartengingu í verkefni sem er ekki lokið, eða taktu frá handvirkt.';
+    begin
+        if not JobPlanningLine.Get(JobNo, JobTaskNo, PlanningLineNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, JobNo, JobTaskNo, PlanningLineNo), 'sourceLineNo', Format(PlanningLineNo, 0, 9), LineExpectedTok, NotFoundNextStepLbl);
+            exit(false);
+        end;
+        if ForReserve then begin
+            if (JobPlanningLine.Type <> JobPlanningLine.Type::Item) or (JobPlanningLine."No." = '') then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NotItemErr, JobNo, JobTaskNo, PlanningLineNo), 'sourceLineNo', Format(PlanningLineNo, 0, 9), LineExpectedTok, PreconditionNextStepLbl);
+                exit(false);
+            end;
+            Job.SetLoadFields(Status);
+            if Job.Get(JobNo) and (Job.Status = Job.Status::Completed) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(CompletedErr, JobNo), 'sourceNo', JobNo, LineExpectedTok, PreconditionNextStepLbl);
+                exit(false);
+            end;
+            if not JobPlanningLine."Usage Link" then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoUsageLinkErr, JobNo, JobTaskNo, PlanningLineNo), 'sourceLineNo', Format(PlanningLineNo, 0, 9), LineExpectedTok, PreconditionNextStepLbl);
+                exit(false);
+            end;
+            Item.SetLoadFields(Reserve);
+            if (JobPlanningLine.Reserve = JobPlanningLine.Reserve::Never) or (Item.Get(JobPlanningLine."No.") and (Item.Reserve = Item.Reserve::Never)) then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ReserveNeverErr, JobPlanningLine."No."), 'sourceLineNo', Format(PlanningLineNo, 0, 9), LineExpectedTok, PreconditionNextStepLbl);
+                exit(false);
+            end;
+        end;
+        SourceSubtype := JobPlanningLine.Status.AsInteger();
+        ContractEntryNo := JobPlanningLine."Job Contract Entry No.";
+        ItemNo := JobPlanningLine."No.";
+        LocationCode := JobPlanningLine."Location Code";
+        AvailabilityDate := JobPlanningLine."Planning Date";
+        QtyPerUOM := JobPlanningLine."Qty. per Unit of Measure";
+        Description := JobPlanningLine.Description;
         exit(true);
     end;
 

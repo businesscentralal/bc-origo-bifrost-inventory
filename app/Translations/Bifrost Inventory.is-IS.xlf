@@ -12657,6 +12657,54 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu Inventory.Reservation.Get til að sjá hvað er tekið frá.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method RaisePartial - NamedType PartialNextStepLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Project planning line %1 %2 %3 was not found.</source>
+          <target>Verkáætlunarlína %1 %2 %3 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 2160166432" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check sourceNo (project), sourceTaskNo and sourceLineNo, and read the project planning lines first.</source>
+          <target>Athugaðu sourceNo (verkefni), sourceTaskNo og sourceLineNo og lestu verkáætlunarlínurnar fyrst.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu sourceNo (verkefni), sourceTaskNo og sourceLineNo og lestu verkáætlunarlínurnar fyrst.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType NotFoundNextStepLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 1844603631" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Project planning line %1 %2 %3 is not an item line. Only item lines can be reserved.</source>
+          <target>Verkáætlunarlína %1 %2 %3 er ekki vörulína. Aðeins vörulínur er hægt að taka frá.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 er ekki vörulína. Aðeins vörulínur er hægt að taka frá.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType NotItemErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 3236521411" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Project planning line %1 %2 %3 has Usage Link off. Reservation needs a usage-linked line.</source>
+          <target>Verkáætlunarlína %1 %2 %3 er án notkunartengingar. Frátekning krefst línu með notkunartengingu.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = project no.; %2 = task no.; %3 = line no.; is-IS=Verkáætlunarlína %1 %2 %3 er án notkunartengingar. Frátekning krefst línu með notkunartengingu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType NoUsageLinkErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 4156052828" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Project %1 is completed, so its planning lines cannot be reserved.</source>
+          <target>Verkefni %1 er lokið svo ekki er hægt að taka frá fyrir verkáætlunarlínur þess.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = project no.; is-IS=Verkefni %1 er lokið svo ekki er hægt að taka frá fyrir verkáætlunarlínur þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType CompletedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 1111338825" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reserve is set to Never for item %1 or for the project planning line.</source>
+          <target>Frátekning er stillt á Aldrei fyrir vöru %1 eða verkáætlunarlínuna.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = item no.; is-IS=Frátekning er stillt á Aldrei fyrir vöru %1 eða verkáætlunarlínuna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType ReserveNeverErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 3077585164" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an item planning line with Usage Link on in an open project</source>
+          <target>vöruáætlunarlína með notkunartengingu í opnu verkefni</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=vöruáætlunarlína með notkunartengingu í opnu verkefni</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType LineExpectedTok</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3467707986 - Method 3954416502 - NamedType 291721461" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use an item planning line with Usage Link on in a project that is not completed, or reserve manually.</source>
+          <target>Notaðu vöruáætlunarlínu með notkunartengingu í verkefni sem er ekki lokið, eða taktu frá handvirkt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu vöruáætlunarlínu með notkunartengingu í verkefni sem er ekki lokið, eða taktu frá handvirkt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reserv. AutoReserve Proc ori - Method ResolveProjectPlanningLine - NamedType PreconditionNextStepLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 3467707986 - Method 918654654 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
           <source>The sales line was not found.</source>
           <target>Sölulínan fannst ekki.</target>
@@ -12796,9 +12844,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetNotes - NamedType LineNotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source table number of the line whose reservations are cancelled when entryNo is not sent, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component or 83 Item Journal Line.</source>
-          <target>Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur eða 83 vörubókarlína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur eða 83 vörubókarlína.</note>
+          <source>Source table number of the line whose reservations are cancelled when entryNo is not sent, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line or 1003 Job Planning Line (project planning line; also send sourceTaskNo).</source>
+          <target>Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína eða 1003 verkáætlunarlína (einnig er sent sourceTaskNo).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína eða 1003 verkáætlunarlína (einnig er sent sourceTaskNo).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 2182983805" size-unit="char" translate="yes" xml:space="preserve">
@@ -12819,6 +12867,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Línunúmer uppruna (Source Ref. No.).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceLineNoLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 3633262606" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Project task number; required for a project planning line (sourceType 1003), where sourceNo is the project number and sourceLineNo the planning line number.</source>
+          <target>Verkþáttarnúmer; nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003), þar sem sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Verkþáttarnúmer; nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003), þar sem sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetParameters - NamedType SourceTaskLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 3615801952 - NamedType 3326184501" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal batch name; required for an item journal line (sourceType 83).</source>
           <target>Heiti bókarkeyrslu; nauðsynlegt fyrir vörubókarlínu (sourceType 83).</target>
@@ -12836,6 +12890,12 @@
           <target>Afturkallar eina frátekningu eftir entryNo, eða allar frátekningar einnar upprunalínu eftir sourceType, sourceNo og sourceLineNo.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar eina frátekningu eftir entryNo, eða allar frátekningar einnar upprunalínu eftir sourceType, sourceNo og sourceLineNo.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1014119422 - Method 3897248833 - NamedType 247799842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Used when entryNo is not sent: every reservation (status Reservation) of that source line is cancelled, for any source the Reserve action supports. sourceBatchName is required for an item journal line (83) and sourceProdOrderLine and sourceSubtype for production output (5406) and components (5407). For a Job Planning Line (1003), send sourceNo as the project number, sourceTaskNo as the project task number and sourceLineNo as the planning line number.</source>
+          <target>Notað þegar entryNo er ekki sent: allar frátekningar (staða Reservation) fyrir upprunalínuna eru afturkallaðar, fyrir alla uppruna sem aðgerðin Taka frá styður. sourceBatchName er nauðsynlegt fyrir vörubókarlínu (83) og sourceProdOrderLine og sourceSubtype fyrir framleiðsluafurðir (5406) og íhluti (5407). Fyrir verkáætlunarlínu (1003) skal senda verkefnisnúmerið í sourceNo, verkþáttarnúmerið í sourceTaskNo og línunúmer verkáætlunarlínunnar í sourceLineNo.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notað þegar entryNo er ekki sent: allar frátekningar (staða Reservation) fyrir upprunalínuna eru afturkallaðar, fyrir alla uppruna sem aðgerðin Taka frá styður. sourceBatchName er nauðsynlegt fyrir vörubókarlínu (83) og sourceProdOrderLine og sourceSubtype fyrir framleiðsluafurðir (5406) og íhluti (5407). Fyrir verkáætlunarlínu (1003) skal senda verkefnisnúmerið í sourceNo, verkþáttarnúmerið í sourceTaskNo og línunúmer verkáætlunarlínunnar í sourceLineNo.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Cancel Impl ori - Method GetTarget - NamedType SourceTargetLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1014119422 - Method 1481450256 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 must be a whole number of 0 or more.</source>
@@ -13006,10 +13066,16 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetOverview - NamedType OverviewLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 20391969" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line.</source>
-          <target>Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína.</note>
+          <source>Source table number: 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 900 Assembly Header, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component, 83 Item Journal Line, 1003 Job Planning Line (project planning line).</source>
+          <target>Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína, 1003 verkáætlunarlína.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Númer upprunatöflu: 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 900 samsetningarhaus, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur, 83 vörubókarlína, 1003 verkáætlunarlína.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceTypeLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 3416415965" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Required for a project planning line (sourceType 1003): the project task number. sourceNo is the project number and sourceLineNo the planning line number.</source>
+          <target>Nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003): verkþáttarnúmer. sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003): verkþáttarnúmer. sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType SourceTaskNoLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 3615801952 - NamedType 2182983805" size-unit="char" translate="yes" xml:space="preserve">
           <source>Source subtype: document type ordinal (default 1 = Order for sales, purchase, assembly and service), or transfer direction (default 0 outbound, 1 inbound). Required for production (status ordinal) and item journals (entry type ordinal).</source>
@@ -13083,6 +13149,12 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls staðsetningarkóði; verður að passa við staðsetningu upprunalínunnar ef hann er sendur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetParameters - NamedType LocationCodeLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 310780755" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The project task number for a project planning line (sourceType 1003); omitted for other sources.</source>
+          <target>Verkþáttarnúmer fyrir verkáætlunarlínu (sourceType 1003); sleppt fyrir aðra uppruna.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Verkþáttarnúmer fyrir verkáætlunarlínu (sourceType 1003); sleppt fyrir aðra uppruna.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType SourceTaskResponseLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 4268477247 - NamedType 3193096050" size-unit="char" translate="yes" xml:space="preserve">
           <source>Success when at least one reservation entry was created.</source>
           <target>Success þegar a.m.k. ein frátekningarfærsla var búin til.</target>
@@ -13114,10 +13186,16 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetResponse - NamedType FullLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 79446908 - NamedType 3491368912" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production or item journal source).</source>
-          <target>Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu- eða vörubókaruppruni).</note>
+          <source>Name the source line with sourceType, sourceSubtype, sourceNo and sourceLineNo (sales, purchase, transfer, assembly, service, production, item journal or project planning line source; a project planning line also needs sourceTaskNo).</source>
+          <target>Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu-, vörubókar- eða verkáætlunarlínuuppruni; verkáætlunarlína þarf einnig sourceTaskNo).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Tilgreindu upprunalínuna með sourceType, sourceSubtype, sourceNo og sourceLineNo (sölu-, innkaupa-, millifærslu-, samsetningar-, þjónustu-, framleiðslu-, vörubókar- eða verkáætlunarlínuuppruni; verkáætlunarlína þarf einnig sourceTaskNo).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 436777468 - Method 3897248833 - NamedType 247799842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The native source pointer: Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), Item Journal Line (83) or Job Planning Line (1003). Add sourceBatchName for journals, sourceProdOrderLine for production and sourceTaskNo for project planning lines. For project planning lines, sourceNo is the project number and sourceLineNo is the planning line number. For production lines and assembly headers, sourceLineNo is 0.</source>
+          <target>Upprunatilvísunin: sölulína (37), innkaupalína (39), millifærslulína (5741), samsetningarhaus (900), samsetningarlína (901), þjónustulína (5902), framleiðslupöntunarlína (5406), framleiðsluíhlutur (5407), vörubókarlína (83) eða verkáætlunarlína (1003). Bættu við sourceBatchName fyrir bókarlínur, sourceProdOrderLine fyrir framleiðslu og sourceTaskNo fyrir verkáætlunarlínur. Fyrir verkáætlunarlínur er sourceNo verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar. Fyrir framleiðslulínur og samsetningarhausa er sourceLineNo 0.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Upprunatilvísunin: sölulína (37), innkaupalína (39), millifærslulína (5741), samsetningarhaus (900), samsetningarlína (901), þjónustulína (5902), framleiðslupöntunarlína (5406), framleiðsluíhlutur (5407), vörubókarlína (83) eða verkáætlunarlína (1003). Bættu við sourceBatchName fyrir bókarlínur, sourceProdOrderLine fyrir framleiðslu og sourceTaskNo fyrir verkáætlunarlínur. Fyrir verkáætlunarlínur er sourceNo verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar. Fyrir framleiðslulínur og samsetningarhausa er sourceLineNo 0.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method GetTarget - NamedType SourceTargetLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 2546409665 - NamedType 1830439019" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 is required.</source>
@@ -13156,9 +13234,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadInteger - NamedType IntegerExpectedTok</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 1105599607" size-unit="char" translate="yes" xml:space="preserve">
-          <source>sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407 or 83.</source>
-          <target>sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407 eða 83.</note>
+          <source>sourceType %1 is not a supported reservation source. Use 37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 or 1003.</source>
+          <target>sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 eða 1003.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = source table number; is-IS=sourceType %1 er ekki studdur frátekningaruppruni. Notaðu 37, 39, 5741, 900, 901, 5902, 5406, 5407, 83 eða 1003.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reservation Create Impl ori - Method ReadSourceLine - NamedType UnsupportedSourceErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 436777468 - Method 1498492779 - NamedType 2524456475" size-unit="char" translate="yes" xml:space="preserve">
