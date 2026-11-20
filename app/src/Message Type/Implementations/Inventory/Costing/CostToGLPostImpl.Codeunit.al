@@ -163,7 +163,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     procedure GetErrors(var Errors: JsonArray): Boolean
     begin
         Clear(Errors);
-        Errors.ReadFrom('[{"code":"InvalidParameter","when":"The Costing domain is disabled.","fix":"Turn on Costing in Inventory Setup."},{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign Inv. Posting Gate in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
+        Errors.ReadFrom('[{"code":"PermissionDenied","when":"The inventory posting token is missing.","fix":"Assign Inv. Posting Gate in addition to native posting permissions."},{"code":"BusinessCentralError","when":"Native posting or selection fails.","fix":"Correct the native setup or selected entries. If journal templates are mandatory, supply journalTemplateName and journalBatchName with a number series."}]');
         exit(true);
     end;
 

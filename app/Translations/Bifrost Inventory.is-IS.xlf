@@ -5697,18 +5697,6 @@
           <note from="Developer" annotates="general" priority="2">%1 = request key, is-IS=Sendu %1 sem texta.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RequireText - NamedType TextNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3587490879 - Method 2961471195 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Charge domain is turned off for this company.</source>
-          <target>Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondDomainDisabled - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3587490879 - Method 2961471195 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondDomainDisabled - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2152073072 - NamedType 3085223924" size-unit="char" translate="yes" xml:space="preserve">
           <source>The document has no line with this line number.</source>
           <target>Skjalið hefur enga línu með þessu línunúmeri.</target>
@@ -6566,18 +6554,6 @@
           <target>Leiðréttu %1 samkvæmt hjálp Inventory.ItemReference.Set og reyndu aftur. Fyrir tilvísun sem stangast á skaltu velja aðra tilvísun eða vöruna sem hún auðkennir þegar.</target>
           <note from="Developer" annotates="general" priority="2">%1 = field, is-IS=Leiðréttu %1 samkvæmt hjálp Inventory.ItemReference.Set og reyndu aftur. Fyrir tilvísun sem stangast á skaltu velja aðra tilvísun eða vöruna sem hún auðkennir þegar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method Refuse - NamedType NextLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2423449542 - NamedType 880711966" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Substitution domain is disabled.</source>
-          <target>Slökkt er á vöruskiptasviðinu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Slökkt er á vöruskiptasviðinu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2423449542 - NamedType 3740637095" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator to enable Item Substitution on Inventory Setup.</source>
-          <target>Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Subst. Get Impl ori - NamedType DisabledNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 2423449542 - NamedType 2588563411" size-unit="char" translate="yes" xml:space="preserve">
           <source>%1 must be JSON text.</source>

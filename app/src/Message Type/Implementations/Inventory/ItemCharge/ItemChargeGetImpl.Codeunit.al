@@ -171,7 +171,6 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::ConflictingIdentifiers, ConflictWhenLbl, ConflictFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, PreconditionWhenLbl, PreconditionFixLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionWhenLbl, PermissionFixLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, 'The Item Charge domain is turned off for this company.', 'Turn the domain on from the Inventory Setup page, then send the call again.'));
         exit(true);
     end;
 
@@ -345,18 +344,6 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', WritePermissionSetTok, WriteNextStepLbl)
         else
             Argument.RespondWithError("Bifrost Error Code ori"::PermissionDenied, PermissionDeniedErr, '', '', ReadPermissionSetTok, ReadNextStepLbl);
-    end;
-
-    /// <summary>
-    /// Answers that the Item Charge domain is turned off.
-    /// </summary>
-    /// <param name="Argument">The message argument that receives the refusal.</param>
-    procedure RespondDomainDisabled(var Argument: Record "Message Argument ori")
-    var
-        DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
-    begin
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
     end;
 
     /// <summary>
