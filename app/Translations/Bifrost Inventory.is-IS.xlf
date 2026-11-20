@@ -5697,18 +5697,6 @@
           <note from="Developer" annotates="general" priority="2">%1 = request key, is-IS=Sendu %1 sem texta.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RequireText - NamedType TextNextStepLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3587490879 - Method 2961471195 - NamedType 3664955007" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Item Charge domain is turned off for this company.</source>
-          <target>Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondDomainDisabled - NamedType DomainDisabledErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3587490879 - Method 2961471195 - NamedType 3490249993" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.</source>
-          <target>Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Charge Get Impl ori - Method RespondDomainDisabled - NamedType DomainNextStepLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3587490879 - Method 2152073072 - NamedType 3085223924" size-unit="char" translate="yes" xml:space="preserve">
           <source>The document has no line with this line number.</source>
           <target>Skjalið hefur enga línu með þessu línunúmeri.</target>

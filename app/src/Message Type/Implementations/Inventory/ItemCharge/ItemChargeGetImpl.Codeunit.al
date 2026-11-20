@@ -347,20 +347,6 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
     end;
 
     /// <summary>
-    /// Obsolete: answers that the Item Charge domain is turned off. A turned-off domain never refuses execution (#267), so nothing calls this.
-    /// Kept only for backward compatibility of the public codeunit; it will be removed in a later version.
-    /// </summary>
-    /// <param name="Argument">The message argument that receives the refusal.</param>
-    [Obsolete('A turned-off Inventory domain no longer refuses execution (#267, #272). Do not call this procedure.', '28.3.2')]
-    procedure RespondDomainDisabled(var Argument: Record "Message Argument ori")
-    var
-        DomainDisabledErr: Label 'The Item Charge domain is turned off for this company.', Comment = 'is-IS=Kostnaðaraukasviðið er óvirkt fyrir þetta fyrirtæki.';
-        DomainNextStepLbl: Label 'Ask an administrator with the Inv. Posting Gate permission set to turn the domain on from the Inventory Setup page. Data.Records.Set cannot change this setup.', Comment = 'is-IS=Biddu kerfisstjóra með heimildasafnið Bókunarhlið birgða að kveikja á sviðinu á síðunni Uppsetning birgða. Data.Records.Set getur ekki breytt þessari uppsetningu.';
-    begin
-        Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, DomainDisabledErr, '', '', '', DomainNextStepLbl);
-    end;
-
-    /// <summary>
     /// Finds the purchase document the request names and answers RecordNotFound or AmbiguousRecord.
     /// </summary>
     /// <param name="Argument">The message argument that receives a refusal.</param>
