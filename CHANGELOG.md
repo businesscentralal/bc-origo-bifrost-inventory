@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added (2026-11-20) - Reservation Create and Cancel accept a project planning line (#276)
+- `Inventory.Reservation.Create` and `Inventory.Reservation.Cancel` accept `sourceType` 1003 (Job Planning Line) with the new `sourceTaskNo`; Create refuses non-item lines, Usage Link off, Reserve Never and completed projects with a nextStep. No new objects (IDs unchanged); is-IS XLF and help updated.
+- Tests: new codeunit 97902 `Reserv. Project Line Tests`.
+
 ### Changed (2026-11-19) - Inventory domains off by default, Suggest Setup (#267)
 - New codeunit 10076951 `Inventory Suggest Setup ori`. Every Inventory domain switch is now off by default: the setup row (created on company initialization, on opening the page or by install) has every switch off, and a missing row counts as off (it used to count as on). The row no longer derives switches from usage when it is inserted.
 - New **Suggest Setup** action on Inventory Setup and in the setup wizard (domains step). It shows per domain whether the domain would be turned on or left off, with a reason, and applies only after confirmation; it never turns a switch off, so it is repeatable. Rules: Transfer Orders needs an in-transit location and two other locations, Assembly an item BOM component, Item Tracking an item with a tracking code, Item Charge an item charge, Inventory Period an inventory period, every other domain at least one item. Each rule is one filtered `IsEmpty`.

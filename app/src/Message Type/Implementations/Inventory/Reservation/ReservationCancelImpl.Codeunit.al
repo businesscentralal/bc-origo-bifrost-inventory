@@ -1,6 +1,7 @@
 namespace Origo.Bifrost.Inventory;
 
 using Microsoft.Inventory.Tracking;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Sales.Document;
 using Origo.Bifrost;
 
@@ -68,10 +69,11 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        SourceTypeLbl: Label 'Source table number of the line whose reservations are cancelled when entryNo is not sent, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component or 83 Item Journal Line.', Comment = 'is-IS=Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur eða 83 vörubókarlína.';
+        SourceTypeLbl: Label 'Source table number of the line whose reservations are cancelled when entryNo is not sent, for example 37 Sales Line, 39 Purchase Line, 5741 Transfer Line, 901 Assembly Line, 5902 Service Line, 5406 Prod. Order Line, 5407 Prod. Order Component 83 Item Journal Line or 1003 Job Planning Line (project planning line; also send sourceTaskNo).', Comment = 'is-IS=Númer upprunatöflu línunnar sem frátekningar eru afturkallaðar fyrir þegar entryNo er ekki sent, til dæmis 37 sölulína, 39 innkaupalína, 5741 millifærslulína, 901 samsetningarlína, 5902 þjónustulína, 5406 framleiðslupöntunarlína, 5407 framleiðsluíhlutur 83 vörubókarlína eða 1003 verkáætlunarlína (einnig er sent sourceTaskNo).';
         SourceSubtypeLbl: Label 'Source subtype: the document type ordinal (1 = Order) or the transfer direction (0 outbound, 1 inbound). Defaults to 1 for sales, purchase and assembly lines; required for production output and components (5406/5407) to identify the production status. For other sources every subtype of the line is cancelled when it is left out.', Comment = 'is-IS=Undirtegund uppruna: raðtala skjalategundar (1 = pöntun) eða stefna millifærslu (0 út, 1 inn). Sjálfgefið 1 fyrir sölu-, innkaupa- og samsetningarlínur; nauðsynlegt fyrir framleiðsluafurðir og íhluti (5406/5407) til að tilgreina framleiðslustöðu. Fyrir aðra uppruna eru allar undirtegundir línunnar afturkallaðar ef hún er ekki send.';
         SourceNoLbl: Label 'Source document number (for an item journal line, the journal template name).', Comment = 'is-IS=Númer upprunaskjals (fyrir vörubókarlínu, heiti bókarsniðmátsins).';
         SourceLineNoLbl: Label 'Source line number (Source Ref. No.).', Comment = 'is-IS=Línunúmer uppruna (Source Ref. No.).';
+        SourceTaskLbl: Label 'Project task number; required for a project planning line (sourceType 1003), where sourceNo is the project number and sourceLineNo the planning line number.', Comment = 'is-IS=Verkþáttarnúmer; nauðsynlegt fyrir verkáætlunarlínu (sourceType 1003), þar sem sourceNo er verkefnisnúmerið og sourceLineNo línunúmer verkáætlunarlínunnar.';
         SourceBatchLbl: Label 'Journal batch name; required for an item journal line (sourceType 83).', Comment = 'is-IS=Heiti bókarkeyrslu; nauðsynlegt fyrir vörubókarlínu (sourceType 83).';
         SourceProdLineLbl: Label 'Production order line number; required for production output and components (sourceType 5406/5407).', Comment = 'is-IS=Línunúmer framleiðslupöntunar; nauðsynlegt fyrir framleiðsluafurðir og íhluti (sourceType 5406/5407).';
     begin
@@ -80,6 +82,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         Parameters.Add(ContractMgt.Parameter('sourceSubtype', 'integer', false, SourceSubtypeLbl));
         Parameters.Add(ContractMgt.Parameter('sourceNo', 'string', false, SourceNoLbl));
         Parameters.Add(ContractMgt.Parameter('sourceLineNo', 'integer', false, SourceLineNoLbl));
+        Parameters.Add(ContractMgt.Parameter('sourceTaskNo', 'string', false, SourceTaskLbl));
         Parameters.Add(ContractMgt.Parameter('sourceBatchName', 'string', false, SourceBatchLbl));
         Parameters.Add(ContractMgt.Parameter('sourceProdOrderLine', 'integer', false, SourceProdLineLbl));
         exit(true);
@@ -282,6 +285,15 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         ReservationEntry: Record "Reservation Entry";
         DemandEntry: Record "Reservation Entry";
         Process: Codeunit "Inventory Write Process ori";
+        ProjectPolicy: Codeunit "Reserv. AutoReserve Proc ori";
+        TaskNo: Text;
+        HasTask: Boolean;
+        ProjectItemNo: Code[20];
+        ProjectLocationCode: Code[10];
+        ProjectDate: Date;
+        ProjectQtyPerUOM: Decimal;
+        ProjectDescription: Text[100];
+        ContractEntryNo: Integer;
         ResponseJson: JsonObject;
         EntryNoArray: JsonArray;
         EntryNos: List of [Integer];
@@ -320,6 +332,8 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
             ReadOk := ReadText(Argument, RequestJson, 'sourceNo', 20, SourceNo, HasSourceNo);
         if ReadOk then
             ReadOk := ReadText(Argument, RequestJson, 'sourceBatchName', 10, BatchName, HasBatch);
+        if ReadOk then
+            ReadOk := ReadText(Argument, RequestJson, 'sourceTaskNo', 20, TaskNo, HasTask);
         if not ReadOk then
             exit;
         if not HasSourceNo then begin
@@ -345,6 +359,17 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
         if not HasSubtype and (SourceType in [37, 39, 901]) then begin
             SourceSubtype := 1;
             HasSubtype := true;
+        end;
+        if SourceType = Database::"Job Planning Line" then begin
+            if not HasTask then begin
+                RespondMissing(Argument, MissingErr, 'sourceTaskNo', MissingNextStepLbl);
+                exit;
+            end;
+            // Project planning lines are reserved under their status and job contract entry number.
+            if not ProjectPolicy.ResolveProjectPlanningLine(Argument, CopyStr(SourceNo, 1, 20), CopyStr(TaskNo, 1, 20), SourceLineNo, false, SourceSubtype, ContractEntryNo, ProjectItemNo, ProjectLocationCode, ProjectDate, ProjectQtyPerUOM, ProjectDescription) then
+                exit;
+            HasSubtype := true;
+            SourceLineNo := ContractEntryNo;
         end;
         if SourceType = Database::"Sales Line" then
             if not CheckSalesLineOpen(Argument, SourceSubtype, CopyStr(SourceNo, 1, 20), SourceLineNo) then
