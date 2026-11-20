@@ -463,6 +463,56 @@ codeunit 96965 "Plan Wksh Tests ori"
     end;
 
     [Test]
+    procedure CarryOut_ProdOrderLine_RefusalNamesManufacturing_BothLanguages()
+    var
+        Item: Record Item;
+        ReqLine: Record "Requisition Line";
+        PurchLine: Record "Purchase Line";
+        Request: JsonObject;
+        Response: JsonObject;
+        EnglishNext: Text;
+        IcelandicNext: Text;
+    begin
+        // [SCENARIO] Issue275 AC01-AC03 | Time: none | Risk: a production line is refused, nothing is written, and the nextStep points to Manufacturing.PlanningWorksheet.CarryOut in both languages.
+        CleanupFixtures();
+        Commit();
+        EnablePlanning();
+        CreatePurchaseItem(Item);
+        CreatePlanningWorksheet();
+        ReqLine.Init();
+        ReqLine."Worksheet Template Name" := 'XP117T';
+        ReqLine."Journal Batch Name" := 'XP117W';
+        ReqLine."Line No." := 10000;
+        ReqLine.Type := ReqLine.Type::Item;
+        ReqLine."No." := Item."No.";
+        ReqLine.Quantity := 1;
+        ReqLine."Action Message" := ReqLine."Action Message"::New;
+        ReqLine."Accept Action Message" := true;
+        ReqLine."Replenishment System" := ReqLine."Replenishment System"::"Prod. Order";
+        ReqLine."Ref. Order Type" := ReqLine."Ref. Order Type"::"Prod. Order";
+        ReqLine.Insert(false);
+        Commit();
+        Request.Add('expectedCount', 1);
+        Response := DispatchInLanguage("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, 1033);
+        Assert.AreEqual('PreconditionFailed', TextValue(Response, 'code'), 'English code');
+        Assert.AreEqual('Production orders are not created by this call.', TextValue(Response, 'error'), 'English refusal');
+        EnglishNext := TextValue(Response, 'nextStep');
+        Assert.IsTrue(EnglishNext.Contains('Manufacturing.PlanningWorksheet.CarryOut'), EnglishNext);
+        Response := DispatchInLanguage("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, 1039);
+        Assert.AreEqual('PreconditionFailed', TextValue(Response, 'code'), 'Icelandic code');
+        Assert.AreEqual('Þetta kall býr ekki til framleiðslupantanir.', TextValue(Response, 'error'), 'Icelandic refusal');
+        IcelandicNext := TextValue(Response, 'nextStep');
+        Assert.IsTrue(IcelandicNext.Contains('Manufacturing.PlanningWorksheet.CarryOut'), IcelandicNext);
+        Assert.AreNotEqual(EnglishNext, IcelandicNext, 'Icelandic nextStep is translated.');
+        Assert.IsTrue(ReqLine.Get('XP117T', 'XP117W', 10000), 'The production line stays.');
+        PurchLine.SetRange(Type, PurchLine.Type::Item);
+        PurchLine.SetRange("No.", Item."No.");
+        Assert.IsTrue(PurchLine.IsEmpty(), 'No purchase line was created.');
+        CleanupFixtures();
+        Commit();
+    end;
+
+    [Test]
     procedure CarryOut_UnknownWorksheet_RecordNotFound()
     var
         Request: JsonObject;
