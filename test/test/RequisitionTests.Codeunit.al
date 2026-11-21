@@ -199,7 +199,7 @@ codeunit 96947 "Requisition Tests ori"
         Calculate.GetEffect(Effect);
         Assert.AreEqual('write', TextAt(Effect, 'effect'), 'Calculation is write.');
         Carry.GetEffect(Effect);
-        Assert.AreEqual('irreversible', TextAt(Effect, 'effect'), 'Carry-out is irreversible.');
+        Assert.AreEqual('write', TextAt(Effect, 'effect'), 'Carry-out creates editable orders without posting.');
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(1033);
         Carry.GetNotes(EnglishNotes);
@@ -207,8 +207,8 @@ codeunit 96947 "Requisition Tests ori"
         Carry.GetNotes(IcelandicNotes);
         GlobalLanguage(PreviousLanguage);
         Assert.AreNotEqual(EnglishNotes, IcelandicNotes, 'Help follows locale.');
-        Assert.IsTrue(EnglishNotes.Contains('expectedCount'), 'English count definition.');
-        Assert.IsTrue(IcelandicNotes.Contains('expectedCount'), 'Icelandic count definition.');
+        Assert.IsTrue(EnglishNotes.Contains('Writes.'), 'English write boundary.');
+        Assert.IsTrue(IcelandicNotes.Contains('Skrifar.'), 'Icelandic write boundary.');
         Assert.IsTrue(Effect.Get('writes', Token), 'Effect declares writes.');
     end;
 
@@ -270,20 +270,22 @@ codeunit 96947 "Requisition Tests ori"
         ContentType: Text[100];
         Serialized: Text;
     begin
-        // Story #131 AC04 | Time: WorkDate | Risk: Foundation confirmation before native execution.
+        // Story #279 AC02 | Time: WorkDate | Risk: confirmation must not mask native preflight validation.
         Library.Initialize();
         // The minimum supported Foundation predates confirmation; that boundary is owned by Foundation.
         if not Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired') then
             exit;
         CreateFixture(Batch, Item, Vendor);
         CreateLine(Line, Batch, Item, Vendor);
+        Line."Action Message" := Line."Action Message"::Cancel;
+        Line.Modify(true);
         Request := Selector(Batch);
         Request.WriteTo(Serialized);
         Input.AddText(Serialized);
         Dispatcher.Execute("Message Type ori"::"Purchase.Requisition.CarryOut", Version::"1.0", '', '', 'application/json', Input, Output, ContentType, true);
         Output.GetSubText(Serialized, 1);
         Response.ReadFrom(Serialized);
-        AssertRefusal(Response, 'ConfirmationRequired');
+        AssertRefusal(Response, 'PreconditionFailed');
         Clear(Input);
         Clear(Output);
         Request.Add('expectedCount', 2);
@@ -292,9 +294,9 @@ codeunit 96947 "Requisition Tests ori"
         Dispatcher.Execute("Message Type ori"::"Purchase.Requisition.CarryOut", Version::"1.0", '', '', 'application/json', Input, Output, ContentType, true);
         Output.GetSubText(Serialized, 1);
         Response.ReadFrom(Serialized);
-        AssertRefusal(Response, 'ConfirmationMismatch');
+        AssertRefusal(Response, 'PreconditionFailed');
         Line.Get(Line."Worksheet Template Name", Line."Journal Batch Name", Line."Line No.");
-        Assert.IsFalse(Line."Accept Action Message", 'Confirmation refusal preserves worksheet acceptance.');
+        Assert.IsFalse(Line."Accept Action Message", 'Preflight refusal preserves worksheet acceptance.');
     end;
 
     local procedure AssertTransfer(LanguageId: Integer)
@@ -390,7 +392,36 @@ codeunit 96947 "Requisition Tests ori"
         Assert.AreEqual(123, OtherLine.Quantity, 'Other worksheet quantity unchanged.');
     end;
 
+    /// <summary>Verifies the optional compatibility value is ignored by native requisition order creation.</summary>
+    procedure VerifyIgnoredCount(LanguageId: Integer)
+    var
+        CountJson: Text;
+    begin
+        foreach CountJson in '{}|{"expectedCount":2}|{"expectedCount":"ignored"}|{"expectedCount":{}}|{"expectedCount":null}'.Split('|') do
+            AssertCarryOutWithRequest(LanguageId, CountJson);
+    end;
+
     local procedure AssertCarryOut(LanguageId: Integer)
+    begin
+        AssertCarryOutWithRequest(LanguageId, '{}');
+    end;
+
+    local procedure DispatchUnconfirmed(Request: JsonObject) Response: JsonObject
+    var
+        Dispatcher: Codeunit "Dispatcher ori";
+        Input: BigText;
+        Output: BigText;
+        Payload: Text;
+        ContentType: Text[100];
+    begin
+        Request.WriteTo(Payload);
+        Input.AddText(Payload);
+        Dispatcher.Execute("Message Type ori"::"Purchase.Requisition.CarryOut", "Message Version ori"::"1.0", '', '', 'application/json', Input, Output, ContentType, true);
+        Output.GetSubText(Payload, 1);
+        Assert.IsTrue(Response.ReadFrom(Payload), 'Dispatcher returns JSON.');
+    end;
+
+    local procedure AssertCarryOutWithRequest(LanguageId: Integer; CountJson: Text)
     var
         Batch: Record "Requisition Wksh. Name";
         Item: Record Item;
@@ -412,13 +443,15 @@ codeunit 96947 "Requisition Tests ori"
         CreateFixture(Batch, Item, Vendor);
         CreateLine(Line, Batch, Item, Vendor);
         CreateLine(OtherLine, Batch, Item, Vendor);
-        Request := Selector(Batch);
+        Request.ReadFrom(CountJson);
+        Request.Add('templateName', Batch."Worksheet Template Name");
+        Request.Add('batchName', Batch.Name);
         Numbers.Add(Line."Line No.");
         Request.Add('lineNos', Numbers);
         // [WHEN] Native order creation carries out the selection.
         PreviousLanguage := GlobalLanguage();
         GlobalLanguage(LanguageId);
-        Response := CallType(true, Request);
+        Response := DispatchUnconfirmed(Request);
         GlobalLanguage(PreviousLanguage);
         // [THEN] The exact native order is returned and only the selected line is consumed.
         AssertSuccess(Response);

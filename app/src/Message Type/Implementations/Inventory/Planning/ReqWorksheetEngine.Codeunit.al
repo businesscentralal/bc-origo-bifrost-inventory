@@ -88,9 +88,6 @@ codeunit 10076946 "Req. Worksheet Engine ori"
         UnknownNextLbl: Label 'Remove the key named in the answer and send only the keys the help lists.', Comment = 'is-IS=Fjarlægðu lykilinn sem svarið nefnir og sendu aðeins lykla sem hjálpin telur upp.';
         CalculateExpectedLbl: Label 'templateName, worksheetName, mode, startingDate, endingDate, itemNo, locationCode or variantCode', Comment = 'is-IS=templateName, worksheetName, mode, startingDate, endingDate, itemNo, locationCode eða variantCode';
         CarryExpectedLbl: Label 'templateName, worksheetName, lineNos or expectedCount', Comment = 'is-IS=templateName, worksheetName, lineNos eða expectedCount';
-        ExpectFormatErr: Label 'expectedCount must be a whole number.', Comment = 'is-IS=expectedCount verður að vera heiltala.';
-        ExpectExpectedLbl: Label 'a whole number', Comment = 'is-IS=heiltala';
-        ExpectNextLbl: Label 'Send expectedCount as the whole number from the confirmation answer, or omit it when confirmation does not require it.', Comment = 'is-IS=Sendu expectedCount sem heiltöluna úr staðfestingarsvarinu, eða slepptu henni þegar staðfesting krefst hennar ekki.';
         EmptyErr: Label 'lineNos must list at least one line number.', Comment = 'is-IS=lineNos verður að telja upp að minnsta kosti eitt línunúmer.';
         LinesFormatErr: Label 'lineNos must be a list of JSON integers.', Comment = 'is-IS=lineNos verður að vera listi af JSON-heiltölum.';
         PositiveErr: Label 'Each line number must be a positive JSON integer.', Comment = 'is-IS=Hvert línunúmer verður að vera jákvæð JSON-heiltala.';
@@ -204,7 +201,7 @@ codeunit 10076946 "Req. Worksheet Engine ori"
     end;
 
     /// <summary>Creates new purchase, transfer and assembly orders from accepted New lines. Mutating lines are refused first.</summary>
-    /// <param name="Argument">The inbound message argument. expectedCount is accepted and ignored here; Foundation checks it.</param>
+    /// <param name="Argument">The inbound message argument. expectedCount is accepted and ignored for compatibility.</param>
     internal procedure CarryOutWorksheet(var Argument: Record "Message Argument ori")
     begin
         CarryOutSelection(Argument, false);
@@ -237,8 +234,8 @@ codeunit 10076946 "Req. Worksheet Engine ori"
         Request := Argument.GetRequestJson();
         if not KeysAreKnown('templateName,worksheetName,lineNos,expectedCount', Request, Argument) then
             exit;
-        if not AcceptExpectedCount(Request, Argument) then
-            exit;
+        // Compatibility only: discard the value without interpreting its type or content.
+        Request.Remove('expectedCount');
         if not ResolvePlanningWorksheet(Argument, Request, TemplateName, WorksheetName) then
             exit;
         if not ReadLineNumbers(Request, Argument, HasLineFilter, RequestedLineNos) then
@@ -676,28 +673,6 @@ codeunit 10076946 "Req. Worksheet Engine ori"
                 Answer(Argument, "Bifrost Error Code ori"::InvalidParameter, UnknownKeyErr, CopyStr(KeyName, 1, 250), CopyStr(KeyName, 1, 250), ExpectedText, UnknownNextLbl);
                 exit(false);
             end;
-        exit(true);
-    end;
-
-    local procedure AcceptExpectedCount(Request: JsonObject; var Argument: Record "Message Argument ori"): Boolean
-    var
-        Token: JsonToken;
-        Serialized: Text;
-        CountValue: Decimal;
-    begin
-        if not Request.Get('expectedCount', Token) then
-            exit(true);
-        if Token.IsValue() and Token.AsValue().IsNull() then
-            exit(true);
-        if not Token.IsValue() then begin
-            Answer(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, ExpectFormatErr, 'expectedCount', '', ExpectExpectedLbl, ExpectNextLbl);
-            exit(false);
-        end;
-        Token.WriteTo(Serialized);
-        if not Evaluate(CountValue, Serialized, 9) or (CountValue <> Round(CountValue, 1)) then begin
-            Answer(Argument, "Bifrost Error Code ori"::InvalidParameterFormat, ExpectFormatErr, 'expectedCount', Serialized, ExpectExpectedLbl, ExpectNextLbl);
-            exit(false);
-        end;
         exit(true);
     end;
 

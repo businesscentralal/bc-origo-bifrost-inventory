@@ -9676,15 +9676,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Calc Impl ori - Method GetParameters - NamedType VariantLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new purchase, transfer and assembly orders from the accepted New lines and removes those lines from the worksheet. Lines that would cancel, change or reschedule an existing document are refused before anything is written. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Created orders stay.</source>
-          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Búnar pantanir standa.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Búnar pantanir standa.</note>
+          <source>Writes. Creates new purchase, transfer and assembly orders from the accepted New lines and removes those lines from the worksheet. Lines that would cancel, change or reschedule an existing document are refused before anything is written. Created orders stay.</source>
+          <target>Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. Búnar pantanir standa.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. Búnar pantanir standa.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType ChangesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
-          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</note>
+          <source>Writes. Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
+          <target>Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -9694,9 +9694,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType KeywordsLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Production lines are carried out by the Manufacturing app (Manufacturing.PlanningWorksheet.CarryOut). Unaccepted lines are left as they are unless lineNos names them. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. The call is irreversible: created orders stay, and the consumed suggestion lines leave the worksheet. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.</source>
-          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</note>
+          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Production lines are carried out by the Manufacturing app (Manufacturing.PlanningWorksheet.CarryOut). Unaccepted lines are left as they are unless lineNos names them. Writes. Created orders can be edited or deleted, and the consumed suggestion lines leave the worksheet. No printing or posting. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.</source>
+          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. Skrifar. Hægt er að breyta eða eyða búnum pöntunum og uppurnar tillögulínur fara af keyrslunni. Hvorki prentar né bókar. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. Skrifar. Hægt er að breyta eða eyða búnum pöntunum og uppurnar tillögulínur fara af keyrslunni. Hvorki prentar né bókar. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 3593894611" size-unit="char" translate="yes" xml:space="preserve">
@@ -9736,9 +9736,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType MissingFixLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 731885583" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A name is not text or is too long, lineNos is not a list of positive JSON integers, or expectedCount is not a whole number.</source>
-          <target>Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum, eða expectedCount er ekki heiltala.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum, eða expectedCount er ekki heiltala.</note>
+          <source>A name is not text or is too long, lineNos is not a list of positive JSON integers.</source>
+          <target>Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetErrors - NamedType FormatWhenLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 1158096087 - NamedType 2068277514" size-unit="char" translate="yes" xml:space="preserve">
@@ -9832,9 +9832,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType LineNosLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Foundation verifies this count before carry-out.</source>
-          <target>expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.</note>
+          <source>Optional compatibility parameter; accepted and ignored. No confirmation is required.</source>
+          <target>Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - Method GetParameters - NamedType ExpectedCountLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - Method 3615801952 - NamedType 4172508015" size-unit="char" translate="yes" xml:space="preserve">
@@ -11811,24 +11811,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=áætlunarkeyrsla sem er til</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExistingExpectedLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3379146112 - NamedType 841609749" size-unit="char" translate="yes" xml:space="preserve">
-          <source>a whole number</source>
-          <target>heiltala</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=heiltala</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectExpectedLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3379146112 - NamedType 2848552323" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount must be a whole number.</source>
-          <target>expectedCount verður að vera heiltala.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount verður að vera heiltala.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectFormatErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3379146112 - NamedType 3249776646" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send expectedCount as the whole number from the confirmation answer, or omit it when confirmation does not require it.</source>
-          <target>Sendu expectedCount sem heiltöluna úr staðfestingarsvarinu, eða slepptu henni þegar staðfesting krefst hennar ekki.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu expectedCount sem heiltöluna úr staðfestingarsvarinu, eða slepptu henni þegar staðfesting krefst hennar ekki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Req. Worksheet Engine ori - NamedType ExpectNextLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3379146112 - NamedType 199971095" size-unit="char" translate="yes" xml:space="preserve">
           <source>itemNo, locationCode or variantCode is not a valid filter.</source>
           <target>itemNo, locationCode eða variantCode er ekki gild sía.</target>
@@ -12136,15 +12118,15 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new orders from selected requisition worksheet lines.</source>
-          <target>Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
+          <source>Writes. Creates new orders from selected requisition worksheet lines.</source>
+          <target>Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
-          <source>expectedCount counts worksheet selections: always 1, not the number of lines or orders. Send 1 before carry-out when confirmation is enabled.</source>
-          <target>expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.</note>
+          <source>Optional compatibility parameter; accepted and ignored. No confirmation is required.</source>
+          <target>Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType ExpectedCountLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -12160,9 +12142,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NativeNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount counts worksheet selections: always 1, not the number of lines or orders. No printing or posting.</source>
-          <target>Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.</note>
+          <source>Writes. Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. No printing or posting.</source>
+          <target>Skrifar. Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. Hvorki prentar né bókar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. Hvorki prentar né bókar.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType NotesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 895773054" size-unit="char" translate="yes" xml:space="preserve">
