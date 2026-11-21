@@ -72,6 +72,37 @@ codeunit 96978 "Inv. Confirmation Tests ori"
         VerifyNativeSuccessWithPendingValueEntry(1039);
     end;
 
+    /// <summary>Both non-posting carry-outs ignore compatibility counts while confirmation policy is enabled.</summary>
+    [Test]
+    procedure Scenario_279_AC02_CarryOutWrites_In1033()
+    begin
+        // Story #279 AC02 | Time: WorkDate | Risk: native planning commits; owned fixtures are explicitly removed.
+        VerifyCarryOutWrites(1033);
+    end;
+
+    /// <summary>The same native write boundary holds in Icelandic.</summary>
+    [Test]
+    procedure Scenario_279_AC02_CarryOutWrites_In1039()
+    begin
+        // Story #279 AC02 | Time: WorkDate | Risk: native planning commits; owned fixtures are explicitly removed.
+        VerifyCarryOutWrites(1039);
+    end;
+
+    local procedure VerifyCarryOutWrites(LanguageId: Integer)
+    var
+        PlanningTests: Codeunit "Plan Wksh Tests ori";
+        RequisitionTests: Codeunit "Requisition Tests ori";
+        FoundationSetup: RecordRef;
+        PreviousConfirmation: Boolean;
+        ChangedConfirmation: Boolean;
+    begin
+        ChangedConfirmation := EnableRequiredConfirmation(FoundationSetup, PreviousConfirmation);
+        Assert.IsTrue(Enum::"Bifrost Error Code ori".Names().Contains('ConfirmationRequired'), 'This regression requires a confirmation-capable Foundation.');
+        PlanningTests.VerifyIgnoredCount(LanguageId);
+        RequisitionTests.VerifyIgnoredCount(LanguageId);
+        RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);
+    end;
+
     [MessageHandler]
     procedure NativeMessageHandler(Message: Text[1024])
     begin
@@ -581,7 +612,7 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             Setup.Modify();
         end else
             Setup.Delete();
-        Assert.AreEqual(13, Checked, 'All thirteen app-owned irreversible types must be exercised.');
+        Assert.AreEqual(12, Checked, 'All twelve app-owned irreversible Inventory types must be exercised.');
         Assert.AreEqual(ItemLedgerCount, ItemLedgerEntry.Count(), 'The boundary requests posted no item ledger entry.');
         Assert.AreEqual(ValueEntryCount, ValueEntry.Count(), 'The boundary requests posted no value entry.');
         RestoreConfirmation(FoundationSetup, ChangedConfirmation, PreviousConfirmation);

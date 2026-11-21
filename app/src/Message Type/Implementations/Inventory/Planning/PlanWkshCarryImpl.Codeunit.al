@@ -13,8 +13,8 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         SelectionLbl: Label 'Identify one planning worksheet by subject TEMPLATE|NAME or by templateName and worksheetName.', Comment = 'is-IS=Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.';
         KeywordsLbl: Label 'planning worksheet, carry out, purchase order, transfer order, assembly order', Comment = 'is-IS=áætlunarkeyrsla, framkvæma, innkaupapöntun, flutningspöntun, samsetningarpöntun';
         OverviewLbl: Label 'Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines that would change or delete an existing document are refused before anything is written.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu breyta eða eyða fyrirliggjandi skjali er hafnað áður en nokkuð er skrifað.';
-        ChangesLbl: Label 'Creates new purchase, transfer and assembly orders from the accepted New lines and removes those lines from the worksheet. Lines that would cancel, change or reschedule an existing document are refused before anything is written. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Created orders stay.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Búnar pantanir standa.';
-        NotesLbl: Label 'Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Production lines are carried out by the Manufacturing app (Manufacturing.PlanningWorksheet.CarryOut). Unaccepted lines are left as they are unless lineNos names them. expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. The call is irreversible: created orders stay, and the consumed suggestion lines leave the worksheet. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Kallið er óafturkræft: búnar pantanir standa og uppurnar tillögulínur fara af keyrslunni. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.';
+        ChangesLbl: Label 'Writes. Creates new purchase, transfer and assembly orders from the accepted New lines and removes those lines from the worksheet. Lines that would cancel, change or reschedule an existing document are refused before anything is written. Created orders stay.', Comment = 'is-IS=Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum og fjarlægir þær línur af keyrslunni. Línum sem myndu ógilda, breyta eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað. Búnar pantanir standa.';
+        NotesLbl: Label 'Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines whose action would cancel, change the quantity of, or reschedule an existing document are refused before anything is written, and so is any line that names an existing document or a production order. Production lines are carried out by the Manufacturing app (Manufacturing.PlanningWorksheet.CarryOut). Unaccepted lines are left as they are unless lineNos names them. Writes. Created orders can be edited or deleted, and the consumed suggestion lines leave the worksheet. No printing or posting. A refusal before the call writes nothing. Each order is committed as it is created, so a failure after the first order can leave orders that were already created. lineNos, when sent, is a non-empty list of line numbers on that worksheet. The Planning domain must be turned on in Inventory Setup and the caller needs permission to write the suggestion lines. Use Inventory.PlanningWorksheet.Calculate first to replace the suggestion lines.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu ógilda, breyta magni eða endurtímasetja fyrirliggjandi skjal er hafnað áður en nokkuð er skrifað, og einnig línu sem nefnir fyrirliggjandi skjal eða framleiðslupöntun. Framleiðslulínur eru framkvæmdar í framleiðsluappinu (Manufacturing.PlanningWorksheet.CarryOut). Ósamþykktar línur standa nema lineNos nefni þær. Skrifar. Hægt er að breyta eða eyða búnum pöntunum og uppurnar tillögulínur fara af keyrslunni. Hvorki prentar né bókar. Höfnun áður en kallið keyrir skrifar ekkert. Hver pöntun er staðfest þegar hún verður til, svo bilun eftir fyrstu pöntun getur skilið eftir pantanir sem þegar hafa verið búnar til. lineNos, þegar það er sent, er listi sem er ekki tómur af línunúmerum á þeirri keyrslu. Sviðið Áætlun verður að vera virkt í uppsetningu birgða og kallandinn þarf heimild til að skrifa tillögulínurnar. Notaðu Inventory.PlanningWorksheet.Calculate fyrst til að skipta út tillögulínunum.';
 
     /// <summary>Requires the Planning domain and write permission on suggestion lines.</summary>
     procedure IsEnabled(): Boolean
@@ -30,7 +30,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         exit(Database::"Requisition Wksh. Name");
     end;
 
-    /// <summary>Planning worksheet carry-out is an inbound irreversible call.</summary>
+    /// <summary>Planning worksheet carry-out is an inbound write call.</summary>
     procedure GetMessageDirection(): Enum "Msg Direction ori"
     begin
         exit("Msg Direction ori"::Inbound);
@@ -86,7 +86,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         exit(true);
     end;
 
-    /// <summary>Returns the parameters chapter, including the confirmation count checked by Foundation.</summary>
+    /// <summary>Returns the parameters chapter, including the ignored compatibility parameter.</summary>
     procedure GetParameters(var Parameters: JsonArray): Boolean
     var
         ContractMgt: Codeunit "Msg Contract Mgt ori";
@@ -95,7 +95,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         TemplateLbl: Label 'Name of an existing planning template that is not recurring, at most 10 characters. Send it with worksheetName unless subject identifies the worksheet.', Comment = 'is-IS=Heiti áætlunarsniðs sem er til og er ekki ítrekunarsnið, mest 10 stafir. Sendu það með worksheetName nema subject auðkenni keyrsluna.';
         WorksheetLbl: Label 'Name of an existing worksheet of that template, at most 10 characters. Every selector that is sent must name the same worksheet.', Comment = 'is-IS=Heiti keyrslu sem er til á því sniði, mest 10 stafir. Öll auðkenni sem eru send verða að nefna sömu keyrslu.';
         LineNosLbl: Label 'Line numbers to carry out. Omit it to carry out every accepted New line on the worksheet. An empty list is refused.', Comment = 'is-IS=Línunúmer sem á að framkvæma. Slepptu því til að framkvæma hverja samþykkta New-línu á keyrslunni. Tómum lista er hafnað.';
-        ExpectedCountLbl: Label 'expectedCount counts worksheet selections: always 1, one carry-out of the selected worksheet, not the number of orders or lines. Foundation verifies this count before carry-out.', Comment = 'is-IS=expectedCount telur val á vinnublaði: alltaf 1, eitt framkvæmdarkall á valda keyrslu, ekki fjölda pantana eða lína. Foundation staðfestir fjöldann áður en aðgerð er framkvæmd.';
+        ExpectedCountLbl: Label 'Optional compatibility parameter; accepted and ignored. No confirmation is required.', Comment = 'is-IS=Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.';
         LineNoLbl: Label 'One line number on the planning worksheet.', Comment = 'is-IS=Eitt línunúmer á áætlunarkeyrslunni.';
     begin
         Clear(Parameters);
@@ -140,7 +140,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         NotFoundFixLbl: Label 'Send an existing planning worksheet and, when used, line numbers from that worksheet.', Comment = 'is-IS=Sendu áætlunarkeyrslu sem er til og, þegar það er notað, línunúmer af þeirri keyrslu.';
         MissingWhenLbl: Label 'The worksheet is not identified.', Comment = 'is-IS=Keyrslan er ekki auðkennd.';
         MissingFixLbl: Label 'Send subject TEMPLATE|NAME or templateName and worksheetName.', Comment = 'is-IS=Sendu subject SNIÐ|HEITI eða templateName og worksheetName.';
-        FormatWhenLbl: Label 'A name is not text or is too long, lineNos is not a list of positive JSON integers, or expectedCount is not a whole number.', Comment = 'is-IS=Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum, eða expectedCount er ekki heiltala.';
+        FormatWhenLbl: Label 'A name is not text or is too long, lineNos is not a list of positive JSON integers.', Comment = 'is-IS=Heiti er ekki texti eða er of langt, lineNos er ekki listi af jákvæðum JSON-heiltölum.';
         FormatFixLbl: Label 'Correct the value named in the answer.', Comment = 'is-IS=Leiðréttu gildið sem svarið nefnir.';
         InvalidWhenLbl: Label 'lineNos is empty, an unknown key is sent, or the Planning domain is turned off.', Comment = 'is-IS=lineNos er tómt, óþekktur lykill er sendur, eða slökkt er á sviðinu Áætlun.';
         InvalidFixLbl: Label 'Correct the value named in the answer, or turn the Planning domain on from Inventory Setup.', Comment = 'is-IS=Leiðréttu gildið sem svarið nefnir, eða kveiktu á sviðinu Áætlun í uppsetningu birgða.';
@@ -171,7 +171,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         Preconditions: JsonArray;
     begin
         Clear(Effect);
-        Effect.Add('effect', 'irreversible');
+        Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         Effect.Add('rollback', false);
@@ -224,7 +224,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
         Clear(Examples);
         Examples.Add(ContractMgt.Example(
             'Carry out the accepted New lines on worksheet WEEK',
-            '{"type":"Inventory.PlanningWorksheet.CarryOut","subject":"PLAN|WEEK","data":{"expectedCount":1}}',
+            '{"type":"Inventory.PlanningWorksheet.CarryOut","subject":"PLAN|WEEK","data":{}}',
             '{"status":"Success","templateName":"PLAN","worksheetName":"WEEK","linesConsumed":1,"orders":[{"documentType":"Purchase","documentNo":"106001"}]}'));
         Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Inventory.PlanningWorksheet.CarryOut","subject":"PLAN|WEEK","data":{"expectedCount":1,"lineNos":[10000]}}', '{"status":"Success","templateName":"PLAN","worksheetName":"WEEK","linesConsumed":1,"orders":[{"documentType":"Purchase","documentNo":"106001"}]}'));
         exit(true);

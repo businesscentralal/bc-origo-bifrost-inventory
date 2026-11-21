@@ -271,13 +271,47 @@ codeunit 96965 "Plan Wksh Tests ori"
     var
         Item: Record Item;
         Worksheet: Record "Requisition Wksh. Name";
+        Line: Record "Requisition Line";
     begin
         Assert.IsFalse(Worksheet.Get('XP117T', 'XP117W'), 'Clean the existing owned worksheet before seeding.');
         EnablePlanning();
         CreatePurchaseItem(Item);
         CreatePlanningWorksheet();
+        CreateNewSuggestion(Line, Item);
+        CreateRequisitionWorksheet();
+        Line.Rename('XP117R', 'XP117W', 10000);
+        CreateNewSuggestion(Line, Item);
         Commit();
         exit(Item."No." + '|' + IsoDate(HorizonStart()) + '|' + IsoDate(HorizonEnd()));
+    end;
+
+    /// <summary>Creates native purchase orders without confirmation for omitted, mismatched and non-numeric compatibility counts.</summary>
+    procedure VerifyIgnoredCount(LanguageId: Integer)
+    var
+        Item: Record Item;
+        Line: Record "Requisition Line";
+        Header: Record "Purchase Header";
+        Request: JsonObject;
+        Response: JsonObject;
+        CountJson: Text;
+        ResponseText: Text;
+    begin
+        foreach CountJson in '{}|{"expectedCount":2}|{"expectedCount":"ignored"}|{"expectedCount":{}}|{"expectedCount":null}'.Split('|') do begin
+            CleanupFixtures();
+            Commit();
+            EnablePlanning();
+            CreatePurchaseItem(Item);
+            CreatePlanningWorksheet();
+            CreateNewSuggestion(Line, Item);
+            Request.ReadFrom(CountJson);
+            Response := DispatchInLanguage("Message Type ori"::"Inventory.PlanningWorksheet.CarryOut", 'XP117T|XP117W', Request, LanguageId);
+            Response.WriteTo(ResponseText);
+            Assert.AreEqual('Success', TextValue(Response, 'status'), ResponseText);
+            Assert.AreEqual(1, IntegerValue(Response, 'linesConsumed'), 'Only the owned suggestion was consumed.');
+            Assert.IsTrue(Header.Get(Header."Document Type"::Order, CreatedOrderNo(Response, 'Purchase')), 'Returned editable order exists.');
+            CleanupFixtures();
+            Commit();
+        end;
     end;
 
     /// <summary>Removes only this codeunit's owned planning fixtures and created orders after MCP verification.</summary>

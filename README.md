@@ -628,8 +628,9 @@ action and Purchase or Transfer replenishment are accepted. Existing-document re
 drop shipments, special orders, Cancel, Change Qty. and rescheduling are refused. Unselected
 lines remain. Native failures return `BusinessCentralError` and roll back the whole call.
 
-Calculate is `write`; CarryOut is `irreversible`, without posting or printing. `expectedCount`
-counts worksheet selections: always 1, rather than lines or created orders. The types
+Calculate and CarryOut are `write`, without posting or printing. Both
+`Purchase.Requisition.CarryOut` and `Inventory.PlanningWorksheet.CarryOut` accept and ignore
+the optional `expectedCount` parameter for compatibility; neither requires irreversible confirmation. The types
 require Full Access plus native worksheet/order permissions. No additional setup domain switch
 or posting permission is introduced because order creation does not post. Native report 699 is
 the purchase/transfer requisition mode; #117 owns the separate regenerative/net-change planning

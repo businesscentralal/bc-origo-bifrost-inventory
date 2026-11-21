@@ -12,8 +12,8 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         DescriptionLbl: Label 'Creates new orders from selected requisition worksheet lines.', Comment = 'is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.';
         SelectionLbl: Label 'Use templateName and batchName to select one non-recurring requisition worksheet.', Comment = 'is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.';
         KeywordsLbl: Label 'purchase,requisition,worksheet,planning,orders', Comment = 'is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir';
-        NotesLbl: Label 'Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. expectedCount counts worksheet selections: always 1, not the number of lines or orders. No printing or posting.', Comment = 'is-IS=Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Hvorki prentar né bókar.';
-        ExpectedCountLbl: Label 'expectedCount counts worksheet selections: always 1, not the number of lines or orders. Send 1 before carry-out when confirmation is enabled.', Comment = 'is-IS=expectedCount telur val á vinnublaði: alltaf 1, ekki fjölda lína eða pantana. Sendu 1 áður en aðgerðin er framkvæmd þegar staðfesting er virk.';
+        NotesLbl: Label 'Writes. Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. No printing or posting.', Comment = 'is-IS=Skrifar. Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. Hvorki prentar né bókar.';
+        ExpectedCountLbl: Label 'Optional compatibility parameter; accepted and ignored. No confirmation is required.', Comment = 'is-IS=Valfrjáls samhæfingarbreyta; samþykkt og hunsuð. Ekki er krafist staðfestingar.';
         NativeNextLbl: Label 'Correct the native worksheet or item setup described by the error and retry; the failed call saved no changes.', Comment = 'is-IS=Leiðréttu uppsetningu vinnublaðs eða vöru samkvæmt villunni og reyndu aftur; engar breytingar voru vistaðar úr misheppnaða kallinu.';
 
     /// <summary>Checks native worksheet and order permissions.</summary>
@@ -121,13 +121,13 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         exit(true);
     end;
 
-    /// <summary>Declares the actual write and confirmation unit in both languages.</summary>
+    /// <summary>Declares the reversible write in both languages.</summary>
     procedure GetEffect(var Effect: JsonObject): Boolean
     var
         Preconditions: JsonArray;
     begin
         Clear(Effect);
-        Effect.Add('effect', 'irreversible');
+        Effect.Add('effect', 'write');
         Effect.Add('writes', true);
         Effect.Add('posts', false);
         Effect.Add('idempotent', false);
@@ -155,8 +155,8 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
         ParameterExample1Lbl: Label 'Select existing line numbers from your own document or worksheet', Comment = 'is-IS=Velja fyrirliggjandi línunúmer úr eigin skjali eða vinnublaði';
     begin
         Clear(Examples);
-        Examples.Add(ContractMgt.Example('Process one requisition worksheet', '{"type":"Purchase.Requisition.CarryOut","data":{"expectedCount":1,"templateName":"REQ","batchName":"DEFAULT"}}', '{"status":"Success"}'));
-        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Purchase.Requisition.CarryOut","data":{"expectedCount":1,"templateName":"REQ","batchName":"DEFAULT","lineNos":[10000]}}', '{"status":"Success"}'));
+        Examples.Add(ContractMgt.Example('Process one requisition worksheet', '{"type":"Purchase.Requisition.CarryOut","data":{"templateName":"REQ","batchName":"DEFAULT"}}', '{"status":"Success"}'));
+        Examples.Add(ContractMgt.Example(ParameterExample1Lbl, '{"type":"Purchase.Requisition.CarryOut","data":{"templateName":"REQ","batchName":"DEFAULT","lineNos":[10000]}}', '{"status":"Success"}'));
         exit(true);
     end;
 
@@ -175,7 +175,7 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
     begin
         Clear(Value);
         Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.Calculate', 'Calculate suggestions in the selected worksheet and inspect the returned lines.'));
-        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions with expectedCount 1.'));
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions without posting.'));
         Value.Add('steps', Steps);
         exit(true);
     end;
