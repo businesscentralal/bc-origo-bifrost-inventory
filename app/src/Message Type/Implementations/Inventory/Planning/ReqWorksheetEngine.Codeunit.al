@@ -234,6 +234,8 @@ codeunit 10076946 "Req. Worksheet Engine ori"
         Request := Argument.GetRequestJson();
         if not KeysAreKnown('templateName,worksheetName,lineNos,expectedCount', Request, Argument) then
             exit;
+        // Compatibility only: discard the value without interpreting its type or content.
+        Request.Remove('expectedCount');
         if not ResolvePlanningWorksheet(Argument, Request, TemplateName, WorksheetName) then
             exit;
         if not ReadLineNumbers(Request, Argument, HasLineFilter, RequestedLineNos) then
