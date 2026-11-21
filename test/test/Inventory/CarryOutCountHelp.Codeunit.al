@@ -85,6 +85,7 @@ codeunit 96948 "CarryOut Count Help ori"
     local procedure AssertDeclared(MessageType: Enum "Message Type ori"; NotLines: Text)
     var
         Contract: Interface "Msg Contract ori";
+        Implementation: Interface "Msg Interface ori";
         Effect: JsonObject;
         Parameters: JsonArray;
         Token: JsonToken;
@@ -98,6 +99,8 @@ codeunit 96948 "CarryOut Count Help ori"
         SavedLanguageId := GlobalLanguage();
         GlobalLanguage(1039);
         Contract := MessageType;
+        Implementation := MessageType;
+        Assert.IsTrue(Implementation.GetDescription().Contains('Skrifar.'), 'Localized catalogue help says Skrifar even when Foundation composes contract chapters in English.');
         Assert.IsTrue(Contract.GetEffect(Effect), 'The type declares an effect.');
         Assert.IsTrue(Effect.Get('changes', Token), 'effect.changes exists.');
         Changes := Token.AsValue().AsText();

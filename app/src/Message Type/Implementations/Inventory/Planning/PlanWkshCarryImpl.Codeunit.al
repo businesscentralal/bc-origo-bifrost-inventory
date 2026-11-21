@@ -9,7 +9,7 @@ codeunit 10076939 "Plan Wksh Carry Impl ori" implements "Msg Interface ori", "Ms
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.';
+        DescriptionLbl: Label 'Writes. Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.', Comment = 'is-IS=Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.';
         SelectionLbl: Label 'Identify one planning worksheet by subject TEMPLATE|NAME or by templateName and worksheetName.', Comment = 'is-IS=Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.';
         KeywordsLbl: Label 'planning worksheet, carry out, purchase order, transfer order, assembly order', Comment = 'is-IS=áætlunarkeyrsla, framkvæma, innkaupapöntun, flutningspöntun, samsetningarpöntun';
         OverviewLbl: Label 'Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet. Lines that would change or delete an existing document are refused before anything is written.', Comment = 'is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu. Línum sem myndu breyta eða eyða fyrirliggjandi skjali er hafnað áður en nokkuð er skrifað.';

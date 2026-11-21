@@ -9682,9 +9682,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType ChangesLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
-          <target>Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</note>
+          <source>Writes. Creates new purchase, transfer and assembly orders from accepted New lines on one planning worksheet.</source>
+          <target>Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Býr til nýjar innkaupa-, flutnings- og samsetningarpantanir úr samþykktum New-línum á einni áætlunarkeyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Plan Wksh Carry Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3545945205 - NamedType 1290244428" size-unit="char" translate="yes" xml:space="preserve">
@@ -12118,9 +12118,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Calc Impl ori - NamedType SelectionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Creates new orders from selected requisition worksheet lines.</source>
-          <target>Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
+          <source>Writes. Creates new orders from selected requisition worksheet lines.</source>
+          <target>Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Requisition Carry Impl ori - NamedType DescriptionLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3785446061 - NamedType 3555864745" size-unit="char" translate="yes" xml:space="preserve">
