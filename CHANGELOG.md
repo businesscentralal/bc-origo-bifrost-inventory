@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed (2026-11-21) - reversible worksheet carry-out (#279)
+- `Inventory.PlanningWorksheet.CarryOut` and `Purchase.Requisition.CarryOut` declare `write`: they create editable orders without posting. Optional `expectedCount` remains accepted and is ignored, including when irreversible confirmation is enabled. The 14 posting types retain `irreversible`. English and Icelandic help and README follow this boundary. Regression tests audit every app-owned type and exercise both carry-outs. No object IDs added.
+
 ### Fixed (2026-11-20) - project reservation amendment (#278)
 - Removed unused test variables and import; reservation Create/Cancel target help now describes project planning line selection and Create response help includes `sourceTaskNo`. Corrected the Cancel source-type separator in both languages.
 
