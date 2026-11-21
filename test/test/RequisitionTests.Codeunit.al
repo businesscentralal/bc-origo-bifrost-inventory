@@ -277,6 +277,8 @@ codeunit 96947 "Requisition Tests ori"
             exit;
         CreateFixture(Batch, Item, Vendor);
         CreateLine(Line, Batch, Item, Vendor);
+        Line.Validate("Action Message", Line."Action Message"::Cancel);
+        Line.Modify(true);
         Request := Selector(Batch);
         Request.WriteTo(Serialized);
         Input.AddText(Serialized);
