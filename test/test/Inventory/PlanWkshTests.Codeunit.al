@@ -266,7 +266,7 @@ codeunit 96965 "Plan Wksh Tests ori"
         exit(CopyStr(TextValue(Order.AsObject(), 'documentNo'), 1, 20));
     end;
 
-    /// <summary>Creates a fresh owned worksheet and purchase item for explicit MCP verification.</summary>
+    /// <summary>Creates fresh owned planning and requisition worksheets and a purchase item for explicit MCP verification.</summary>
     procedure SeedMcpFixtures(): Text
     var
         Item: Record Item;
@@ -279,8 +279,8 @@ codeunit 96965 "Plan Wksh Tests ori"
         CreatePlanningWorksheet();
         CreateNewSuggestion(Line, Item);
         CreateRequisitionWorksheet();
-        Line.Rename('XP117R', 'XP117W', 10000);
-        CreateNewSuggestion(Line, Item);
+        Line."Worksheet Template Name" := 'XP117R';
+        Line.Insert(true);
         Commit();
         exit(Item."No." + '|' + IsoDate(HorizonStart()) + '|' + IsoDate(HorizonEnd()));
     end;
