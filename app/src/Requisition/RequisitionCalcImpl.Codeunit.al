@@ -168,7 +168,7 @@ codeunit 10076941 "Requisition Calc Impl ori" implements "Msg Interface ori", "M
     begin
         Clear(Value);
         Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.Calculate', 'Calculate suggestions in the selected worksheet and inspect the returned lines.'));
-        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions with expectedCount 1.'));
+        Steps.Add(ContractMgt.WorkflowStep('Purchase.Requisition.CarryOut', 'Create new purchase or transfer orders from the reviewed suggestions without posting.'));
         Value.Add('steps', Steps);
         exit(true);
     end;
