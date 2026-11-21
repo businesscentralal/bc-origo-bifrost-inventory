@@ -297,7 +297,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         Notes := 'Posting is permanent and commits with the message transaction. lineSystemIds selects a nonempty set of distinct lines belonging to the named batch; without it all lines of the batch are posted. It does not create or post a transfer order. ' +
             'The call requires an existing reclassification (Transfer) template before it reads or posts any journal line. Missing templates return RecordNotFound; other template types return PreconditionFailed with a nextStep. ' +
             'A missing or empty batch returns PreconditionFailed. Native posting errors return PreconditionFailed with Business Central''s unchanged text and the selected batch; selected-line parameter refusals retain their specific code. Failed posting is rolled back. ' +
-            'The caller needs the Inv. Posting Gate permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'The caller needs the Inv. Posting Gate permission set (without it the call is not listed as enabled) and the table permissions that the standard item journal posting itself needs. The Reclassification domain must be turned on in Inventory Setup (a missing setup row counts as off). ' +
             'Use Inventory.Reclassification.Check first. Inventory.Reclassification.PreviewPost runs native posting preview, returns captured ledger entries and rolls back the simulated posting changes.';
         exit(true);
     end;

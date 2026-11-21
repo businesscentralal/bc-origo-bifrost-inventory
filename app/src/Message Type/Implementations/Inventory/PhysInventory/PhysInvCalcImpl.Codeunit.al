@@ -230,7 +230,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
             'postingDate (YYYY-MM-DD) and documentNo (at most 20 characters) are required and are written to every line. itemNo, locationCode and variantCode are Business Central filter expressions of at most 2048 characters; without them every eligible item is calculated. itemsNotOnInventory and includeItemsWithNoTransactions default to false. ' +
             'linesCreated is the number of lines the batch has afterwards and can be 0. Any key that is not declared is refused. ' +
             'The lines are committed with the answer; under Omit Commit the caller''s transaction commits instead. A failure rolls back the lines already created. Under Omit Commit an error is raised to the caller instead of being answered with the error text. ' +
-            'The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs write permission on the Item Journal Line table. ' +
+            'The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as off) and the caller needs write permission on the Item Journal Line table. ' +
             'Call Inventory.PhysInventory.RecordCount next to enter the counted quantities.';
         exit(true);
     end;

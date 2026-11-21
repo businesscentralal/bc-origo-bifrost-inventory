@@ -334,6 +334,7 @@ codeunit 96993 "Item Substitution Tests ori"
         Substitute: Record Item;
         Substitution: Record "Item Substitution";
         Setup: Record "Inventory Setup ori";
+        SuggestSetup: Codeunit "Inventory Suggest Setup ori";
     begin
         // Story #118, AC02 | Time: none; WorkDate ignored | Risk: None
         Initialize();
@@ -347,11 +348,13 @@ codeunit 96993 "Item Substitution Tests ori"
         // [WHEN/THEN] Opening existing setup preserves the opt-out.
         Setup.InsertIfNotExists();
         Assert.IsFalse(Setup."Item Substitution", 'Existing opt-out is preserved');
-        // [WHEN] New company setup is initialized from native usage.
+        // [WHEN] New company setup is created, every switch is off until Suggest Setup runs.
         Setup.Delete();
         Setup.InsertIfNotExists();
-        // [THEN] The native substitution is recognized as usage.
-        Assert.IsTrue(Setup."Item Substitution", 'Substitution usage enables new setup');
+        Assert.IsFalse(Setup."Item Substitution", 'New setup starts with the switch off');
+        // [THEN] Suggest Setup turns it on because the company has items.
+        SuggestSetup.ApplyTo(Setup);
+        Assert.IsTrue(Setup."Item Substitution", 'Suggest Setup enables substitution when items exist');
     end;
 
     local procedure Initialize()

@@ -4,7 +4,7 @@ using Origo.Bifrost;
 
 /// <summary>
 /// Shared IsEnabled gate. A type is enabled only when the caller has the required permission
-/// and the company domain flag is on. A missing setup row counts as on.
+/// and the company domain flag is on. A missing setup row counts as off.
 /// </summary>
 codeunit 10076922 "Inventory Domain Gate ori"
 {

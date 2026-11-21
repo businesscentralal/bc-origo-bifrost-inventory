@@ -234,7 +234,7 @@ codeunit 10076884 "Phys. Inv. Check Impl ori" implements "Msg Interface ori", "M
         Notes := 'Read only: nothing is written, posted or rolled back. Every line of the batch, or only the lines in lineSystemIds, gets the standard item journal line checks and the physical inventory rules: the line has an item that is not blocked, is a physical inventory line, has the entry type Positive Adjmt. or Negative Adjmt., the value entry type Direct Cost and no item charge. ' +
             'A failing line is added to errors with code BusinessCentralError and parameter line N, and the check continues with the next line. A posting date after the work date is added to warnings with code InvalidLine. ' +
             'The answer is Success whatever the verdict: read validationResult (Ready, ReadyWithWarnings or NotReady), errorCount and warningCount. A batch without lines is not refused but answered NotReady with one PreconditionFailed entry in errors. ' +
-            'An unidentifiable batch, a template that is not a non-recurring Phys. Inventory template, a lineSystemIds value that does not fit the batch and any key that is not declared are refused with BusinessCentralError. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as on). ' +
+            'An unidentifiable batch, a template that is not a non-recurring Phys. Inventory template, a lineSystemIds value that does not fit the batch and any key that is not declared are refused with BusinessCentralError. The Physical Inventory domain must be turned on in Inventory Setup (a missing setup row counts as off). ' +
             'Use Inventory.PhysInventory.PreviewPost to see the entries and Inventory.PhysInventory.Post to post.';
         exit(true);
     end;

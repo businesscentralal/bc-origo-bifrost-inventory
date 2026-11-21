@@ -96,7 +96,7 @@ codeunit 96920 "Inventory Setup Wizard Tests"
         if Setup.Get() then
             Setup.Delete();
         foreach Ordinal in Domain.Ordinals() do
-            Assert.IsTrue(WizardMgt.ReadDomain("Inventory Domain ori".FromInteger(Ordinal)), 'Missing setup means every domain is enabled.');
+            Assert.IsFalse(WizardMgt.ReadDomain("Inventory Domain ori".FromInteger(Ordinal)), 'Missing setup means every domain is off.');
         Assert.IsFalse(Setup.Get(), 'Read must not create a setup row.');
     end;
 

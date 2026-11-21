@@ -12,6 +12,7 @@ using Microsoft.Inventory.Posting;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Manufacturing.Document;
+using Microsoft.Projects.Project.Planning;
 using Microsoft.Purchases.Document;
 using Microsoft.Sales.Document;
 using Microsoft.Service.Document;
@@ -370,6 +371,7 @@ codeunit 10076842 "Inventory Write Process ori"
         PurchaseLine: Record "Purchase Line";
         TransferLine: Record "Transfer Line";
         AssemblyLine: Record "Assembly Line";
+        JobPlanningLine: Record "Job Planning Line";
         ReservationManagement: Codeunit "Reservation Management";
         JournalContext: Codeunit "Reserv. Supply Filter ori";
     begin
@@ -427,6 +429,14 @@ codeunit 10076842 "Inventory Write Process ori"
                     AssemblyLine.Get(Enum::"Assembly Document Type".FromInteger(SourceSubtype), SourceNo, SourceLineNo);
                     AssemblyLine.SetReservationEntry(DemandEntry);
                     ReservationManagement.SetReservSource(AssemblyLine);
+                end;
+            Database::"Job Planning Line":
+                begin
+                    // SourceLineNo carries the job contract entry number, the planning line's reservation reference.
+                    JobPlanningLine.SetRange("Job Contract Entry No.", SourceLineNo);
+                    JobPlanningLine.FindFirst();
+                    JobPlanningLine.SetReservationEntry(DemandEntry);
+                    ReservationManagement.SetReservSource(JobPlanningLine);
                 end;
         end;
         ReservationManagement.SetTrackingFromReservEntry(TempReserveTracking);

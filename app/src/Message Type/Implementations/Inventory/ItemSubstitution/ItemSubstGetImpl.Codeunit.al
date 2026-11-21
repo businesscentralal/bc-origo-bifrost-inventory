@@ -24,8 +24,6 @@ codeunit 10077020 "Item Subst. Get Impl ori" implements "Msg Interface ori", "Ms
         NotFoundNextLbl: Label 'Check the source and substitute item numbers and variants in Business Central.', Comment = 'is-IS=Athugaðu vörunúmer og afbrigði upprunavörunnar og staðgengilsins í Business Central.';
         PermissionLbl: Label 'Read permission is required for inventory setup, substitutions, items, variants and item ledger entries.', Comment = 'is-IS=Lesheimild þarf fyrir uppsetningu birgða, vöruskipti, vörur, afbrigði og vörufærslur.';
         PermissionNextLbl: Label 'Ask an administrator for BIFROST Read and read permission to the native tables used by this type.', Comment = 'is-IS=Biddu stjórnanda um BIFROST Read og lesheimild að stöðluðu töflunum sem þessi tegund notar.';
-        DisabledLbl: Label 'The Item Substitution domain is disabled.', Comment = 'is-IS=Slökkt er á vöruskiptasviðinu.';
-        DisabledNextLbl: Label 'Ask an administrator to enable Item Substitution on Inventory Setup.', Comment = 'is-IS=Biddu stjórnanda að virkja Vöruskipti í Uppsetningu birgða.';
 
     /// <summary>Checks company setup and all native read permissions.</summary>
     procedure IsEnabled(): Boolean
@@ -140,7 +138,6 @@ codeunit 10077020 "Item Subst. Get Impl ori" implements "Msg Interface ori", "Ms
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::MissingParameter, MissingLbl, MissingNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameterFormat, FormatNextLbl, FormatNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, LengthNextLbl, LengthNextLbl));
-        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, DisabledLbl, DisabledNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::UnknownParameter, UnknownLbl, UnknownNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::RecordNotFound, NotFoundLbl, NotFoundNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionLbl, PermissionNextLbl));

@@ -22,7 +22,7 @@ using Microsoft.Warehouse.Ledger;
 using Microsoft.Warehouse.Structure;
 
 /// <summary>
-/// Per-company switches for Bifrost Inventory domains. A missing row counts as every domain on.
+/// Per-company switches for Bifrost Inventory domains. Every switch is off by default and a missing row counts as every domain off. Suggest Setup turns on the domains the company can use.
 /// </summary>
 table 10076836 "Inventory Setup ori"
 {
@@ -125,12 +125,7 @@ table 10076836 "Inventory Setup ori"
         }
     }
 
-    trigger OnInsert()
-    begin
-        EnableDomainsInUse();
-    end;
-
-    /// <summary>Creates the company setup with defaults derived from existing inventory usage.</summary>
+    /// <summary>Creates the company setup with every domain switch off. Suggest Setup turns on the domains the company can use.</summary>
     procedure InsertIfNotExists()
     begin
         if Get() then
@@ -139,11 +134,17 @@ table 10076836 "Inventory Setup ori"
         Insert(true);
     end;
 
-    /// <summary>Reads a domain switch; an absent setup row preserves the all-enabled contract.</summary>
+    /// <summary>Reads a domain switch; an absent setup row counts as every domain off.</summary>
     procedure IsDomainEnabled(Domain: Enum "Inventory Domain ori"): Boolean
     begin
         if not Get() then
-            exit(true);
+            exit(false);
+        exit(IsSwitchOn(Domain));
+    end;
+
+    /// <summary>Reads a domain switch on the record in memory, without reading the row.</summary>
+    internal procedure IsSwitchOn(Domain: Enum "Inventory Domain ori"): Boolean
+    begin
         case Domain of
             Domain::Attributes:
                 exit(Attributes);
@@ -184,8 +185,54 @@ table 10076836 "Inventory Setup ori"
             Domain::Planning:
                 exit(Planning);
         end;
-        exit(true);
+        exit(false);
     end;
+
+    /// <summary>Sets one domain switch without writing the row.</summary>
+    internal procedure SetDomainEnabled(Domain: Enum "Inventory Domain ori"; Value: Boolean)
+    begin
+        case Domain of
+            Domain::Attributes:
+                Attributes := Value;
+            Domain::TransferOrders:
+                "Transfer Orders" := Value;
+            Domain::Assembly:
+                Assembly := Value;
+            Domain::Reservations:
+                Reservations := Value;
+            Domain::ItemTracking:
+                "Item Tracking" := Value;
+            Domain::PhysInventory:
+                "Phys. Inventory" := Value;
+            Domain::Costing:
+                Costing := Value;
+            Domain::Reclassification:
+                Reclassification := Value;
+            Domain::ItemApplication:
+                "Item Application" := Value;
+            Domain::InventoryPeriod:
+                "Inventory Period" := Value;
+            Domain::ItemPrice:
+                "Item Price" := Value;
+            Domain::ItemReference:
+                "Item Reference" := Value;
+            Domain::Availability:
+                Availability := Value;
+            Domain::ItemCharge:
+                "Item Charge" := Value;
+            Domain::ItemCategory:
+                "Item Category" := Value;
+            Domain::ItemSubstitution:
+                "Item Substitution" := Value;
+            Domain::PurchaseReturns:
+                "Purchase Returns" := Value;
+            Domain::CatalogItems:
+                "Catalog Items" := Value;
+            Domain::Planning:
+                Planning := Value;
+        end;
+    end;
+
     /// <summary>
     /// Raises domain switches supported by company data, without changing enabled switches or writing the row.
     /// Returns whether a switch changed so lifecycle callers can avoid a needless Modify.

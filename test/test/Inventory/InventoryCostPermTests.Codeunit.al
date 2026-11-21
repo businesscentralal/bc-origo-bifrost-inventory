@@ -54,6 +54,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         TempArgument.Insert(true);
         Request.Add('itemNo', Item."No.");
         TempArgument.SetRequestJson(Request);
+        LowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableCosting();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Read ori');
         LowerPermissions.AddPermissionSet('Inv Cost Read Test');
         Assert.IsTrue(Item.ReadPermission(), 'Caller has actual native Item read access.');
@@ -134,6 +136,8 @@ codeunit 96933 "Inventory Cost Perm. Tests"
         PostingGate: Codeunit "Inv. Posting Gate ori";
         LowerPermissions: Codeunit "Library - Lower Permissions";
     begin
+        LowerPermissions.SetOutsideO365Scope();
+        DomainSetup.EnableCosting();
         LowerPermissions.PushPermissionSetWithoutDefaults('BIFROST Full ori');
         LowerPermissions.AddPermissionSet('Inv Cost Write Test');
         Assert.IsTrue(Item.WritePermission(), 'Native Item writes are present.');

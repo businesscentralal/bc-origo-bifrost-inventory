@@ -151,7 +151,7 @@ own them.
 - **Microsoft logic, not a copy.** Every write goes through the standard codeunits and reports, so
   validation, posting and ledger entries are exactly what a user would get.
 - **Per-company control.** Each domain can be switched off for a company without uninstalling the
-  app; a switched-off domain disappears from discovery.
+  app; a switched-off domain disappears from discovery. New companies start with every domain off; Suggest Setup turns on what the company can use.
 - **Posting is separate from writing.** Posting, cost adjustment, cost to G/L and posting previews
   need their own permission set, so an integration can create and release documents without being
   able to post them.
@@ -169,7 +169,7 @@ own them.
 | --- | --- | --- |
 | Registration | `Inventory Registration ori` (10076845) | Answers Foundation's `App Registry ori` `OnRegisterApps` and registers `Inventory Setup ori` as the app setup page. |
 | Install / upgrade | `Inventory Install ori` (10076835), `Inventory Upgrade ori` (10076836) | Sets the initial-release upgrade tag; install inserts the Inventory Setup record per company. |
-| Domain gate | `Inventory Domain Gate ori` (10076922) | `IsEnabled` / `AssertEnabled`: the domain flag must be on (a missing setup row counts as on) and the caller needs read, write or posting permission for the domain. |
+| Domain gate | `Inventory Domain Gate ori` (10076922) | `IsEnabled` / `AssertEnabled`: the domain flag must be on (a missing setup row counts as off) and the caller needs read, write or posting permission for the domain. |
 | Posting gate | `Inv. Posting Gate ori` (10076921), `Inv. Posting ori` (10076835) | Write permission on the token table `Inv. Posting ori` is the posting permission; only `BIFROST InvPost ori` grants it. |
 | Contracts | `Inventory Contract Parts ori` (10076919) | Shared contract chapters used by the implementation codeunits. |
 | Write restrictions | `Item Attr. Data Restrict ori` (10076846), `Inventory Setup Restrict ori` (10076923), `Tracking Data Restrict ori` (10076920), `Reservation WriteGuard ori` (10076843) | Subscribe to Foundation's `OnAfterIsTableWriteRestrictedForDataRecords` and close their tables to `Data.Records.Set`. |
@@ -203,12 +203,18 @@ Opnaðu **Leiðsagða uppsetningu → Setja upp Bifröst birgðir**, eða **Upps
    Item Reference, Availability, Item Charge, Item Category, Item Substitution, Purchase Returns and Catalog Items.
    Item Reference, Availability, Item Charge, Item Category, Item Substitution, Purchase Returns and Planning.
 
-   Domain defaults now follow the company's inventory usage. New rows start off and enable the
-   domains for which usage exists. A one-time, per-company upgrade raises the same flags on
+   Every switch is off by default and a missing setup row counts as off (#267). **Suggest Setup** on Inventory Setup and in the
+   setup wizard turns on the domains the company can use after the administrator confirms (Transfer Orders: an in-transit location
+   and at least two other locations; Assembly: an item BOM component; Item Tracking: an item with a tracking code; Item Charge;
+   Inventory Period; every other domain: at least one item). Install and upgrade run it once per company behind the upgrade tag
+   `Origo.Bifrost.Inventory-SuggestSetup-20261119`, only for companies without a setup row. Switches only decide which types are listed;
+   execution is never refused for a switch.
+
+   Earlier releases derived defaults from usage. A one-time, per-company upgrade raises the same flags on
    existing rows, including Reclassification. It never turns an enabled domain off and makes no
    write when nothing changes. Later manual choices remain in place; the upgrade does not run
    again. A separate one-time upgrade, tag `Origo.Bifrost.Inventory-PlanningDomain-20261117`, turns on Planning only when a planning worksheet template exists. It does not turn other domains back on.
-   If no setup row exists, the existing all-domains-enabled rule still applies.
+   If no setup row exists, every domain counts as off.
    Calls that reach a disabled domain's implementation return a coded refusal with a next step
    pointing to Inventory Setup. Foundation can omit disabled types from discovery and reject a
    call before it reaches the implementation; this app cannot change that Foundation behavior.

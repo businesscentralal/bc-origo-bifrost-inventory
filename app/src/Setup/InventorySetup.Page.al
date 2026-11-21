@@ -108,6 +108,19 @@ page 10076835 "Inventory Setup ori"
     {
         area(Processing)
         {
+            action(SuggestSetup)
+            {
+                Caption = 'Suggest Setup', Comment = 'is-IS=Tillaga að uppsetningu';
+                ToolTip = 'Reads the Business Central setup, shows which domains this company can use and why, and turns them on after you confirm. Switches only decide which message types are listed; they never block a message type that is called.', Comment = 'is-IS=Les uppsetningu Business Central, sýnir hvaða svið þetta fyrirtæki getur notað og hvers vegna, og virkjar þau eftir að þú staðfestir. Rofarnir ráða aðeins hvaða skilaboðategundir eru listaðar; þeir loka aldrei á skilaboðategund sem er kölluð.';
+                Image = Setup;
+                trigger OnAction()
+                var
+                    InventorySuggestSetup: Codeunit "Inventory Suggest Setup ori";
+                begin
+                    InventorySuggestSetup.RunWithConfirmation(Rec);
+                    CurrPage.Update(false);
+                end;
+            }
             action(SetupWizard)
             {
                 Caption = 'Setup Wizard', Comment = 'is-IS=Uppsetningarhjálp';

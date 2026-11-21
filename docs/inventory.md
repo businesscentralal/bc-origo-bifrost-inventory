@@ -60,7 +60,7 @@ Omitted descriptions and validity dates retain their saved values. Send `startin
 {"type":"Inventory.Reservation.Create","data":{"sourceType":37,"sourceNo":"SO-1001","sourceLineNo":10000,"quantity":2,"itemLedgerEntryNo":8842,"lotNo":"LOT-A"}}
 ```
 
-Create supports Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), and Item Journal Line (83). For journals, send `sourceNo` as the template and `sourceBatchName` as the batch, with the entry type in `sourceSubtype`. For production, send the status ordinal in `sourceSubtype` and the parent line in `sourceProdOrderLine`; `sourceLineNo` is 0 for an output line and the component line number for a component. Assembly headers also use `sourceLineNo:0`. Use the same source pointer for Get or Cancel, omitting blank optional parts. BC permits reservation pairs for transfer journal entries; other journal entry types still receive BC's native refusal.
+Create supports Sales Line (37), Purchase Line (39), Transfer Line (5741), Assembly Header (900), Assembly Line (901), Service Line (5902), Prod. Order Line (5406), Prod. Order Component (5407), Item Journal Line (83), and Job Planning Line (1003, a project planning line). For a project planning line send `sourceType` 1003, `sourceNo` (project number), `sourceTaskNo` (task number) and `sourceLineNo` (planning line number); only item lines with Usage Link on in a project that is not completed can be reserved, otherwise the request is refused with a `nextStep`. `Inventory.Reservation.Cancel` takes the same four keys and uses the native cancel. For journals, send `sourceNo` as the template and `sourceBatchName` as the batch, with the entry type in `sourceSubtype`. For production, send the status ordinal in `sourceSubtype` and the parent line in `sourceProdOrderLine`; `sourceLineNo` is 0 for an output line and the component line number for a component. Assembly headers also use `sourceLineNo:0`. Use the same source pointer for Get or Cancel, omitting blank optional parts. BC permits reservation pairs for transfer journal entries; other journal entry types still receive BC's native refusal.
 
 A `serialNo` request must represent exactly one base unit, including conversion from the source unit of measure.
 
@@ -73,8 +73,15 @@ An administrator uses **Inventory Setup** in the Business Central Web Client to 
 for the current company. The **Inv. Posting Gate** permission set (Icelandic: **Bókunarhlið birgða**)
 grants access to this page and its settings. `Data.Records.Set` deliberately cannot change this
 protected setup, including with `force`; an integration caller must ask the administrator.
-The usage-based defaults from issue #147 can enable domains when their native data exists,
-including Reclassification. They do not remove an administrator's later opt-out.
+Every domain switch is **off by default**, and a company without a setup row counts as off. The switches only decide which
+message types the MCP server **lists**; a type that is called is never refused because its switch is off, and the existing
+permission checks still apply. Choose **Suggest Setup** on Inventory Setup (or in the setup wizard) to read the Business Central
+setup: it shows per domain whether it would turn the domain on or leave it off, and why, and applies the proposal only after you
+confirm. It never turns a switch off, so running it again gives the same result. Transfer Orders needs an in-transit location
+(Use As In-Transit) and at least two other locations; Assembly an assembly BOM; Item Tracking an item that uses an item tracking
+code; Item Charge an item charge; Inventory Period an inventory period; every other domain needs at least one item. Install and
+upgrade run the same suggestion once per company, without confirmation, and only for a company that has no setup row yet; an
+existing row is never changed.
 
 ## Statistics and counting compatibility
 

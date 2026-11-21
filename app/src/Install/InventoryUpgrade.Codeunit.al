@@ -14,12 +14,14 @@ codeunit 10076836 "Inventory Upgrade ori"
     var
         UpgradeTag: Codeunit "Upgrade Tag";
         InventoryInstall: Codeunit "Inventory Install ori";
+        SuggestSetup: Codeunit "Inventory Suggest Setup ori";
     begin
         if not UpgradeTag.HasUpgradeTag(InventoryInstall.GetInitialReleaseTag()) then
             UpgradeTag.SetUpgradeTag(InventoryInstall.GetInitialReleaseTag());
         EnableUsedDomains();
         EnableUsedCatalogItems();
         EnablePlanningDomain();
+        SuggestSetup.RunOncePerCompany();
     end;
 
     /// <summary>Runs the usage migration once per company and preserves absent setup rows.</summary>

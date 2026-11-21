@@ -180,7 +180,7 @@ codeunit 10076878 "Period Get Impl ori" implements "Msg Interface ori", "Msg Dis
     procedure GetNotes(var Notes: Text): Boolean
     begin
         Notes := 'Read only. Every Inventory Period of the company is returned in the order of the ending date, with no filter and no limit; a company without periods gets an empty periods array. ' +
-            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as on) and the caller needs read permission on the Inventory Period table. ' +
+            'The Inventory Period domain must be turned on in Inventory Setup (a missing setup row counts as off) and the caller needs read permission on the Inventory Period table. ' +
             'Use Inventory.Period.Close or Inventory.Period.Reopen to change a period.';
         exit(true);
     end;

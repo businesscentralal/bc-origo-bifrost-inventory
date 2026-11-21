@@ -958,7 +958,8 @@ codeunit 96921 "Inventory Contract Batch Tests"
                             LibraryAssert.AreEqual('A filter is not text or postToGL is not a JSON boolean.', WhenText, 'Only scalar format failures use InvalidParameterFormat.');
                         'InvalidParameter':
                             begin
-                                LibraryAssert.IsTrue(WhenText.Contains('both effective filters'), 'Both-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsTrue(LowerCase(WhenText).Contains('both effective filters'), 'Both-filter refusal is InvalidParameter.');
+                                LibraryAssert.IsFalse(LowerCase(WhenText).Contains('domain'), 'A turned-off domain never refuses execution (#267, #272).');
                                 LibraryAssert.IsTrue(WhenText.Contains('filter is invalid'), 'Invalid-filter refusal is InvalidParameter.');
                                 LibraryAssert.IsTrue(WhenText.Contains('before the report runs'), 'Selection validation precedes report execution.');
                             end;
@@ -1252,10 +1253,9 @@ codeunit 96921 "Inventory Contract Batch Tests"
                 if TypeName = 'Inventory.AdjustCost.Run' then
                     LibraryAssert.AreEqual(6, ArrayChapter.Count(), 'Six independently specified adjustment error branches, including typed formats and collected errors.')
                 else begin
-                    LibraryAssert.AreEqual(3, ArrayChapter.Count(), 'Domain, posting permission and native posting/selection failures.');
+                    LibraryAssert.AreEqual(2, ArrayChapter.Count(), 'Posting permission and native posting/selection failures; a turned-off domain never refuses (#272).');
                     Clear(ObjectChapter);
                     ObjectChapter.Add('errors', ArrayChapter);
-                    GetNamedMember(ObjectChapter, 'errors', 'code', 'InvalidParameter', ErrorChapter);
                     GetNamedMember(ObjectChapter, 'errors', 'code', 'PermissionDenied', ErrorChapter);
                     GetNamedMember(ObjectChapter, 'errors', 'code', 'BusinessCentralError', ErrorChapter);
                 end;
