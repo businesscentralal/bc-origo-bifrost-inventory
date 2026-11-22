@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Released 28.3.3.159 to AppSource on 2026-11-22 (submission 1152921505800031332, go-live): the effect-fix release (#279, only posting is irreversible). Entries below this line that predate it are included in that release unless a later version heading says otherwise.
+
 ### Fixed (2026-11-21) - reversible worksheet carry-out (#279)
 - `Inventory.PlanningWorksheet.CarryOut` and `Purchase.Requisition.CarryOut` declare `write`: they create editable orders without posting. Optional `expectedCount` remains accepted and is ignored, including when irreversible confirmation is enabled. The 14 posting types retain `irreversible`. English and Icelandic help and README follow this boundary. Regression tests audit every app-owned type and exercise both carry-outs. No object IDs added.
 
