@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 - Requires Business Central 28.0 or later (was 28.3). (#282)
-- Tests: `Price List Tests` (96987) sets a price-list number series in Sales and Purchases setup when it is blank; native Price List Header Code validation on BC 28.0 fails with "The No. Series does not exist" otherwise. (#282)
+- `Price.List.Set` assigns the code of a new price list instead of validating it. On BC 28.0 the native Code validation looks up a blank number series (Source Group is still All) and failed with "The No. Series does not exist"; later versions skip that lookup, so behaviour is unchanged there. (#282)
 
 - Released 28.3.3.159 to AppSource on 2026-11-22 (submission 1152921505800031332, go-live): the effect-fix release (#279, only posting is irreversible). Entries below this line that predate it are included in that release unless a later version heading says otherwise.
 

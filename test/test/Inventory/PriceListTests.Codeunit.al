@@ -3,8 +3,6 @@ namespace Origo.Bifrost.Inventory.Test;
 using Microsoft.Foundation.UOM;
 using Microsoft.Inventory.Item;
 using Microsoft.Pricing.PriceList;
-using Microsoft.Purchases.Setup;
-using Microsoft.Sales.Setup;
 using Origo.Bifrost;
 using Origo.Bifrost.Inventory;
 using System.TestLibraries.Utilities;
@@ -20,7 +18,6 @@ codeunit 96987 "Price List Tests ori"
         Assert: Codeunit "Library Assert";
         Library: Codeunit "Inventory Test Library ori";
         Inventory: Codeunit "Library - Inventory";
-        LibraryUtility: Codeunit "Library - Utility";
 
     /// <summary>AC01: Sales Price And Dates Are Stored Natively.</summary>
     [Test]
@@ -509,25 +506,6 @@ codeunit 96987 "Price List Tests ori"
     begin
         Library.Initialize();
         Library.EnableItemPrice();
-        EnsurePriceListNoSeries();
-    end;
-
-    /// <summary>Native Price List Header Code validation tests the price-list number series; fresh BC 28.0 companies leave it blank.</summary>
-    local procedure EnsurePriceListNoSeries()
-    var
-        SalesSetup: Record "Sales & Receivables Setup";
-        PurchasesSetup: Record "Purchases & Payables Setup";
-    begin
-        SalesSetup.Get();
-        if SalesSetup."Price List Nos." = '' then begin
-            SalesSetup."Price List Nos." := LibraryUtility.GetGlobalNoSeriesCode();
-            SalesSetup.Modify();
-        end;
-        PurchasesSetup.Get();
-        if PurchasesSetup."Price List Nos." = '' then begin
-            PurchasesSetup."Price List Nos." := LibraryUtility.GetGlobalNoSeriesCode();
-            PurchasesSetup.Modify();
-        end;
     end;
 
     local procedure NewCode(): Code[20]
