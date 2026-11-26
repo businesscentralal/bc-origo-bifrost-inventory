@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Requires Business Central 28.0 or later (was 28.3). (#282)
+
 - Released 28.3.3.159 to AppSource on 2026-11-22 (submission 1152921505800031332, go-live): the effect-fix release (#279, only posting is irreversible). Entries below this line that predate it are included in that release unless a later version heading says otherwise.
 
 ### Fixed (2026-11-21) - reversible worksheet carry-out (#279)
