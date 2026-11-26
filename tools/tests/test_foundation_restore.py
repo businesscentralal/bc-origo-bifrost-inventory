@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 import stage_foundation_inputs as S
 from test_symbol_policy import fixture
 import prune_self_symbols as P
+import fetch_baseline_symbols as F
 
 
 def with_friend(path):
@@ -205,6 +206,56 @@ class FoundationRestore(unittest.TestCase):
         with self.assertRaisesRegex(S.GateError, "Changed Foundation Apps artifact"):
             self.restore()
         self.assertEqual(before, self.collision.read_bytes())
+
+
+class BaselineSymbolFetch(unittest.TestCase):
+    def nupkg(self, package_id, version, identity, dependencies=()):
+        temp = Path(self.temp.name) / f'{package_id}.app'
+        fixture(temp, identity)
+        deps = ''.join(f'<dependency id="{d}" version="{r}" />' for d, r in dependencies)
+        spec = (f'<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"><metadata>'
+                f'<id>{package_id}</id><version>{version}</version><dependencies>{deps}</dependencies>'
+                f'</metadata></package>')
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            archive.writestr(f'{package_id}.nuspec', spec)
+            archive.writestr(f'Microsoft_{identity["name"]}_{version}.app', temp.read_bytes())
+        return buffer.getvalue()
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        base_id = 'microsoft.baseapplication.symbols.437dbf0e-84ff-417a-965d-ed2bb9650972'
+        app = dict(id=str(uuid.uuid4()), publisher='Microsoft', name='Application', version='28.3.52162.52273')
+        base = dict(id=str(uuid.uuid4()), publisher='Microsoft', name='Base Application', version='28.3.52162.52273')
+        self.responses = {
+            'feed/microsoft.application.symbols/index.json':
+                json.dumps({'versions': ['28.0.46665.54008', '28.3.52162.52273', '28.4.1.1', '29.0.0.0-beta']}).encode(),
+            'feed/microsoft.application.symbols/28.3.52162.52273/microsoft.application.symbols.28.3.52162.52273.nupkg':
+                self.nupkg('Microsoft.Application.symbols', '28.3.52162.52273', app,
+                           [(base_id, '[28.3.0.0,28.4.0.0)'), ('Microsoft.Platform.symbols', '[28.0.0.0,28.1.0.0)')]),
+            f'feed/{base_id}/index.json': json.dumps({'versions': ['28.3.52162.52273', '28.4.1.1']}).encode(),
+            f'feed/{base_id}/28.3.52162.52273/{base_id}.28.3.52162.52273.nupkg':
+                self.nupkg(base_id, '28.3.52162.52273', base),
+        }
+
+    def test_earliest_matching_application_and_dependencies_without_platform(self):
+        folder = Path(self.temp.name) / 'out'
+        written = F.download('28.3.0.0', folder, feed='feed/', fetcher=self.responses.__getitem__)
+        self.assertEqual(['Application', 'Base Application'], [item['name'] for item in written])
+        self.assertEqual({'28.3.52162.52273'}, {item['version'] for item in written})
+        self.assertEqual(2, len(list(folder.glob('*.app'))))
+
+    def test_unmatched_requirement_and_bad_input_refused(self):
+        with self.assertRaisesRegex(F.GateError, 'No symbol package version'):
+            F.download('28.9.0.0', Path(self.temp.name) / 'none', feed='feed/', fetcher=self.responses.__getitem__)
+        with self.assertRaisesRegex(F.GateError, 'Invalid Application requirement'):
+            F.download('28.3', Path(self.temp.name) / 'none', feed='feed/', fetcher=self.responses.__getitem__)
+
+    def test_version_ranges(self):
+        self.assertEqual(((28, 3, 0, 0), (28, 4, 0, 0), None), F.parse_range('[28.3.0.0,28.4.0.0)'))
+        self.assertEqual(((28, 3, 1, 2), None, (28, 3, 1, 2)), F.parse_range('[28.3.1.2]'))
+        self.assertEqual(((28, 3, 0, 0), None, None), F.parse_range('28.3.0.0'))
 
 
 class PrecompileCache(unittest.TestCase):

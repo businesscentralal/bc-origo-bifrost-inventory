@@ -342,24 +342,12 @@ if ($Stage -eq 'BeforeCompile') {
         if ($required -notmatch '^\d+\.\d+\.\d+\.\d+$') { throw "Invalid baseline Application requirement '$required'." }
         $baselineSymbols = Join-Path $Root (".buildartifacts/AppSourceBaselineSymbols/" + $required)
         if (-not (Get-ChildItem -LiteralPath $baselineSymbols -Filter 'Microsoft_Application_*.app' -ErrorAction SilentlyContinue)) {
-            New-Item -ItemType Directory -Path $baselineSymbols -Force | Out-Null
-            $feed = 'https://dynamicssmb2.pkgs.visualstudio.com/DynamicsBCPublicFeeds/_packaging/MSSymbols/nuget/v3/index.json'
-            if ($bcContainerHelperConfig -and $bcContainerHelperConfig.MSSymbolsNuGetFeedUrl) { $feed = $bcContainerHelperConfig.MSSymbolsNuGetFeedUrl }
             Write-Host "AppSource baseline $($baselineInfo.version) requires Application $required; compile floor provides $($baselineInfo.applicationAvailable). Fetching baseline symbols."
-            for ($attempt = 1; ; $attempt++) {
-                try {
-                    # W1 symbols: every Bifrost app builds country w1. Earliest build >= requirement.
-                    Download-BcNuGetPackageToFolder -nuGetServerUrl $feed -packageName 'Microsoft.Application.symbols' `
-                        -version $required -select Earliest -folder $baselineSymbols -downloadDependencies allButPlatform | Out-Null
-                    if (-not (Get-ChildItem -LiteralPath $baselineSymbols -Filter 'Microsoft_Application_*.app')) { throw 'No Application symbols downloaded.' }
-                    break
-                }
-                catch {
-                    if ($attempt -ge 3) { throw "Baseline symbol download failed: $($_.Exception.Message)" }
-                    Write-Host "Baseline symbol download attempt $attempt failed: $($_.Exception.Message); retrying."
-                    Start-Sleep -Seconds (15 * $attempt)
-                }
-            }
+            # Microsoft MSSymbols NuGet feed, symbol packages only (retries inside the helper).
+            $fetchOutput = @(& $python.Source (Join-Path $Root 'tools/fetch_baseline_symbols.py') --required $required --folder $baselineSymbols)
+            $fetchExitCode = $LASTEXITCODE
+            $fetchOutput | ForEach-Object { Write-Host $_ }
+            if ($fetchExitCode -ne 0) { throw 'Baseline symbol download failed.' }
         }
         $pruneOutput = @(& $python.Source @($pruneArgs + @('--baseline-symbols', $baselineSymbols)))
         $pruneExitCode = $LASTEXITCODE
