@@ -33,7 +33,50 @@ def manifest_identity(path):
     return {key: apps[0].attrib[key.title()] for key in ('id', 'publisher', 'name')}
 
 
-def prepare_baseline(root, project, symbols, measured, compiler_symbols):
+def version_key(value):
+    return tuple(int(part) for part in str(value or '0').split('.'))
+
+
+def baseline_overrides(root, baseline_symbols):
+    """Microsoft symbol packages that replace the compile-floor ones for the baseline only.
+
+    The product compiles against the BC floor artifact (Application 28.0). The previous
+    AppSource release may require a newer Application (e.g. 28.3). AppSourceCop must
+    resolve that release's own dependencies, so the baseline cache gets the matching
+    Microsoft symbols while the compile cache keeps the floor packages.
+    """
+    if not baseline_symbols:
+        return {}
+    folder = Path(baseline_symbols)
+    require(folder.is_dir() and not folder.is_symlink(), 'Baseline symbol folder missing/linked')
+    require(folder.resolve().is_relative_to(root), 'Baseline symbols outside owned workspace')
+    overrides = {}
+    for path in sorted(folder.iterdir()):
+        if path.suffix.lower() != '.app':
+            continue
+        identity = manifest_identity(path)
+        require(identity['publisher'] == 'Microsoft', 'Baseline symbol override must be a Microsoft package')
+        key = (identity['publisher'], identity['name'])
+        require(key not in overrides, 'Ambiguous baseline symbol override')
+        overrides[key] = path
+    require(len(overrides) <= 64, 'Baseline symbol override bound exceeded')
+    return overrides
+
+
+def package_key(path):
+    identity = manifest_identity(path)
+    return identity['publisher'], identity['name']
+
+
+def application_available(paths):
+    versions = []
+    for path in paths:
+        if package_key(path) == ('Microsoft', 'Application'):
+            versions.append(package_info(path, allow_ready_to_run=True)['identity']['version'])
+    return max(versions, key=version_key) if versions else None
+
+
+def prepare_baseline(root, project, symbols, measured, compiler_symbols, baseline_symbols=None):
     cop_path = project / 'AppSourceCop.json'
     if not cop_path.exists():
         return None
@@ -90,17 +133,34 @@ def prepare_baseline(root, project, symbols, measured, compiler_symbols):
         compiler_symbols = Path(compiler_symbols)
         require(compiler_symbols.is_dir() and not compiler_symbols.is_symlink(), 'Compiler catalog missing/linked')
         dependencies += [path for path in compiler_symbols.iterdir() if path.suffix.lower() == '.app']
+    overrides = baseline_overrides(root, baseline_symbols)
+    if overrides:
+        dependencies = [path for path in dependencies if package_key(path) not in overrides]
+        dependencies += list(overrides.values())
+        planned = {path.name for path in dependencies}
+        # Drop floor copies of overridden packages left by an earlier preparation.
+        for existing in owned.iterdir():
+            if existing.name == 'Baseline.app' or existing.suffix.lower() != '.app' or existing.name in planned:
+                continue
+            if package_key(existing) in overrides:
+                existing.unlink()
     require(len(dependencies) <= 384, 'Baseline dependency bound exceeded')
     for dependency in dependencies:
         preserve(dependency, owned / dependency.name)
+    required = package_info(baseline).get('application') or None
+    available = application_available(dependencies)
     cop[keys.get('baselinepackagecachepath', 'baselinePackageCachePath')] = str(owned)
     # Preserve version and all analyzer rules; only separate its input cache.
     cop_path.write_text(json.dumps(cop, indent=2) + '\n', encoding='utf-8')
     return {'version': version, 'path': str(owned), 'sha256': file_hash(baseline),
-            'dependencyInputs': len(dependencies), 'breakingChangeValidationRetained': True}
+            'dependencyInputs': len(dependencies), 'breakingChangeValidationRetained': True,
+            'applicationRequired': required, 'applicationAvailable': available,
+            'applicationSatisfied': bool(required is None or
+                                         (available and version_key(available) >= version_key(required))),
+            'baselineSymbolOverrides': sorted(path.name for path in overrides.values())}
 
 
-def prune(root, project, symbols, compiler_symbols=None):
+def prune(root, project, symbols, compiler_symbols=None, baseline_symbols=None):
     root = Path(root).resolve()
     project = Path(project).resolve()
     symbols = Path(symbols)
@@ -124,7 +184,7 @@ def prune(root, project, symbols, compiler_symbols=None):
         require(not path.is_symlink() and file_hash(path) == info['sha256'],
                 'Self-app changed after cache inspection')
         removals.append((path, info))
-    baseline = prepare_baseline(root, project, symbols, measured, compiler_symbols)
+    baseline = prepare_baseline(root, project, symbols, measured, compiler_symbols, baseline_symbols)
     for path, info in removals:
         path.unlink()
     return {'project': project.name, 'baseline': baseline, 'removed': [
@@ -137,8 +197,10 @@ if __name__ == '__main__':
     for name in ('root', 'project', 'symbols'):
         parser.add_argument('--' + name, required=True)
     parser.add_argument('--compiler-symbols')
+    parser.add_argument('--baseline-symbols')
     args = parser.parse_args()
     try:
-        print(json.dumps(prune(args.root, args.project, args.symbols, args.compiler_symbols)))
+        print(json.dumps(prune(args.root, args.project, args.symbols, args.compiler_symbols,
+                               args.baseline_symbols)))
     except (GateError, OSError, ValueError, KeyError, zipfile.BadZipFile, ET.ParseError) as error:
         parser.exit(1, f'Self-cache preparation failed: {error}\n')
