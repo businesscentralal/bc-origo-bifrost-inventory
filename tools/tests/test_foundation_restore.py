@@ -9,6 +9,7 @@ import struct
 import sys
 import tempfile
 import unittest
+import uuid
 import zipfile
 from pathlib import Path
 from unittest.mock import patch
@@ -280,6 +281,53 @@ class PrecompileCache(unittest.TestCase):
         self.assertEqual(str(baseline), settings['baselinePackageCachePath'])
         self.assertFalse((self.cache / 'Previous.app').exists())
         self.assertEqual([], P.prune(self.root, self.root / 'app', self.cache, catalog)['removed'])
+
+    def baseline_on_newer_application(self):
+        previous = dict(self.identities['app'], version='28.3.3.161')
+        fixture(self.cache / 'Previous.app', dict(previous, application='28.3.0.0'))
+        catalog = self.root / 'compiler-symbols'
+        catalog.mkdir()
+        app_id = 'c1335042-3002-4257-bf8a-75c898ccb1b8'
+        fixture(catalog / 'Microsoft_Application_28.0.app',
+                dict(id=app_id, publisher='Microsoft', name='Application', version='28.0.46665.54008'))
+        fixture(catalog / 'Microsoft_System_28.0.app',
+                dict(id=str(uuid.uuid4()), publisher='Microsoft', name='System', version='28.0.46665.54008'))
+        (self.root / 'app/AppSourceCop.json').write_text(json.dumps({'version': previous['version']}))
+        return catalog, app_id
+
+    def test_baseline_on_newer_application_is_reported_unsatisfied(self):
+        catalog, _ = self.baseline_on_newer_application()
+        result = P.prune(self.root, self.root / 'app', self.cache, catalog)['baseline']
+        self.assertEqual('28.3.0.0', result['applicationRequired'])
+        self.assertEqual('28.0.46665.54008', result['applicationAvailable'])
+        self.assertFalse(result['applicationSatisfied'])
+
+    def test_baseline_symbols_replace_floor_packages_in_baseline_cache_only(self):
+        catalog, app_id = self.baseline_on_newer_application()
+        P.prune(self.root, self.root / 'app', self.cache, catalog)
+        newer = self.root / '.buildartifacts/AppSourceBaselineSymbols/28.3.0.0'
+        newer.mkdir(parents=True)
+        fixture(newer / 'Microsoft_Application_28.3.app',
+                dict(id=app_id, publisher='Microsoft', name='Application', version='28.3.52162.52273'))
+        result = P.prune(self.root, self.root / 'app', self.cache, catalog, newer)['baseline']
+        self.assertTrue(result['applicationSatisfied'])
+        self.assertEqual('28.3.52162.52273', result['applicationAvailable'])
+        owned = Path(result['path'])
+        names = sorted(path.name for path in owned.glob('*.app'))
+        self.assertEqual(['Baseline.app', 'Microsoft_Application_28.3.app', 'Microsoft_System_28.0.app'], names)
+        # The compile floor catalog is untouched.
+        self.assertTrue((catalog / 'Microsoft_Application_28.0.app').exists())
+
+    def test_baseline_symbol_override_must_be_microsoft_and_owned(self):
+        catalog, _ = self.baseline_on_newer_application()
+        foreign = self.root / '.buildartifacts/AppSourceBaselineSymbols/x'
+        foreign.mkdir(parents=True)
+        fixture(foreign / 'Other.app', dict(id=str(uuid.uuid4()), publisher='Contoso', name='Application', version='28.3.0.0'))
+        with self.assertRaisesRegex(P.GateError, 'Microsoft package'):
+            P.prune(self.root, self.root / 'app', self.cache, catalog, foreign)
+        with tempfile.TemporaryDirectory() as outside:
+            with self.assertRaisesRegex(P.GateError, 'outside owned workspace'):
+                P.prune(self.root, self.root / 'app', self.cache, catalog, outside)
 
     def test_missing_upgrade_baseline_refuses_before_removing_self(self):
         fixture(self.cache / 'Self.app', self.identities['app'])

@@ -328,6 +328,50 @@ if ($Stage -eq 'BeforeCompile') {
     $pruneExitCode = $LASTEXITCODE
     $pruneOutput | ForEach-Object { Write-Host $_ }
     if ($pruneExitCode -ne 0) { throw 'Actual precompile cache/baseline preparation failed.' }
+    # The build compiles on the BC floor artifact (Application 28.0), but the previous
+    # AppSource release (the breaking-change baseline) may require a newer Application,
+    # e.g. 28.3. Give AppSourceCop that release's Microsoft symbols in the baseline
+    # cache only (symbol packages, nothing installed); the compile cache keeps 28.0.
+    $baselineInfo = $null
+    foreach ($line in $pruneOutput) {
+        try { $parsed = [string]$line | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+        if ($parsed -and $parsed.PSObject.Properties['baseline'] -and $parsed.baseline) { $baselineInfo = $parsed.baseline }
+    }
+    if ($baselineInfo -and $baselineInfo.PSObject.Properties['applicationSatisfied'] -and -not $baselineInfo.applicationSatisfied) {
+        $required = [string]$baselineInfo.applicationRequired
+        if ($required -notmatch '^\d+\.\d+\.\d+\.\d+$') { throw "Invalid baseline Application requirement '$required'." }
+        $baselineSymbols = Join-Path $Root (".buildartifacts/AppSourceBaselineSymbols/" + $required)
+        if (-not (Get-ChildItem -LiteralPath $baselineSymbols -Filter 'Microsoft_Application_*.app' -ErrorAction SilentlyContinue)) {
+            New-Item -ItemType Directory -Path $baselineSymbols -Force | Out-Null
+            $feed = 'https://dynamicssmb2.pkgs.visualstudio.com/DynamicsBCPublicFeeds/_packaging/MSSymbols/nuget/v3/index.json'
+            if ($bcContainerHelperConfig -and $bcContainerHelperConfig.MSSymbolsNuGetFeedUrl) { $feed = $bcContainerHelperConfig.MSSymbolsNuGetFeedUrl }
+            Write-Host "AppSource baseline $($baselineInfo.version) requires Application $required; compile floor provides $($baselineInfo.applicationAvailable). Fetching baseline symbols."
+            for ($attempt = 1; ; $attempt++) {
+                try {
+                    # W1 symbols: every Bifrost app builds country w1. Earliest build >= requirement.
+                    Download-BcNuGetPackageToFolder -nuGetServerUrl $feed -packageName 'Microsoft.Application.symbols' `
+                        -version $required -select Earliest -folder $baselineSymbols -downloadDependencies allButPlatform | Out-Null
+                    if (-not (Get-ChildItem -LiteralPath $baselineSymbols -Filter 'Microsoft_Application_*.app')) { throw 'No Application symbols downloaded.' }
+                    break
+                }
+                catch {
+                    if ($attempt -ge 3) { throw "Baseline symbol download failed: $($_.Exception.Message)" }
+                    Write-Host "Baseline symbol download attempt $attempt failed: $($_.Exception.Message); retrying."
+                    Start-Sleep -Seconds (15 * $attempt)
+                }
+            }
+        }
+        $pruneOutput = @(& $python.Source @($pruneArgs + @('--baseline-symbols', $baselineSymbols)))
+        $pruneExitCode = $LASTEXITCODE
+        $pruneOutput | ForEach-Object { Write-Host $_ }
+        if ($pruneExitCode -ne 0) { throw 'Baseline symbol preparation failed.' }
+        $verified = $false
+        foreach ($line in $pruneOutput) {
+            try { $parsed = [string]$line | ConvertFrom-Json -ErrorAction Stop } catch { continue }
+            if ($parsed -and $parsed.PSObject.Properties['baseline'] -and $parsed.baseline -and $parsed.baseline.applicationSatisfied) { $verified = $true }
+        }
+        if (-not $verified) { throw "Baseline symbols still do not satisfy Application $required." }
+    }
     $beforeRequest = @{
         context = $context
         kind = $kind
