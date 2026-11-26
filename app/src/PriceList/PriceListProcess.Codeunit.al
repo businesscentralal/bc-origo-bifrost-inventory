@@ -151,7 +151,9 @@ codeunit 10076982 "Price List Process ori"
         if Created then begin
             Header.Init();
             Header."Price Type" := PriceType;
-            Header.Validate(Code, ListCode);
+            // Assigned, not validated: Code validation tests GetNoSeries() while Source Group is still All (blank series).
+            // BC 28.0 No. Series TestManual('') fails with "The No. Series does not exist"; later versions skip it.
+            Header.Code := ListCode;
             if PriceType = PriceType::Sale then
                 Header.Validate("Source Type", "Price Source Type"::"All Customers")
             else

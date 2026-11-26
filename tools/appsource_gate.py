@@ -59,6 +59,14 @@ MEASURED_PACKAGE_PROFILES = {
                      "name": "Base Application", "version": "28.5.54151.55751"},
         "maxEntries": 16384, "maxExpandedBytes": 512 * 1024 * 1024,
     },
+    # ReadyToRun wrapper from sandbox/28.0.46665.54008/w1 (the BC 28.0 floor CI artifact),
+    # disk size 97862349. Outer: 9 entries, 258650112 expanded bytes. The embedded app has
+    # 8521 entries and 371033790 expanded bytes (measured by worker-4 for inventory#282).
+    "198f9097dba40da987a18525b6f68bbdd6266fbd1cea9f81d9ab687cefefe0c2": {
+        "identity": {"id": "437dbf0e-84ff-417a-965d-ed2bb9650972", "publisher": "Microsoft",
+                     "name": "Base Application", "version": "28.0.46665.54008"},
+        "maxEntries": 16384, "maxExpandedBytes": 512 * 1024 * 1024,
+    },
 }
 FOUNDATION_CANDIDATE = {
     "identity": {"id": "7505e808-6e52-4b96-a328-82573391297a", "publisher": "Origo",
