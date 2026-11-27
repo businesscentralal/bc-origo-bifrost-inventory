@@ -1191,7 +1191,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Answered: Boolean;
     begin
         if not TryConfirmPhysicalPost(Argument, Answered) then begin
-            Argument.RespondWithLastError();
+            RespondWithFailure(Argument);
             exit(false);
         end;
         exit(not Answered);
@@ -1203,7 +1203,7 @@ codeunit 10076840 "Inventory Native Journal ori"
         Answered: Boolean;
     begin
         if not TryConfirmRevaluationPost(Argument, Answered) then begin
-            Argument.RespondWithLastError();
+            RespondWithFailure(Argument);
             exit(false);
         end;
         exit(not Answered);
