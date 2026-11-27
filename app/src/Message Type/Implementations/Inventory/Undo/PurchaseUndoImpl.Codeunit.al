@@ -11,7 +11,7 @@ codeunit 10077017 "Purchase Undo Impl ori" implements "Msg Interface ori", "Msg 
     var
         Undo: Codeunit "Posted Line Undo ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        DescriptionLbl: Label 'Undoes selected posted purchase receipt lines with native corrective entries.', Comment = 'is-IS=Afturkallar valdar línur í bókaðri innkaupamóttöku með innbyggðum leiðréttingarfærslum.';
+        DescriptionLbl: Label 'Undoes selected posted purchase receipt lines with native corrective entries.', Comment = 'is-IS=Afturkallar valdar línur í bókaðri innkaupamóttöku með innbyggðum leiðréttingarfærslum. (afturkalla bókaða innkaupamóttöku leiðrétta línur).';
         KeywordsLbl: Label 'undo posted purchase receipt reverse lines', Comment = 'is-IS=afturkalla bókaða innkaupamóttöku leiðrétta línur';
 
     /// <summary>Supplies the IsEnabled contract for Purchase.Receipt.Undo.</summary>

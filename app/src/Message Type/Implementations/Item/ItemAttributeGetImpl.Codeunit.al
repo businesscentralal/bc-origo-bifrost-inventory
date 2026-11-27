@@ -24,7 +24,7 @@ codeunit 10076916 "Item Attribute Get Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Returns item attribute definitions and assigned values for one or more items.', Comment = 'is-IS=Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur.';
+        DescriptionLbl: Label 'Returns item attribute definitions and assigned values for one or more items.', Comment = 'is-IS=Skilar skilgreiningum vörueiginleika og úthlutuðum gildum fyrir eina eða fleiri vörur. (lesa eiginleika vöru, sækja eiginleikagildi vöru, skoða eiginleika vöru, telja úthlutaða eiginleika, lýsigögn vöru).';
     begin
         exit(DescriptionLbl);
     end;

@@ -50,7 +50,7 @@ codeunit 10077028 "Sales Get Shipment Impl ori" implements "Msg Interface ori", 
     /// <summary>Returns the localized catalogue description.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Pulls posted, not invoiced sales shipment lines into an open sales invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning.';
+        DescriptionLbl: Label 'Pulls posted, not invoiced sales shipment lines into an open sales invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar afhendingarlínur sölu inn á opinn sölureikning. (sækja afhendingarlínur, samsettur reikningur, sölureikningur, óreikningsfært).';
     begin
         exit(DescriptionLbl);
     end;

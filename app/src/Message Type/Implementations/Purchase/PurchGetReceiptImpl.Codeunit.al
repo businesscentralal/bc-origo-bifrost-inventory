@@ -52,7 +52,7 @@ codeunit 10077018 "Purch Get Receipt Impl ori" implements "Msg Interface ori", "
     /// <summary>Implements GetDescription for purchase receipt invoice lines.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Pulls posted, not invoiced purchase receipt lines into an open purchase invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar móttökulínur innkaupa inn á opinn innkaupareikning.';
+        DescriptionLbl: Label 'Pulls posted, not invoiced purchase receipt lines into an open purchase invoice.', Comment = 'is-IS=Sækir bókaðar, óreikningsfærðar móttökulínur innkaupa inn á opinn innkaupareikning. (sækja móttökulínur, samsettur reikningur, móttaka, innkaupareikningur, óreikningsfært).';
     begin
         exit(DescriptionLbl);
     end;

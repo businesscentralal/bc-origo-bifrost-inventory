@@ -37,7 +37,7 @@ codeunit 10076895 "Reserv. AutoReserve Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reserves a sales order line from available supply.', Comment = 'is-IS=Tekur sölupöntunarlínu frá úr tiltæku framboði.';
+        DescriptionLbl: Label 'Reserves a sales order line from available supply.', Comment = 'is-IS=Tekur sölupöntunarlínu frá úr tiltæku framboði. (sjálfvirk frátekning, sölulína, frátekning, taka frá).';
     begin
         exit(DescriptionLbl);
     end;

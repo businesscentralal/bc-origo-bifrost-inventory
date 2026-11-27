@@ -8,7 +8,7 @@ codeunit 10076860 "Cost Get Impl ori" implements "Msg Interface ori", "Msg Disco
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki.';
+        DescriptionLbl: Label 'Reads item cost fields that are not exposed by the foundation app.', Comment = 'is-IS=Les kostnaðarreiti vöru sem grunnforritið birtir ekki. (lesa vörukostnað, kostnaðarverð, birgðavirði).';
         SelectionLbl: Label 'Returns current costing fields and native filtered inventory for one or more items.', Comment = 'is-IS=Skilar núverandi kostnaðarreitum og innbyggðum síuðum birgðum fyrir eina eða fleiri vörur.';
         KeywordsLbl: Label 'read item cost, unit cost, inventory value', Comment = 'is-IS=lesa vörukostnað,kostnaðarverð,birgðavirði';
         OverviewLbl: Label 'Reads current item costs and filtered inventory for one or more items.', Comment = 'is-IS=Les núverandi vörukostnað og síað birgðamagn fyrir eina eða fleiri vörur.';

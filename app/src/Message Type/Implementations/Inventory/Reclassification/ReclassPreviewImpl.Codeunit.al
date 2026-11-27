@@ -25,7 +25,7 @@ codeunit 10076889 "Reclass Preview Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Simulates posting a reclassification journal batch and returns the captured ledger entries. All posting changes are rolled back.', Comment = 'is-IS=Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka.';
+        DescriptionLbl: Label 'Simulates posting a reclassification journal batch and returns the captured ledger entries. All posting changes are rolled back.', Comment = 'is-IS=Líkir eftir bókun endurflokkunarbókarkeyrslu og skilar færslunum. Öllum bókunarbreytingum er velt til baka. (forskoða endurflokkun, forskoðun endurflokkunarbókar).';
     begin
         exit(DescriptionLbl);
     end;

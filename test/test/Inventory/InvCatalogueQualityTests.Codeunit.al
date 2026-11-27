@@ -95,6 +95,49 @@ codeunit 96971 "Inv. Catalogue Quality Tests"
         Assert.IsTrue(TypeCount >= 62, 'Every Inventory type is checked (' + Format(TypeCount) + ').');
     end;
 
+    /// <summary>Every app-owned type is searchable by all of its Icelandic keyword phrases within the catalogue limit.</summary>
+    [Test]
+    procedure Scenario_289_AC01_AC02_AllIcelandicPhrasesInDescription()
+    var
+        Implementation: Interface "Msg Interface ori";
+        Discovery: Interface "Msg Discovery ori";
+        MessageType: Enum "Message Type ori";
+        OriginalLanguage: Integer;
+        TypeCount: Integer;
+        TypeName: Text;
+        EnglishDescription: Text;
+        EnglishKeywords: Text;
+        Description: Text;
+        Keywords: Text;
+        Phrase: Text;
+    begin
+        // Story #289, AC01/AC02/AC03 | Time: independent | Risk: pure catalogue metadata; no document execution.
+        OriginalLanguage := GlobalLanguage();
+        foreach MessageType in InventoryTypes() do begin
+            TypeName := TypeNameOf(MessageType);
+            Implementation := MessageType;
+            Discovery := MessageType;
+            GlobalLanguage(1033);
+            EnglishDescription := Implementation.GetDescription();
+            EnglishKeywords := Discovery.GetKeywords();
+            GlobalLanguage(1039);
+            Description := Implementation.GetDescription();
+            Keywords := Discovery.GetKeywords();
+            Assert.AreNotEqual('', Keywords.Trim(), TypeName + ' needs Icelandic keywords.');
+            Assert.AreNotEqual(EnglishKeywords, Keywords, TypeName + ' keywords must be translated.');
+            Assert.AreNotEqual(EnglishDescription, Description, TypeName + ' description must be translated.');
+            Assert.IsTrue(StrLen(Description) <= 250, TypeName + ' description fits the catalogue.');
+            foreach Phrase in Keywords.Split(',') do begin
+                Phrase := Phrase.Trim().ToLower();
+                Assert.AreNotEqual('', Phrase, TypeName + ' has no blank keyword entry.');
+                Assert.IsTrue(Description.ToLower().Contains(Phrase), TypeName + ' description must contain search phrase: ' + Phrase);
+            end;
+            TypeCount += 1;
+        end;
+        GlobalLanguage(OriginalLanguage);
+        Assert.IsTrue(TypeCount >= 97, 'Every app-owned message type is checked.');
+    end;
+
     /// <summary>Every message type of this app: its implementation id is its enum value inside the app object range.</summary>
     local procedure InventoryTypes() Types: List of [Enum "Message Type ori"]
     var

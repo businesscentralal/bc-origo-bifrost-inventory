@@ -21,7 +21,7 @@ codeunit 10076853 "Asm. Order Statistics Impl ori" implements "Msg Interface ori
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Returns assembly order statistics: header info, line counts, quantities and cost breakdown.', Comment = 'is-IS=Skilar tölfræði samsetningarpöntunar: upplýsingum úr haus, fjölda lína, magni og sundurliðun kostnaðar.';
+        DescriptionLbl: Label 'Returns assembly order statistics: header info, line counts, quantities and cost breakdown.', Comment = 'is-IS=Skilar tölfræði samsetningarpöntunar: upplýsingum úr haus, fjölda lína, magni og sundurliðun kostnaðar. (kostnaður samsetningar, kostnaður íhluta).';
     begin
         exit(DescriptionLbl);
     end;

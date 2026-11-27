@@ -28,7 +28,7 @@ codeunit 10076867 "Item Appl. Get Impl ori" implements "Msg Interface ori", "Msg
     /// <summary>Returns the description contract chapter.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads item applications and joined ledger entries by item or ledger entry.', Comment = 'is-IS=Les vörujafnanir og tengdar vörufærslur eftir vöru eða færslu.';
+        DescriptionLbl: Label 'Reads item applications and joined ledger entries by item or ledger entry.', Comment = 'is-IS=Les vörujafnanir og tengdar vörufærslur eftir vöru eða færslu. (vörujöfnun, jafnaðar færslur).';
     begin
         exit(DescriptionLbl);
     end;

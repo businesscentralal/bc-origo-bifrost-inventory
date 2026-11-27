@@ -46,7 +46,7 @@ codeunit 10077019 "Nonstock Item Create Impl ori" implements "Msg Interface ori"
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates an item from a catalog item with the item template of the catalog item.', Comment = 'is-IS=Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar.';
+        DescriptionLbl: Label 'Creates an item from a catalog item with the item template of the catalog item.', Comment = 'is-IS=Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar. (vörulistavara, vara utan birgða, stofna vöru, breyta vörulistavöru).';
     begin
         exit(DescriptionLbl);
     end;

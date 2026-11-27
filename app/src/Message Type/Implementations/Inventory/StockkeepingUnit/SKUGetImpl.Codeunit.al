@@ -36,7 +36,7 @@ codeunit 10076996 "SKU Get Impl ori" implements "Msg Interface ori", "Msg Discov
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads stockkeeping units with their planning and cost fields.', Comment = 'is-IS=Les birgðageymsluvörur með skipulags- og kostnaðarreitum þeirra.';
+        DescriptionLbl: Label 'Reads stockkeeping units with their planning and cost fields.', Comment = 'is-IS=Les birgðageymsluvörur með skipulags- og kostnaðarreitum þeirra. (birgðageymsluvara, sku, staðsetning, afbrigði, pöntunarmark, áætlun).';
     begin
         exit(DescriptionLbl);
     end;
