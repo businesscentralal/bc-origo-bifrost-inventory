@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Bifröst page: Related now links Inventory Setup right after Bifrost Setup (page extension 10077001 `Bifrost Inventory Setup ori`; test codeunit 97903). Needs a Foundation release that has the Bifröst page. (#293)
+
 - Requires Business Central 28.0 or later (was 28.3). (#282)
 - `Price.List.Set` assigns the code of a new price list instead of validating it. On BC 28.0 the native Code validation looks up a blank number series (Source Group is still All) and failed with "The No. Series does not exist"; later versions skip that lookup, so behaviour is unchanged there. (#282)
 

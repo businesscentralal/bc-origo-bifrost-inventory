@@ -39,6 +39,8 @@ The published help is `https://docs.bifrost.origo.is/en-us/inventory/` (product 
 `https://docs.bifrost.origo.is/{locale}/help/inventory/inventory-setup` (context-sensitive help for
 the Inventory Setup page).
 
+Inventory Setup can also be opened from the Bifröst page: Related, Inventory Setup, right after Bifrost Setup.
+
 Icelandic translations are in `app/Translations/Bifrost Inventory.is-IS.xlf`. SourceGuards.yaml is not enabled for HelpLinks, IcelandicXlfInSync, or MixedLanguageLabels in this change. Those jobs stay unwired until the guards pass and infrastructure review approves them.
 
 ## Save an item reference
