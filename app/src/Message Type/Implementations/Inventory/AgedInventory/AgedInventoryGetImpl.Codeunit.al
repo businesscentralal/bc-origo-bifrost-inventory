@@ -13,7 +13,7 @@ codeunit 10076948 "Aged Inventory Get Impl ori" implements "Msg Interface ori", 
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Reads stock quantity and value per age bucket for each item, like the Item Age Composition reports.', Comment = 'is-IS=Les birgðamagn og birgðavirði í aldursflokkum fyrir hverja vöru, eins og skýrslurnar Aldurssamsetning vöru.';
+        DescriptionLbl: Label 'Reads stock quantity and value per age bucket for each item, like the Item Age Composition reports.', Comment = 'is-IS=Les birgðamagn og birgðavirði í aldursflokkum fyrir hverja vöru, eins og skýrslurnar Aldurssamsetning vöru. (aldursgreining birgða, aldur birgða).';
         SelectionLbl: Label 'Returns one row per item with stock: remaining quantity and value in five age buckets, counted back from the ending date.', Comment = 'is-IS=Skilar einni línu fyrir hverja vöru með birgðir: eftirstandandi magn og virði í fimm aldursflokkum, talið aftur frá lokadagsetningu.';
         KeywordsLbl: Label 'aged inventory, stock age, item age composition', Comment = 'is-IS=aldursgreining birgða,aldur birgða,aldurssamsetning vöru';
         OverviewLbl: Label 'Reads the age of stock: remaining quantity and value per age bucket and item, paged and read only.', Comment = 'is-IS=Les aldur birgða: eftirstandandi magn og virði í aldursflokki og vöru, síðuskipt og aðeins til lestrar.';

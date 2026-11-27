@@ -25,7 +25,7 @@ codeunit 10077026 "Transfer Ship Impl ori" implements "Msg Interface ori", "Msg 
     /// <summary>Describes the operation.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Ships selected quantities on a transfer order and returns the posted document.', Comment = 'is-IS=Afhendir valið magn á flutningspöntun og skilar bókaða skjalinu.';
+        DescriptionLbl: Label 'Ships selected quantities on a transfer order and returns the posted document.', Comment = 'is-IS=Afhendir valið magn á flutningspöntun og skilar bókaða skjalinu. (hlutaflutningur, valdar línur).';
     begin
         exit(DescriptionLbl);
     end;

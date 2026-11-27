@@ -41,7 +41,7 @@ codeunit 10076966 "Assembly BOM Get Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Answers the assembly BOM components of an item, optionally exploded through every sub-assembly level.', Comment = 'is-IS=Svarar íhlutum samsetningaruppskriftar vöru, valfrjálst sundurliðað í gegnum öll stig undirsamsetninga.';
+        DescriptionLbl: Label 'Answers the assembly BOM components of an item, optionally exploded through every sub-assembly level.', Comment = 'is-IS=Svarar íhlutum samsetningaruppskriftar vöru, valfrjálst sundurliðað í gegnum öll stig undirsamsetninga. (íhlutir, samsett vara, sundurliða uppskrift).';
     begin
         exit(DescriptionLbl);
     end;

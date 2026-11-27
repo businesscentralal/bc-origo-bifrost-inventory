@@ -25,7 +25,7 @@ codeunit 10076897 "Tracking Assign Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu.';
+        DescriptionLbl: Label 'Assigns lot, serial or package tracking to an existing sales, purchase, transfer, assembly or item journal source through native item tracking.', Comment = 'is-IS=Úthlutar lotu-, rað- eða pakkarakningu á sölu-, innkaupa-, flutnings-, samsetningar- eða birgðabókaruppruna með innbyggðri vörurakningu. (úthluta lotu, úthluta raðnúmeri, úthluta pakka, vörurekjanleiki).';
     begin
         exit(DescriptionLbl);
     end;

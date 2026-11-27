@@ -42,7 +42,7 @@ codeunit 10076965 "Asm. To Order Get Impl ori" implements "Msg Interface ori", "
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Answers the assemble-to-order assembly order linked to a sales line, with its lines.', Comment = 'is-IS=Svarar samsetningarpöntuninni sem er tengd sölulínu með samsetningu eftir pöntun, ásamt línum hennar.';
+        DescriptionLbl: Label 'Answers the assemble-to-order assembly order linked to a sales line, with its lines.', Comment = 'is-IS=Svarar samsetningarpöntuninni sem er tengd sölulínu með samsetningu eftir pöntun, ásamt línum hennar. (samsetning eftir pöntun, ATO, sölulína, samsett vara).';
     begin
         exit(DescriptionLbl);
     end;

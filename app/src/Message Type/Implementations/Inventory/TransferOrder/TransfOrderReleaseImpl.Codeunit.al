@@ -24,7 +24,7 @@ codeunit 10076907 "Transf. Order Release Impl ori" implements "Msg Interface ori
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Releases a transfer order, changing its status from Open to Released.', Comment = 'is-IS=Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest.';
+        DescriptionLbl: Label 'Releases a transfer order, changing its status from Open to Released.', Comment = 'is-IS=Staðfestir millifærslupöntun og breytir stöðu hennar úr Opin í Staðfest. (losa millifærslupöntun, staðfesta millifærslupöntun, millifærsla tilbúin til afhendingar).';
     begin
         exit(DescriptionLbl);
     end;

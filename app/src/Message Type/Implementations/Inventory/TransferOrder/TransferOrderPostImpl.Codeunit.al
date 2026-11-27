@@ -25,7 +25,7 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Posts a transfer order (ship/receive, or ship+receive for direct transfers).', Comment = 'is-IS=Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu).';
+        DescriptionLbl: Label 'Posts a transfer order (ship/receive, or ship+receive for direct transfers).', Comment = 'is-IS=Bókar millifærslupöntun (afhendingu eða móttöku, eða hvort tveggja við beina millifærslu). (bóka millifærslu, afhenda millifærslupöntun, taka á móti millifærslupöntun, móttekið í hinni birgðageymslunni, bein millifærsla).';
     begin
         exit(DescriptionLbl);
     end;

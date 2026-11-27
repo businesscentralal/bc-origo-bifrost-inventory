@@ -13,8 +13,8 @@ codeunit 10076936 "Std. Cost Contract ori"
     /// <summary>Describes the actual writes made by the operation.</summary>
     procedure Description(Implement: Boolean): Text
     var
-        SuggestLbl: Label 'Suggests standard costs for filtered items in a standard cost worksheet.', Comment = 'is-IS=Leggur til staðalkostnað fyrir síaðar vörur í staðalkostnaðarvinnublaði.';
-        ImplementLbl: Label 'Updates item and SKU standard costs and creates unposted revaluation journal lines from a worksheet.', Comment = 'is-IS=Uppfærir staðalkostnað vara og birgðahaldseininga og stofnar óbókaðar endurmatsbókarlínur úr vinnublaði.';
+        SuggestLbl: Label 'Suggests standard costs for filtered items in a standard cost worksheet.', Comment = 'is-IS=Leggur til staðalkostnað fyrir síaðar vörur í staðalkostnaðarvinnublaði. (staðalkostnaður, leiðréttingarstuðull, endurmat).';
+        ImplementLbl: Label 'Updates item and SKU standard costs and creates unposted revaluation journal lines from a worksheet.', Comment = 'is-IS=Uppfærir staðalkostnað vara og birgðahaldseininga og stofnar óbókaðar endurmatsbókarlínur úr vinnublaði. (staðalkostnaður, leiðréttingarstuðull).';
     begin
         if Implement then
             exit(ImplementLbl);

@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Icelandic catalogue descriptions include every Icelandic keyword phrase for all app-owned message types, within the 250-character search limit. English descriptions stay English. The parity guard in test codeunit 96971 rejects missing, untranslated or unsearchable phrases (#289). No object IDs added.
+
 - Requires Business Central 28.0 or later (was 28.3). (#282)
 - `Price.List.Set` assigns the code of a new price list instead of validating it. On BC 28.0 the native Code validation looks up a blank number series (Source Group is still All) and failed with "The No. Series does not exist"; later versions skip that lookup, so behaviour is unchanged there. (#282)
 

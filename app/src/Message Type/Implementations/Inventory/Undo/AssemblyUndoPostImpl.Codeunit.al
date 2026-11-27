@@ -23,7 +23,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Undoes a posted assembly document through the standard posted assembly undo.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar.';
+        DescriptionLbl: Label 'Undoes a posted assembly document through the standard posted assembly undo.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar. (afturkalla samsetningu, bakfæra bókaða samsetningu).';
     begin
         exit(DescriptionLbl);
     end;

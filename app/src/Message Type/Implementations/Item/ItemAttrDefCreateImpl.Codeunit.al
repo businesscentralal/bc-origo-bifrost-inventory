@@ -24,7 +24,7 @@ codeunit 10076913 "Item AttrDef Create Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates an item attribute definition and optional option values, independent of any item.', Comment = 'is-IS=Býr til skilgreiningu vörueiginleika og valkvæða valkosti, óháð einstökum vörum.';
+        DescriptionLbl: Label 'Creates an item attribute definition and optional option values, independent of any item.', Comment = 'is-IS=Býr til skilgreiningu vörueiginleika og valkvæða valkosti, óháð einstökum vörum. (búa til eiginleikaskilgreiningu vöru, skilgreina eiginleika vöru, bæta við eiginleikategund, búa til valkostalista, skilgreining á lýsigögnum vöru).';
     begin
         exit(DescriptionLbl);
     end;

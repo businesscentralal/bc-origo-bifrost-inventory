@@ -25,7 +25,7 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Undoes a posted transfer shipment with corrective entries.', Comment = 'is-IS=Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.';
+        DescriptionLbl: Label 'Undoes a posted transfer shipment with corrective entries.', Comment = 'is-IS=Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum. (afturkalla millifærsluafhendingu).';
     begin
         exit(DescriptionLbl);
     end;

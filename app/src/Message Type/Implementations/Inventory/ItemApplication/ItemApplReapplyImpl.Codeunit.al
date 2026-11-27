@@ -26,7 +26,7 @@ codeunit 10076868 "Item Appl. Reapply Impl ori" implements "Msg Interface ori", 
     /// <summary>Returns the description contract chapter.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reapplies an item ledger entry through standard item application posting.', Comment = 'is-IS=Jafnar vörufærslu aftur með hefðbundinni vörujöfnun.';
+        DescriptionLbl: Label 'Reapplies an item ledger entry through standard item application posting.', Comment = 'is-IS=Jafnar vörufærslu aftur með hefðbundinni vörujöfnun. (jafna vöru aftur, jafna vörufærslu).';
     begin
         exit(DescriptionLbl);
     end;

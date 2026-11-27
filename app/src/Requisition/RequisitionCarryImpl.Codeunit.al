@@ -9,7 +9,7 @@ codeunit 10076942 "Requisition Carry Impl ori" implements "Msg Interface ori", "
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Writes. Creates new orders from selected requisition worksheet lines.', Comment = 'is-IS=Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs.';
+        DescriptionLbl: Label 'Writes. Creates new orders from selected requisition worksheet lines.', Comment = 'is-IS=Skrifar. Stofnar nýjar pantanir úr völdum línum innkaupavinnublaðs. (innkaupabeiðni, áætlanagerð).';
         SelectionLbl: Label 'Use templateName and batchName to select one non-recurring requisition worksheet.', Comment = 'is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.';
         KeywordsLbl: Label 'purchase,requisition,worksheet,planning,orders', Comment = 'is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir';
         NotesLbl: Label 'Writes. Consumes selected new purchase or transfer suggestions to create new orders. Rejects Cancel, change, reschedule and existing-document links before any write. No printing or posting.', Comment = 'is-IS=Skrifar. Notar valdar nýjar innkaupa- eða millifærslutillögur til að stofna nýjar pantanir. Afturköllun, breytingum, endurtímasetningu og tengingum við fyrirliggjandi skjöl er hafnað áður en skrif hefjast. Hvorki prentar né bókar.';

@@ -25,7 +25,7 @@ codeunit 10076950 "Phys. Count Record Impl ori" implements "Msg Interface ori"
     /// <summary>Distinguishes the counts-only operation from the legacy single-line form.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Records physical inventory counts using the counts array; omitted qtyCounted leaves a line unchanged, zero records a zero count, and nothing is posted.', Comment = 'is-IS=Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað.';
+        DescriptionLbl: Label 'Records physical inventory counts using the counts array; omitted qtyCounted leaves a line unchanged, zero records a zero count, and nothing is posted.', Comment = 'is-IS=Skráir birgðatalningu með counts-fylkinu; ef qtyCounted er sleppt helst línan óbreytt, núll skráir núlltalningu og ekkert er bókað. (skrá talið magn, skrá talningu, skrá birgðatalningu, setja talið magn, talningarlínur).';
     begin
         exit(DescriptionLbl);
     end;

@@ -10,8 +10,8 @@ codeunit 10076983 "Price List Contract ori"
 
     var
         Activating: Boolean;
-        SetDescriptionLbl: Label 'Creates or updates a Draft sales or purchase price list and its numbered lines.', Comment = 'is-IS=Stofnar eða uppfærir sölu- eða innkaupaverðlista í Drögum og númeraðar línur hans.';
-        ActivateDescriptionLbl: Label 'Verifies a Draft price list, refuses conflicting lines and activates the list.', Comment = 'is-IS=Yfirfer verðlista í Drögum, hafnar línum sem stangast á og virkjar listann.';
+        SetDescriptionLbl: Label 'Creates or updates a Draft sales or purchase price list and its numbered lines.', Comment = 'is-IS=Stofnar eða uppfærir sölu- eða innkaupaverðlista í Drögum og númeraðar línur hans. (verðlisti, söluverð, afslættir).';
+        ActivateDescriptionLbl: Label 'Verifies a Draft price list, refuses conflicting lines and activates the list.', Comment = 'is-IS=Yfirfer verðlista í Drögum, hafnar línum sem stangast á og virkjar listann. (virkja verðlista, yfirfara verð, tvítekin verð).';
         SetKeywordsLbl: Label 'price list, sales prices, purchase prices, discounts', Comment = 'is-IS=verðlisti,söluverð,innkaupaverð,afslættir';
         ActivateKeywordsLbl: Label 'activate price list, verify prices, duplicate prices', Comment = 'is-IS=virkja verðlista,yfirfara verð,tvítekin verð';
         SelectionLbl: Label 'Selects one price list by data.code. Subjects and table views are not supported.', Comment = 'is-IS=Velur einn verðlista með data.code. Subject og töflusýn eru ekki studd.';

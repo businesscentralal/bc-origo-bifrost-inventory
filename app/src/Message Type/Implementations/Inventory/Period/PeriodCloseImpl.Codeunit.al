@@ -26,7 +26,7 @@ codeunit 10076877 "Period Close Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Closes the inventory period that ends on the given ending date.', Comment = 'is-IS=Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu.';
+        DescriptionLbl: Label 'Closes the inventory period that ends on the given ending date.', Comment = 'is-IS=Lokar birgðatímabilinu sem endar á gefinni lokadagsetningu. (loka birgðatímabili, læsa birgðatímabili).';
     begin
         exit(DescriptionLbl);
     end;

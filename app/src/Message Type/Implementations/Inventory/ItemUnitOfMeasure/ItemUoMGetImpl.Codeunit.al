@@ -42,7 +42,7 @@ codeunit 10077011 "Item UoM Get Impl ori" implements "Msg Interface ori", "Msg D
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads the units of measure of an item.', Comment = 'is-IS=Les mælieiningar vöru.';
+        DescriptionLbl: Label 'Reads the units of measure of an item.', Comment = 'is-IS=Les mælieiningar vöru. (vörumælieining, grunneining, magn í einingu, kassi, bretti, þyngd).';
     begin
         exit(DescriptionLbl);
     end;

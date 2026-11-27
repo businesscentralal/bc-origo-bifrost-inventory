@@ -42,7 +42,7 @@ codeunit 10076995 "SKU Create Impl ori" implements "Msg Interface ori", "Msg Dis
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates stockkeeping units per location and variant for the selected items.', Comment = 'is-IS=Stofnar birgðageymsluvörur fyrir staðsetningar og afbrigði valinna vara.';
+        DescriptionLbl: Label 'Creates stockkeeping units per location and variant for the selected items.', Comment = 'is-IS=Stofnar birgðageymsluvörur fyrir staðsetningar og afbrigði valinna vara. (stofna birgðageymsluvörur, sku, skipta út).';
     begin
         exit(DescriptionLbl);
     end;

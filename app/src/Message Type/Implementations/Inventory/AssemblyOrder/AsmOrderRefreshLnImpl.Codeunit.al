@@ -21,7 +21,7 @@ codeunit 10076850 "Asm. Order RefreshLn Impl ori" implements "Msg Interface ori"
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).', Comment = 'is-IS=Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift móðurvörunnar (RefreshBOM).';
+        DescriptionLbl: Label 'Refreshes assembly order component lines from the parent item''s BOM (RefreshBOM).', Comment = 'is-IS=Endurnýjar íhlutalínur samsetningarpöntunar úr uppskrift móðurvörunnar (RefreshBOM). (uppfæra samsetningarlínur, uppfæra íhluti úr uppskrift, endurhlaða íhlutalista, endurreikna íhluti).';
     begin
         exit(DescriptionLbl);
     end;

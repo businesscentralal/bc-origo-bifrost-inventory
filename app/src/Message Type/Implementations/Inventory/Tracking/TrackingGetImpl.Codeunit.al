@@ -12,7 +12,7 @@ codeunit 10076900 "Tracking Get Impl ori" implements "Msg Interface ori", "Msg D
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Reads lot, serial and package tracking for an item or document line.', Comment = 'is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.';
+        DescriptionLbl: Label 'Reads lot, serial and package tracking for an item or document line.', Comment = 'is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu. (lesa rakningu, loturakning, raðnúmerarakning).';
         SelectionLbl: Label 'Select a source or legacy document line; otherwise select an item. A sales, purchase or transfer line SystemId in subject selects that source.', Comment = 'is-IS=Veldu uppruna eða eldri skjalalínuvalkost; annars skaltu velja vöru. SystemId sölu-, innkaupa- eða flutningslínu í subject velur þann uppruna.';
         KeywordsLbl: Label 'read tracking,lot tracking,serial tracking,package tracking', Comment = 'is-IS=lesa rakningu,loturakning,raðnúmerarakning,pakkarakning';
         OverviewLbl: Label 'Reads lot, serial and package tracking for an item or document line.', Comment = 'is-IS=Les lotu-, raðnúmera- og pakkarakningu fyrir vöru eða skjalalínu.';

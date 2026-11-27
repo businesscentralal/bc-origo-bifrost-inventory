@@ -44,7 +44,7 @@ codeunit 10076876 "Item Ref. Resolve Impl ori" implements "Msg Interface ori", "
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Resolves a barcode, customer reference, or vendor reference to an item.', Comment = 'is-IS=Leysir strikamerki, viðskiptavinatilvísun eða birgjatilvísun upp í vöru.';
+        DescriptionLbl: Label 'Resolves a barcode, customer reference, or vendor reference to an item.', Comment = 'is-IS=Leysir strikamerki, viðskiptavinatilvísun eða birgjatilvísun upp í vöru. (vörutilvísun, vörunúmer viðskiptavinar, vörunúmer birgja, GTIN).';
     begin
         exit(DescriptionLbl);
     end;

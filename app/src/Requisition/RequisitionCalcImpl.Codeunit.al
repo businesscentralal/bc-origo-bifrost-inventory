@@ -9,7 +9,7 @@ codeunit 10076941 "Requisition Calc Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Calculates a native requisition plan in one worksheet.', Comment = 'is-IS=Reiknar innkaupaáætlun í einu vinnublaði.';
+        DescriptionLbl: Label 'Calculates a native requisition plan in one worksheet.', Comment = 'is-IS=Reiknar innkaupaáætlun í einu vinnublaði. (innkaupabeiðni, áætlanagerð, pantanir).';
         SelectionLbl: Label 'Use templateName and batchName to select one non-recurring requisition worksheet.', Comment = 'is-IS=Notaðu templateName og batchName til að velja eitt innkaupavinnublað sem er ekki ítrekunarblað.';
         KeywordsLbl: Label 'purchase,requisition,worksheet,planning,orders', Comment = 'is-IS=innkaup,innkaupabeiðni,vinnublað,áætlanagerð,pantanir';
         NotesLbl: Label 'Calculates a requisition plan with item, location and variant filters and an inclusive date range. Replaces matching working lines only in the named worksheet. Other worksheets are preserved. Returns the worksheet lines including action suggestions; no orders are changed.', Comment = 'is-IS=Reiknar innkaupaáætlun með vöru-, birgðastaðar- og afbrigðissíum og dagsetningarbili með báðum endadögum. Skiptir aðeins út samsvarandi vinnulínum á tilgreindu vinnublaði. Önnur vinnublöð eru varðveitt. Skilar vinnublaðslínum ásamt aðgerðatillögum; engum pöntunum er breytt.';

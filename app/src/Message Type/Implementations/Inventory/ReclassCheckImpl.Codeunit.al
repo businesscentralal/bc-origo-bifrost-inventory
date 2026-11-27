@@ -24,7 +24,7 @@ codeunit 10076887 "Reclass Check Impl ori" implements "Msg Interface ori", "Msg 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Validates the selected lines of an existing Transfer journal batch with the standard item journal line check. Nothing is posted.', Comment = 'is-IS=Sannreynir valdar línur fyrirliggjandi millifærslubókarkeyrslu með hefðbundinni athugun vörubókarlínu. Ekkert er bókað.';
+        DescriptionLbl: Label 'Validates the selected lines of an existing Transfer journal batch with the standard item journal line check. Nothing is posted.', Comment = 'is-IS=Sannreynir valdar línur fyrirliggjandi millifærslubókarkeyrslu með hefðbundinni athugun vörubókarlínu. Ekkert er bókað. (endurflokkunarfærsla, breyta staðsetningu vöru, breyta lotu).';
     begin
         exit(DescriptionLbl);
     end;

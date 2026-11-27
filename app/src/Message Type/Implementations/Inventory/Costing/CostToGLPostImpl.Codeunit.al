@@ -93,7 +93,7 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna.';
+        DescriptionLbl: Label 'Posts selected pending inventory costs to G/L per entry and returns actual posted and remaining counts.', Comment = 'is-IS=Bókar valinn óbókaðan birgðakostnað á fjárhag fyrir hverja færslu og skilar raunfjölda bókaðra og eftirstandandi færslna. (bóka birgðakostnað, fjárhagur, kostnaðarbókun).';
     begin
         exit(DescriptionLbl);
     end;

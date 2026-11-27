@@ -21,7 +21,7 @@ codeunit 10076904 "Transfer Order Reopen Impl ori" implements "Msg Interface ori
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Reopens a transfer order, changing its status from Released to Open.', Comment = 'is-IS=Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin.';
+        DescriptionLbl: Label 'Reopens a transfer order, changing its status from Released to Open.', Comment = 'is-IS=Opnar millifærslupöntun aftur og breytir stöðu hennar úr Staðfest í Opin. (opna millifærslupöntun aftur, breyta staðfestri millifærslu, aflæsa millifærslu).';
     begin
         exit(DescriptionLbl);
     end;

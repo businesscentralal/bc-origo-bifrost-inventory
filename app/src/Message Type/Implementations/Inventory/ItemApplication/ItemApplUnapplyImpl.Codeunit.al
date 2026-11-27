@@ -26,7 +26,7 @@ codeunit 10076869 "Item Appl. Unapply Impl ori" implements "Msg Interface ori", 
     /// <summary>Returns the description contract chapter.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Unapplies an item application entry through standard item application posting.', Comment = 'is-IS=Afturkallar vörujöfnun með hefðbundinni vörujöfnun.';
+        DescriptionLbl: Label 'Unapplies an item application entry through standard item application posting.', Comment = 'is-IS=Afturkallar vörujöfnun með hefðbundinni vörujöfnun. (afturkalla vörujöfnun, afturkalla jöfnun).';
     begin
         exit(DescriptionLbl);
     end;

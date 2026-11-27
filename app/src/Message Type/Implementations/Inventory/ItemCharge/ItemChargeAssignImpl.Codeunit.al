@@ -62,7 +62,7 @@ codeunit 10076873 "Item Charge Assign Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Assigns a purchase or sales item charge to item lines, receipts or shipments.', Comment = 'is-IS=Úthlutar kostnaðarauka í innkaupum eða sölu á vörulínur, móttökur eða afhendingar.';
+        DescriptionLbl: Label 'Assigns a purchase or sales item charge to item lines, receipts or shipments.', Comment = 'is-IS=Úthlutar kostnaðarauka í innkaupum eða sölu á vörulínur, móttökur eða afhendingar. (kostnaðarauki, flutningskostnaður, tollur, kostnaðarverð).';
     begin
         exit(DescriptionLbl);
     end;
