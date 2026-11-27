@@ -49,7 +49,7 @@ codeunit 10077012 "Item UoM Create Impl ori" implements "Msg Interface ori", "Ms
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates a unit of measure on an item.', Comment = 'is-IS=Stofnar mælieiningu á vöru.';
+        DescriptionLbl: Label 'Creates a unit of measure on an item.', Comment = 'is-IS=Stofnar mælieiningu á vöru. (vörumælieining, ný eining, kassi, bretti, magn í einingu, þyngd, mál).';
     begin
         exit(DescriptionLbl);
     end;

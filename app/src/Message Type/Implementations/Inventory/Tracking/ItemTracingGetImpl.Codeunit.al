@@ -31,7 +31,7 @@ codeunit 10076994 "Item Tracing Get Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Traces a lot or serial number to where it came from or where it went.', Comment = 'is-IS=Rekur lotu- eða raðnúmer til uppruna þess eða þangað sem það fór.';
+        DescriptionLbl: Label 'Traces a lot or serial number to where it came from or where it went.', Comment = 'is-IS=Rekur lotu- eða raðnúmer til uppruna þess eða þangað sem það fór. (vörurakning, innköllun, lotuferill, raðnúmeraferill, notkun, uppruni).';
     begin
         exit(DescriptionLbl);
     end;

@@ -25,7 +25,7 @@ codeunit 10076899 "Tracking Delete Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Removes selected unposted item tracking from its document line through native reservation handling.', Comment = 'is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu.';
+        DescriptionLbl: Label 'Removes selected unposted item tracking from its document line through native reservation handling.', Comment = 'is-IS=Fjarlægir valda óbókaða vörurakningu af skjalalínu með innbyggðri frátektarvinnslu. (eyða rekjanleika, eyða lotu, eyða raðnúmeri, eyða pakka).';
     begin
         exit(DescriptionLbl);
     end;

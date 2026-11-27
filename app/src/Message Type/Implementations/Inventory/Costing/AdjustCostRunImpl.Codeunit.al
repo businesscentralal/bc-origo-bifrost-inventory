@@ -58,7 +58,7 @@ codeunit 10076858 "Adjust Cost Run Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Describes the existing costing execution.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Adjusts item costs with an optional item or category filter and an explicit postToGL option.', Comment = 'is-IS=Leiðréttir vörukostnað með valkvæðri vöru- eða flokkssíu og skýru postToGL-vali.';
+        DescriptionLbl: Label 'Adjusts item costs with an optional item or category filter and an explicit postToGL option.', Comment = 'is-IS=Leiðréttir vörukostnað með valkvæðri vöru- eða flokkssíu og skýru postToGL-vali. (leiðrétta kostnað, leiðrétting vörufærslu, bóka á fjárhag, kostnaðarleiðrétting).';
     begin
         exit(DescriptionLbl);
     end;

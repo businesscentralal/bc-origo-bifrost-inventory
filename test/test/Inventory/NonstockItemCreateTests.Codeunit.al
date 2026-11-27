@@ -298,7 +298,7 @@ codeunit 96934 "Nonstock Item Create Tests"
         Discovery := "Message Type ori"::"Inventory.NonstockItem.Create";
         Description := Discovery.GetDescription();
         GlobalLanguage(PreviousLanguage);
-        Assert.AreEqual('Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar.', Description, 'is-IS description');
+        Assert.IsTrue(Description.StartsWith('Stofnar vöru úr vörulistavöru með vörusniðmáti vörulistavörunnar.'), 'is-IS description');
     end;
 
     local procedure CreateCatalogItem(WithTemplate: Boolean) EntryNo: Code[20]

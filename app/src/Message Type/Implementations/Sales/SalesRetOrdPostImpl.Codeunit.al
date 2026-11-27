@@ -66,7 +66,7 @@ codeunit 10077032 "Sales Ret. Ord. Post. Impl ori" implements "Msg Interface ori
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates a sales return order or credit memo from posted sales invoice or shipment lines.', Comment = 'is-IS=Stofnar sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum sölureiknings- eða afhendingarlínum.';
+        DescriptionLbl: Label 'Creates a sales return order or credit memo from posted sales invoice or shipment lines.', Comment = 'is-IS=Stofnar sölutilbakaskilapöntun eða sölukreditreikning úr bókuðum sölureiknings- eða afhendingarlínum. (kreditreikningur, sækja bókaðar skjalalínur til að bakfæra, skil viðskiptamanns, afrita skjal).';
     begin
         exit(DescriptionLbl);
     end;

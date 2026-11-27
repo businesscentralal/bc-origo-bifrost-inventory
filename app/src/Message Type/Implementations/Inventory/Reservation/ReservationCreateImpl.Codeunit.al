@@ -49,7 +49,7 @@ codeunit 10076893 "Reservation Create Impl ori" implements "Msg Interface ori", 
     /// <returns>The description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reserves supply for a source document line through Reservation Management.', Comment = 'is-IS=Tekur frá framboð fyrir línu upprunaskjals með Reservation Management.';
+        DescriptionLbl: Label 'Reserves supply for a source document line through Reservation Management.', Comment = 'is-IS=Tekur frá framboð fyrir línu upprunaskjals með Reservation Management. (búa til frátekningu, taka sjálfvirkt frá, taka vöru frá, upprunalína).';
     begin
         exit(DescriptionLbl);
     end;

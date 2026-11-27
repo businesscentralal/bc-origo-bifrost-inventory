@@ -26,7 +26,7 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.';
+        DescriptionLbl: Label 'Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins. (bóka samsetningu, ljúka samsetningu, samsett, skila vörusetti, nota íhluti).';
     begin
         exit(DescriptionLbl);
     end;

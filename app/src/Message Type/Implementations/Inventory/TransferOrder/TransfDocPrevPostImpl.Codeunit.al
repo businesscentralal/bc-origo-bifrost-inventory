@@ -26,7 +26,7 @@ codeunit 10076901 "Transf Doc Prev. Post Impl ori" implements "Msg Interface ori
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.', Comment = 'is-IS=Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar.';
+        DescriptionLbl: Label 'Simulates posting a transfer order and returns predicted ledger entries (Item, Value, G/L) without committing changes.', Comment = 'is-IS=Hermir bókun millifærslupöntunar og skilar væntanlegum vöru-, virðis- og fjárhagsfærslum án þess að vista breytingar. (forskoða bókun millifærslu, herma birgðaflutning, hvað myndi millifærslan bóka).';
     begin
         exit(DescriptionLbl);
     end;

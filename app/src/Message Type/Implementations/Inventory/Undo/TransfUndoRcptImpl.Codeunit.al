@@ -20,7 +20,7 @@ codeunit 10076911 "Transf Undo Rcpt Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Comment = 'is-IS=Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd.';
+        DescriptionLbl: Label 'Unavailable compatibility identifier; posted transfer receipt undo is not supported.', Comment = 'is-IS=Óvirkt samhæfnisauðkenni; afturköllun bókaðrar flutningsmóttöku er ekki studd. (afturkalla millifærslumóttöku).';
     begin
         exit(DescriptionLbl);
     end;

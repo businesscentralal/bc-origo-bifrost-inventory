@@ -45,7 +45,7 @@ codeunit 10076991 "Item Variant Create Impl ori" implements "Msg Interface ori",
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates a variant on an item.', Comment = 'is-IS=Stofnar afbrigði á vöru.';
+        DescriptionLbl: Label 'Creates a variant on an item.', Comment = 'is-IS=Stofnar afbrigði á vöru. (vöruafbrigði, nýtt afbrigði, afbrigðiskóði, litur, stærð).';
     begin
         exit(DescriptionLbl);
     end;

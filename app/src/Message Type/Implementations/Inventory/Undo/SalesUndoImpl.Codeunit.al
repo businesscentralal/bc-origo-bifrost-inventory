@@ -11,7 +11,7 @@ codeunit 10077016 "Sales Undo Impl ori" implements "Msg Interface ori", "Msg Dis
     var
         Undo: Codeunit "Posted Line Undo ori";
         ContractMgt: Codeunit "Msg Contract Mgt ori";
-        DescriptionLbl: Label 'Undoes selected posted sales shipment lines with native corrective entries.', Comment = 'is-IS=Afturkallar valdar línur í bókaðri söluafhendingu með innbyggðum leiðréttingarfærslum.';
+        DescriptionLbl: Label 'Undoes selected posted sales shipment lines with native corrective entries.', Comment = 'is-IS=Afturkallar valdar línur í bókaðri söluafhendingu með innbyggðum leiðréttingarfærslum. (afturkalla bókaða söluafhendingu leiðrétta línur).';
         KeywordsLbl: Label 'undo posted sales shipment reverse lines', Comment = 'is-IS=afturkalla bókaða söluafhendingu leiðrétta línur';
 
     /// <summary>Supplies the IsEnabled contract for Sales.Shipment.Undo.</summary>

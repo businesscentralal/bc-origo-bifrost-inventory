@@ -49,7 +49,7 @@ codeunit 10076875 "Item Charge Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads the item charge assignment of one purchase or sales charge line.', Comment = 'is-IS=Les úthlutun kostnaðarauka á einni kostnaðaraukalínu í innkaupum eða sölu.';
+        DescriptionLbl: Label 'Reads the item charge assignment of one purchase or sales charge line.', Comment = 'is-IS=Les úthlutun kostnaðarauka á einni kostnaðaraukalínu í innkaupum eða sölu. (kostnaðarauki, óúthlutað, flutningskostnaður, tollur).';
     begin
         exit(DescriptionLbl);
     end;

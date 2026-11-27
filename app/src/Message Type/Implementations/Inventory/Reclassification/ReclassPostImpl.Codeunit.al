@@ -25,7 +25,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Posts an item reclassification journal. This is not a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.';
+        DescriptionLbl: Label 'Posts an item reclassification journal. This is not a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun. (bóka endurflokkun).';
     begin
         exit(DescriptionLbl);
     end;

@@ -25,7 +25,7 @@ codeunit 10076915 "Item Attribute Create Impl ori" implements "Msg Interface ori
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Assigns attribute values to an item. Idempotent when the same value already exists.', Comment = 'is-IS=Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til.';
+        DescriptionLbl: Label 'Assigns attribute values to an item. Idempotent when the same value already exists.', Comment = 'is-IS=Úthlutar eiginleikagildum á vöru. Breytir engu ef sama gildi er þegar til. (úthluta eiginleika vöru, búa til eiginleikagildi vöru, stilla eiginleika vöru, merkja vöru, bæta við lýsigögnum vöru).';
     begin
         exit(DescriptionLbl);
     end;

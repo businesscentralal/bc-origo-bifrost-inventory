@@ -51,7 +51,7 @@ codeunit 10076932 "Item Create Impl ori" implements "Msg Interface ori", "Msg Di
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates an item from an item template and answers its number and units of measure.', Comment = 'is-IS=Stofnar vöru út frá vörusniðmáti og svarar númeri hennar og mælieiningum.';
+        DescriptionLbl: Label 'Creates an item from an item template and answers its number and units of measure.', Comment = 'is-IS=Stofnar vöru út frá vörusniðmáti og svarar númeri hennar og mælieiningum. (GTIN).';
     begin
         exit(DescriptionLbl);
     end;

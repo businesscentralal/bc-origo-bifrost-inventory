@@ -11,7 +11,7 @@ codeunit 10076886 "Price Update Impl ori" implements "Msg Interface ori", "Msg D
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Updates an item unit price.', Comment = 'is-IS=Uppfærir einingarverð vöru.';
+        DescriptionLbl: Label 'Updates an item unit price.', Comment = 'is-IS=Uppfærir einingarverð vöru. (uppfæra vöruverð).';
         SelectionLbl: Label 'Selects exactly one item using the Foundation subject, identifier or tableView rules.', Comment = 'is-IS=Velur nákvæmlega eina vöru samkvæmt reglum grunnforritsins um subject, auðkenni eða tableView.';
         KeywordsLbl: Label 'update item price, unit price', Comment = 'is-IS=uppfæra vöruverð,einingarverð';
         OverviewLbl: Label 'Updates the unit price of one item.', Comment = 'is-IS=Uppfærir einingarverð einnar vöru.';

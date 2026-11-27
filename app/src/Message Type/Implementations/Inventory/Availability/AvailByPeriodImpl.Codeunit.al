@@ -54,7 +54,7 @@ codeunit 10076857 "Avail. By Period Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads projected item availability by day, week, month, quarter, or year.', Comment = 'is-IS=Les áætlað framboð vöru eftir degi, viku, mánuði, ársfjórðungi eða ári.';
+        DescriptionLbl: Label 'Reads projected item availability by day, week, month, quarter, or year.', Comment = 'is-IS=Les áætlað framboð vöru eftir degi, viku, mánuði, ársfjórðungi eða ári. (tímabil, heildarþörf, áætlað tiltækt magn, birgðir).';
     begin
         exit(DescriptionLbl);
     end;

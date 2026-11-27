@@ -11,7 +11,7 @@ codeunit 10076898 "Tracking Avail. Get Impl ori" implements "Msg Interface ori",
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Reads tracked inventory, reserved quantities and availability by location and variant.', Comment = 'is-IS=Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.';
+        DescriptionLbl: Label 'Reads tracked inventory, reserved quantities and availability by location and variant.', Comment = 'is-IS=Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði. (tiltæk rakning, tiltækar lotur, tiltæk raðnúmer, tiltækir pakkar).';
         SelectionLbl: Label 'Select an item using subject or item identifiers; intersect location, variant and exact tracking filters.', Comment = 'is-IS=Veldu vöru með subject eða vöruauðkennum; sameinaðu síur fyrir birgðageymslu, afbrigði og nákvæma rakningu.';
         KeywordsLbl: Label 'tracking availability,lot availability,serial availability,package availability', Comment = 'is-IS=tiltæk rakning,tiltækar lotur,tiltæk raðnúmer,tiltækir pakkar';
         OverviewLbl: Label 'Reads tracked inventory, reserved quantities and availability by location and variant.', Comment = 'is-IS=Les raktar birgðir, frátekið magn og tiltækt magn eftir birgðageymslu og afbrigði.';

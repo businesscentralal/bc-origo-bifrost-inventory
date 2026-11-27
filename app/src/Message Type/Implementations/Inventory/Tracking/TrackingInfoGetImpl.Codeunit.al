@@ -11,7 +11,7 @@ codeunit 10077010 "Tracking Info Get Impl ori" implements "Msg Interface ori", "
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Reads the lot, serial or package information card of an item, with its comments and inventory.', Comment = 'is-IS=Les upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru, með athugasemdum og birgðum.';
+        DescriptionLbl: Label 'Reads the lot, serial or package information card of an item, with its comments and inventory.', Comment = 'is-IS=Les upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru, með athugasemdum og birgðum. (lotuupplýsingar, raðnúmeraupplýsingar, pakkaupplýsingar, lotuspjald, raðnúmeraspjald, pakkaspjald, gæðaprófun, vottorðsnúmer, lokuð lota).';
         SelectionLbl: Label 'Select an item using subject or item identifiers, then exactly one of lotNo, serialNo or packageNo, and the variantCode of the card.', Comment = 'is-IS=Veldu vöru með subject eða vöruauðkennum, síðan nákvæmlega eitt af lotNo, serialNo eða packageNo, og variantCode spjaldsins.';
         KeywordsLbl: Label 'lot information,serial information,package information,lot card,serial card,package card,test quality,certificate number,blocked lot', Comment = 'is-IS=lotuupplýsingar,raðnúmeraupplýsingar,pakkaupplýsingar,lotuspjald,raðnúmeraspjald,pakkaspjald,gæðaprófun,vottorðsnúmer,lokuð lota';
         OverviewLbl: Label 'Reads one lot, serial or package information card of an item: description, test quality, certificate number, blocked, comments, inventory and expired inventory.', Comment = 'is-IS=Les eitt upplýsingaspjald lotu, raðnúmers eða pakka fyrir vöru: lýsingu, gæðaprófun, vottorðsnúmer, lokun, athugasemdir, birgðir og útrunnar birgðir.';
