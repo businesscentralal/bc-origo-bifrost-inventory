@@ -1271,8 +1271,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 4269381906 - Method 4077369804 - NamedType 2938128749" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reads dated supply and demand events and projected inventory for one item.</source>
-          <target>Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru.</note>
+          <target>Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru. (atburður, aðföng).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru. (atburður, aðföng).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Avail. By Event Impl ori - Method GetDescription - NamedType HelpLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4269381906 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">
@@ -6347,8 +6347,8 @@
         </trans-unit>
         <trans-unit id="Codeunit 3640557848 - Method 4077369804 - NamedType 918378481" size-unit="char" translate="yes" xml:space="preserve">
           <source>Creates or updates an item reference.</source>
-          <target>Stofnar eða uppfærir vörutilvísun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eða uppfærir vörutilvísun.</note>
+          <target>Stofnar eða uppfærir vörutilvísun. (strikamerki, viðskiptavinur, birgir).</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnar eða uppfærir vörutilvísun. (strikamerki, viðskiptavinur, birgir).</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Item Ref. Set Impl ori - Method GetDescription - NamedType TextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3640557848 - Method 1479631707 - NamedType 1449450473" size-unit="char" translate="yes" xml:space="preserve">

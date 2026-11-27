@@ -45,7 +45,7 @@ codeunit 10076954 "Item Ref. Set Impl ori" implements "Msg Interface ori", "Msg 
     /// <summary>Provides translated description.</summary>
     procedure GetDescription(): Text[250]
     var
-        TextLbl: Label 'Creates or updates an item reference.', Comment = 'is-IS=Stofnar eða uppfærir vörutilvísun.';
+        TextLbl: Label 'Creates or updates an item reference.', Comment = 'is-IS=Stofnar eða uppfærir vörutilvísun. (strikamerki, viðskiptavinur, birgir).';
     begin
         exit(TextLbl);
     end;
