@@ -181,61 +181,23 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         exit("Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Checks the posted shipment exists and still has lines that can be undone, before confirmation.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; var DocumentNo: Code[20]): Boolean
+    var
+        TransferShipmentLine: Record "Transfer Shipment Line";
+    begin
+        exit(PrepareUndo(Argument, TransferShipmentLine, DocumentNo));
+    end;
+
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
-        TransferShipmentHeader: Record "Transfer Shipment Header";
         TransferShipmentLine: Record "Transfer Shipment Line";
-        TransferLine: Record "Transfer Line";
-        TransferReceiptLine: Record "Transfer Receipt Line";
-        Gate: Codeunit "Inventory Domain Gate ori";
         UndoShipment: Codeunit "Undo Transfer Shipment";
-        RequestJson: JsonObject;
         ResponseJson: JsonObject;
-        Token: JsonToken;
         DocumentNo: Code[20];
-        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
-        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.';
-        ReceivedErr: Label 'Transfer shipment %1 has already been received and cannot be undone.', Comment = '%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.';
-        ReceivedNextStepTxt: Label 'Create a new transfer order to return the received goods to the original location.', Comment = 'is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.';
-        UnreceivedTxt: Label 'A posted shipment whose selected transfer lines have not been received.', Comment = 'is-IS=Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.';
-        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.';
     begin
-        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
+        if not PrepareUndo(Argument, TransferShipmentLine, DocumentNo) then
             exit;
-        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true) then
-            exit;
-        Argument.AssertIsLicensed();
-        Argument.AssertVersion1();
-        RequestJson := Argument.GetRequestJson();
-        if not RequestJson.Get('documentNo', Token) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, 'documentNo', '', '', '');
-            exit;
-        end;
-        DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
-        if not TransferShipmentHeader.Get(DocumentNo) then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
-            exit;
-        end;
-        TransferShipmentLine.SetRange("Document No.", TransferShipmentHeader."No.");
-        if not SelectLines(RequestJson, TransferShipmentLine, Argument) then
-            exit;
-        TransferShipmentLine.SetRange("Correction Line", false);
-        if not TransferShipmentLine.FindSet() then begin
-            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesErr, DocumentNo), '', '', '', '');
-            exit;
-        end;
-        repeat
-            TransferReceiptLine.SetRange("Transfer Order No.", TransferShipmentLine."Transfer Order No.");
-            TransferReceiptLine.SetRange("Line No.", TransferShipmentLine."Trans. Order Line No.");
-            TransferReceiptLine.SetFilter(Quantity, '<>0');
-            if (not TransferReceiptLine.IsEmpty()) or
-               (TransferLine.Get(TransferShipmentLine."Transfer Order No.", TransferShipmentLine."Trans. Order Line No.") and
-                (TransferLine."Qty. Received (Base)" > 0))
-            then begin
-                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ReceivedErr, DocumentNo), 'documentNo', DocumentNo, UnreceivedTxt, ReceivedNextStepTxt);
-                exit;
-            end;
-        until TransferShipmentLine.Next() = 0;
         TransferShipmentLine.FindSet();
         UndoShipment.SetHideDialog(true);
         if Argument."Omit Commit" then
@@ -249,6 +211,61 @@ codeunit 10076910 "Transfer Undo Shpt Impl ori" implements "Msg Interface ori", 
         ResponseJson.Add('documentNo', DocumentNo);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure PrepareUndo(var Argument: Record "Message Argument ori"; var TransferShipmentLine: Record "Transfer Shipment Line"; var DocumentNo: Code[20]): Boolean
+    var
+        TransferShipmentHeader: Record "Transfer Shipment Header";
+        TransferLine: Record "Transfer Line";
+        TransferReceiptLine: Record "Transfer Receipt Line";
+        Gate: Codeunit "Inventory Domain Gate ori";
+        RequestJson: JsonObject;
+        Token: JsonToken;
+        MissingDocErr: Label 'documentNo is required.', Comment = 'is-IS=documentNo er nauðsynlegt.';
+        NotFoundErr: Label 'Posted transfer shipment %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.';
+        ReceivedErr: Label 'Transfer shipment %1 has already been received and cannot be undone.', Comment = '%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.';
+        ReceivedNextStepTxt: Label 'Create a new transfer order to return the received goods to the original location.', Comment = 'is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.';
+        UnreceivedTxt: Label 'A posted shipment whose selected transfer lines have not been received.', Comment = 'is-IS=Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.';
+        NoLinesErr: Label 'Posted transfer shipment %1 has no lines to undo.', Comment = '%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.';
+    begin
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, false) then
+            exit(false);
+        if not Gate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Shipment Header", true, true) then
+            exit(false);
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        RequestJson := Argument.GetRequestJson();
+        if not RequestJson.Get('documentNo', Token) or not Token.IsValue() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingDocErr, 'documentNo', '', '', '');
+            exit(false);
+        end;
+        DocumentNo := CopyStr(Token.AsValue().AsCode(), 1, MaxStrLen(DocumentNo));
+        // Default isolation: an update lock taken while confirming is still held when the undo runs in the same transaction.
+        if not TransferShipmentHeader.Get(DocumentNo) then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', '', '', '');
+            exit(false);
+        end;
+        TransferShipmentLine.SetRange("Document No.", TransferShipmentHeader."No.");
+        if not SelectLines(RequestJson, TransferShipmentLine, Argument) then
+            exit(false);
+        TransferShipmentLine.SetRange("Correction Line", false);
+        if not TransferShipmentLine.FindSet() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesErr, DocumentNo), '', '', '', '');
+            exit(false);
+        end;
+        repeat
+            TransferReceiptLine.SetRange("Transfer Order No.", TransferShipmentLine."Transfer Order No.");
+            TransferReceiptLine.SetRange("Line No.", TransferShipmentLine."Trans. Order Line No.");
+            TransferReceiptLine.SetFilter(Quantity, '<>0');
+            if (not TransferReceiptLine.IsEmpty()) or
+               (TransferLine.Get(TransferShipmentLine."Transfer Order No.", TransferShipmentLine."Trans. Order Line No.") and
+                (TransferLine."Qty. Received (Base)" > 0))
+            then begin
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(ReceivedErr, DocumentNo), 'documentNo', DocumentNo, UnreceivedTxt, ReceivedNextStepTxt);
+                exit(false);
+            end;
+        until TransferShipmentLine.Next() = 0;
+        exit(true);
     end;
 
     local procedure SelectLines(Request: JsonObject; var ShipmentLine: Record "Transfer Shipment Line"; var Argument: Record "Message Argument ori"): Boolean

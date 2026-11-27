@@ -33,6 +33,8 @@ codeunit 10077024 "Partial Transfer Contract ori"
         PermissionNextLbl: Label 'Enable Transfer Orders in Inventory Setup and grant the required read, write and posting permissions.', Comment = 'is-IS=Virkjaðu flutningspantanir í birgðauppsetningu og veittu nauðsynlegar les-, skrif- og bókunarheimildir.';
         DirectLbl: Label 'The selected order is a direct transfer, or a supplied expectedCount is not the integer 1.', Comment = 'is-IS=Valda pöntunin er beinn flutningur eða tilgreint expectedCount er ekki heiltalan 1.';
         DirectNextLbl: Label 'Use Inventory.TransferOrder.Post for a direct transfer; otherwise send expectedCount 1 for one order.', Comment = 'is-IS=Notaðu Inventory.TransferOrder.Post fyrir beinan flutning; annars skaltu senda expectedCount 1 fyrir eina pöntun.';
+        NoLinesLbl: Label 'The transfer order has no lines to ship or receive.', Comment = 'is-IS=Flutningspöntunin hefur engar línur til afhendingar eða móttöku.';
+        NoLinesNextLbl: Label 'Add item lines to the transfer order, then send the call again.', Comment = 'is-IS=Bættu vörulínum við flutningspöntunina og sendu kallið aftur.';
         RelatedLbl: Label 'Post an order using its current quantities, including direct transfers.', Comment = 'is-IS=Bókaðu pöntun með núverandi magni hennar, þar á meðal beina flutninga.';
         ExampleLbl: Label 'Post part of one selected transfer line.', Comment = 'is-IS=Bókaðu hluta einnar valinnar flutningslínu.';
 
@@ -111,6 +113,7 @@ codeunit 10077024 "Partial Transfer Contract ori"
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PermissionDenied, PermissionLbl, PermissionNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::InvalidParameter, PermissionLbl, PermissionNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, DirectLbl, DirectNextLbl));
+        Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::PreconditionFailed, NoLinesLbl, NoLinesNextLbl));
         Errors.Add(ContractMgt.ErrorEntry("Bifrost Error Code ori"::BusinessCentralError, NativeLbl, NativeNextLbl));
     end;
 

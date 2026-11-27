@@ -12,31 +12,29 @@ codeunit 10076859 "Adjust Cost Run Process ori"
 {
     Access = Internal;
 
+    /// <summary>Validates filters before confirmation or the adjust-cost report. Zero matching items is still a valid run.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"): Boolean
+    var
+        ItemNoFilter: Text;
+        ItemCategoryFilter: Text;
+        PostToGL: Boolean;
+        ItemsProcessed: Integer;
+    begin
+        exit(TryPrepare(Argument, ItemNoFilter, ItemCategoryFilter, PostToGL, ItemsProcessed));
+    end;
+
     procedure RunAdjustCost(var Argument: Record "Message Argument ori")
     var
-        Reader: Codeunit "Request Value Reader ori";
-        RequestJson: JsonObject;
         ItemNoFilter: Text;
         ItemCategoryFilter: Text;
         PostToGL: Boolean;
         ResponseJson: JsonObject;
         ErrorsJson: JsonArray;
-        ReadOk: Boolean;
         ItemsProcessed: Integer;
         NativeExpectedTxt: Label 'Valid costing setup and one item or category filter.', Comment = 'is-IS=Gild kostnaðaruppsetning og ein vöru- eða flokkasía.';
         NativeNextStepTxt: Label 'Correct the reported costing or filter problem and inspect ledger state before retrying.', Comment = 'is-IS=Leiðréttu kostnaðar- eða síuvilluna og skoðaðu stöðu færslna áður en þú reynir aftur.';
     begin
-        RequestJson := Argument.GetRequestJson();
-        if not CheckUnsupportedParameters(Argument, RequestJson) then
-            exit;
-        ReadOk := TryReadText(Argument, RequestJson, 'itemNoFilter', ItemNoFilter);
-        if not TryReadText(Argument, RequestJson, 'itemCategoryFilter', ItemCategoryFilter) then
-            ReadOk := false;
-        if not Reader.TryReadBoolean(Argument, RequestJson, 'postToGL', RequestJson.Contains('postToGL'), PostToGL) then
-            ReadOk := false;
-        if not ReadOk then
-            exit;
-        if not CheckSelection(Argument, ItemNoFilter, ItemCategoryFilter, ItemsProcessed) then
+        if not TryPrepare(Argument, ItemNoFilter, ItemCategoryFilter, PostToGL, ItemsProcessed) then
             exit;
         if not TryRunAdjustCost(ItemNoFilter, ItemCategoryFilter, PostToGL) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'itemNoFilter', ItemNoFilter, NativeExpectedTxt, NativeNextStepTxt);
@@ -50,6 +48,25 @@ codeunit 10076859 "Adjust Cost Run Process ori"
         ResponseJson.Add('errors', ErrorsJson);
         Argument.SetResponseJson(ResponseJson);
         Argument."Content Type" := Argument.GetContentTypeJson();
+    end;
+
+    local procedure TryPrepare(var Argument: Record "Message Argument ori"; var ItemNoFilter: Text; var ItemCategoryFilter: Text; var PostToGL: Boolean; var ItemsProcessed: Integer): Boolean
+    var
+        Reader: Codeunit "Request Value Reader ori";
+        RequestJson: JsonObject;
+        ReadOk: Boolean;
+    begin
+        RequestJson := Argument.GetRequestJson();
+        if not CheckUnsupportedParameters(Argument, RequestJson) then
+            exit(false);
+        ReadOk := TryReadText(Argument, RequestJson, 'itemNoFilter', ItemNoFilter);
+        if not TryReadText(Argument, RequestJson, 'itemCategoryFilter', ItemCategoryFilter) then
+            ReadOk := false;
+        if not Reader.TryReadBoolean(Argument, RequestJson, 'postToGL', RequestJson.Contains('postToGL'), PostToGL) then
+            ReadOk := false;
+        if not ReadOk then
+            exit(false);
+        exit(CheckSelection(Argument, ItemNoFilter, ItemCategoryFilter, ItemsProcessed));
     end;
 
     local procedure CheckUnsupportedParameters(var Argument: Record "Message Argument ori"; RequestJson: JsonObject): Boolean

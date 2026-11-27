@@ -1107,6 +1107,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar samsetningarpöntun og notar íhluti; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2987745232 - Method 3966126217 - NamedType 3359697259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Assembly order %1 has no lines to post.</source>
+          <target>Samsetningarpöntun %1 hefur engar línur til að bóka.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Samsetningarpöntun %1 hefur engar línur til að bóka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method ValidateForConfirm - NamedType NoLinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2987745232 - Method 3966126217 - NamedType 3511091107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Refresh the assembly lines, then send the call again.</source>
+          <target>Endurnýjaðu samsetningarlínurnar og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Endurnýjaðu samsetningarlínurnar og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Order Post Impl ori - Method ValidateForConfirm - NamedType NoLinesNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1450582865 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reopens a released assembly order so it can be edited again (status Released -&gt; Open).</source>
           <target>Opnar staðfesta samsetningarpöntun aftur svo hægt sé að breyta henni (staða Staðfest -&gt; Opin).</target>
@@ -1131,24 +1143,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða samsetningarskjalið, alltaf 1, ekki línur þess eða birgðafærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 2266268523" size-unit="char" translate="yes" xml:space="preserve">
-          <source>recreateOrder must be a JSON boolean.</source>
-          <target>recreateOrder verður að vera JSON-rökgildi.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=recreateOrder verður að vera JSON-rökgildi.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3480846878" size-unit="char" translate="yes" xml:space="preserve">
-          <source>true or false</source>
-          <target>true eða false</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=true eða false</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 139679517" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send recreateOrder as true or false, or omit it.</source>
-          <target>Sendu recreateOrder sem true eða false eða slepptu því.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu recreateOrder sem true eða false eða slepptu því.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType BooleanNextTxt</note>
-        </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 2590426299" size-unit="char" translate="yes" xml:space="preserve">
           <source>An existing posted assembly document that can be undone.</source>
           <target>Bókað samsetningarskjal sem er til og hægt er að afturkalla.</target>
@@ -1160,12 +1154,6 @@
           <target>Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType DocumentNextStepTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 2432377750 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posted assembly %1 was not found.</source>
-          <target>Bókuð samsetning %1 fannst ekki.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2432377750 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Undoes a posted assembly document through the standard posted assembly undo.</source>
@@ -1190,6 +1178,42 @@
           <target>Afturkallar bókaða samsetningu eftir skjalnúmeri.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Afturkallar bókaða samsetningu eftir skjalnúmeri.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 2266268523" size-unit="char" translate="yes" xml:space="preserve">
+          <source>recreateOrder must be a JSON boolean.</source>
+          <target>recreateOrder verður að vera JSON-rökgildi.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=recreateOrder verður að vera JSON-rökgildi.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType BooleanErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 3480846878" size-unit="char" translate="yes" xml:space="preserve">
+          <source>true or false</source>
+          <target>true eða false</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=true eða false</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType BooleanExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 139679517" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send recreateOrder as true or false, or omit it.</source>
+          <target>Sendu recreateOrder sem true eða false eða slepptu því.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu recreateOrder sem true eða false eða slepptu því.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType BooleanNextTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 2590426299" size-unit="char" translate="yes" xml:space="preserve">
+          <source>An existing posted assembly document that can be undone.</source>
+          <target>Bókað samsetningarskjal sem er til og hægt er að afturkalla.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType DocumentExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 3455991230" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send the posted assembly number in documentNo and resolve its native posting constraints.</source>
+          <target>Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType DocumentNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2432377750 - Method 3966126217 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted assembly %1 was not found.</source>
+          <target>Bókuð samsetning %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Assembly Undo Post Impl ori - Method ValidateForConfirm - NamedType NotFoundErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 4269381906 - NamedType 1198502872" size-unit="char" translate="yes" xml:space="preserve">
           <source>Business Central could not calculate the event timeline.</source>
@@ -2312,6 +2336,12 @@
           <target>Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Cycle Count Calc Impl ori - NamedType SelectionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3647194787 - Method 3507224617 - NamedType 3337375434" size-unit="char" translate="yes" xml:space="preserve">
+          <source>record %1</source>
+          <target>færsla %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document or selection, is-IS=færsla %1</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Inv. Doc Confirm ori - Method GetConfirmCount - NamedType SummaryLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1635400680 - Method 3527532202 - NamedType 842664886" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting denied: missing '%1' permission set.</source>
@@ -8781,6 +8811,18 @@
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu pöntunina eða bókunaruppsetningu samkvæmt innbyggðu villunni og reyndu aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType NativeNextLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 2953885794 - NamedType 2658168242" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The transfer order has no lines to ship or receive.</source>
+          <target>Flutningspöntunin hefur engar línur til afhendingar eða móttöku.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Flutningspöntunin hefur engar línur til afhendingar eða móttöku.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType NoLinesLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 2953885794 - NamedType 3511091107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add item lines to the transfer order, then send the call again.</source>
+          <target>Bættu vörulínum við flutningspöntunina og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bættu vörulínum við flutningspöntunina og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Contract ori - NamedType NoLinesNextLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 2953885794 - NamedType 2344026547" size-unit="char" translate="yes" xml:space="preserve">
           <source>All lines are validated before any quantity changes. Duplicate, missing, zero, negative and excessive quantities are refused. Receipt is limited to shipped-but-unreceived quantities. Direct transfers use Inventory.TransferOrder.Post. Native posting failures roll back quantity changes and entries. A successful call commits and ignores Omit Commit; do not retry a successful call blindly. A final receipt may delete the completed order.</source>
           <target>Allar línur eru sannreyndar áður en magni er breytt. Tvítekningum, vöntun, núlli, neikvæðu magni og of miklu magni er hafnað. Móttaka takmarkast við afhent en ómóttekið magn. Beinir flutningar nota Inventory.TransferOrder.Post. Villur í innbyggðri bókun afturkalla magnbreytingar og færslur. Heppnað kall vistar og hunsar Omit Commit; ekki endurtaka heppnað kall í blindni. Lokamóttaka getur eytt fullgerðri pöntun.</target>
@@ -8888,6 +8930,24 @@
           <target>Lestu flutningslínurnar, fjarlægðu tvítekningar og sendu lineNo með qtyToShip eða qtyToReceive innan eftirstöðva.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Lestu flutningslínurnar, fjarlægðu tvítekningar og sendu lineNo með qtyToShip eða qtyToReceive innan eftirstöðva.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method InvalidLine - NamedType NextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 3966126217 - NamedType 3359697259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer order %1 has no lines to ship.</source>
+          <target>Flutningspöntun %1 hefur engar línur til afhendingar.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = order no., is-IS=Flutningspöntun %1 hefur engar línur til afhendingar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method ValidateForConfirm - NamedType NoLinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 3966126217 - NamedType 2653912142" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer order %1 has no lines to receive.</source>
+          <target>Flutningspöntun %1 hefur engar línur til móttöku.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = order no., is-IS=Flutningspöntun %1 hefur engar línur til móttöku.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method ValidateForConfirm - NamedType NoLinesReceiveErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1797566734 - Method 3966126217 - NamedType 3511091107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add item lines to the transfer order, then send the call again.</source>
+          <target>Bættu vörulínum við flutningspöntunina og sendu kallið aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bættu vörulínum við flutningspöntunina og sendu kallið aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Partial Transfer Mgt ori - Method ValidateForConfirm - NamedType NoLinesNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 1797566734 - Method 1380282473 - NamedType 390865673" size-unit="char" translate="yes" xml:space="preserve">
           <source>expectedCount must be the integer 1 for the selected transfer order.</source>
@@ -9926,6 +9986,18 @@
           <target>Beiðni um afturköllun inniheldur óþekkta færibreytu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Beiðni um afturköllun inniheldur óþekkta færibreytu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ReadSelection - NamedType UnknownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 3966126217 - NamedType 2009142491" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Undo requires native posted document write permission and Inv. Posting Gate.</source>
+          <target>Afturköllun krefst innbyggðrar skrifheimildar á bókaða skjalið og Bókunarhlið birgða.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Afturköllun krefst innbyggðrar skrifheimildar á bókaða skjalið og Bókunarhlið birgða.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ValidateForConfirm - NamedType PermissionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 145108229 - Method 3966126217 - NamedType 3932376842" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ask an administrator to assign Bifrost Full Access, Inv. Posting Gate and the native posted document permissions.</source>
+          <target>Biddu kerfisstjóra um að úthluta fullum Bifröst aðgangi, Bókunarhlið birgða og innbyggðum heimildum á bókaða skjalið.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Biddu kerfisstjóra um að úthluta fullum Bifröst aðgangi, Bókunarhlið birgða og innbyggðum heimildum á bókaða skjalið.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Posted Line Undo ori - Method ValidateForConfirm - NamedType PermissionNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 4073803195 - NamedType 1721877906" size-unit="char" translate="yes" xml:space="preserve">
           <source>Activates one verified Draft price list and its lines using native status validation; changes subsequent price calculations without posting or deleting.</source>
@@ -11343,30 +11415,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókarkeyrsluaðgerð, alltaf 1, óháð fjölda valinna lína eða færslna. Staðfestingin kemur á undan sannprófun keyrslunnar. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án bókunar. Annars er bókað.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Journal template %1 was not found.</source>
-          <target>Bókarsniðmátið %1 fannst ekki.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType MissingJournalErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Journal template %1 is not a Transfer template.</source>
-          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType WrongTypeErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 809699881" size-unit="char" translate="yes" xml:space="preserve">
-          <source>an existing Transfer journal template</source>
-          <target>fyrirliggjandi bókarsniðmát af gerðinni Transfer</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferExpectedLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 688647466" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.</source>
-          <target>Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType TransferNextLbl</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 3316243964" size-unit="char" translate="yes" xml:space="preserve">
           <source>a nonempty Transfer journal batch that passes native posting</source>
           <target>millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun</target>
@@ -11378,12 +11426,6 @@
           <target>Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType BatchNextLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3195905895 - Method 3571782927 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Reclassification batch %1 %2 has no lines.</source>
-          <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ExecuteBifrostTask - NamedType EmptyBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3195905895 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posts an item reclassification journal. This is not a transfer order.</source>
@@ -11516,6 +11558,48 @@
           <target>Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar endurflokkunarbók. Býr ekki til millifærslupöntun.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 2958635972" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 was not found.</source>
+          <target>Bókarsniðmátið %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType MissingJournalErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal template %1 is not a Transfer template.</source>
+          <target>Bókarsniðmátið %1 er ekki af gerðinni Transfer.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template name; is-IS=Bókarsniðmátið %1 er ekki af gerðinni Transfer.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType WrongTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 809699881" size-unit="char" translate="yes" xml:space="preserve">
+          <source>an existing Transfer journal template</source>
+          <target>fyrirliggjandi bókarsniðmát af gerðinni Transfer</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=fyrirliggjandi bókarsniðmát af gerðinni Transfer</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType TransferExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 688647466" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Use a reclassification journal template of type Transfer; use the dedicated posting type for other journals.</source>
+          <target>Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Notaðu endurflokkunarbókarsniðmát af gerðinni Transfer; notaðu viðeigandi bókunartegund fyrir aðrar bækur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType TransferNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 3316243964" size-unit="char" translate="yes" xml:space="preserve">
+          <source>a nonempty Transfer journal batch that passes native posting</source>
+          <target>millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType BatchExpectedLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 2840945451" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Check the selected batch and correct the posting error before retrying.</source>
+          <target>Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType BatchNextLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3195905895 - Method 3966126217 - NamedType 177944392" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Reclassification batch %1 %2 has no lines.</source>
+          <target>Endurflokkunarkeyrsla %1 %2 hefur engar línur.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = template, %2 = batch, is-IS=Endurflokkunarkeyrsla %1 %2 hefur engar línur.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Reclass Post Impl ori - Method ValidateForConfirm - NamedType EmptyBatchErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 2678178361 - Method 3571782927 - NamedType 3089784978" size-unit="char" translate="yes" xml:space="preserve">
           <source>Journal template %1 is not a Transfer template.</source>
@@ -15861,18 +15945,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina flutningspöntunina sem er bókuð, alltaf 1, ekki línur hennar, bókuð skjöl eða birgðafærslur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Ship or Receive for a non-direct transfer order.</source>
-          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingExpectedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
-          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType PostingNextStepTxt</note>
-        </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 1294467649" size-unit="char" translate="yes" xml:space="preserve">
           <source>A transfer order that passes native posting validation.</source>
           <target>Flutningspöntun sem stenst innbyggða bókunarprófun.</target>
@@ -15884,18 +15956,6 @@
           <target>Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType NativeNextStepTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
-          <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
-          <target>Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType MissingPostingTypeErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1887623995 - Method 3571782927 - NamedType 2336037040" size-unit="char" translate="yes" xml:space="preserve">
-          <source>postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1</source>
-          <target>postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1</target>
-          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ExecuteBifrostTask - NamedType InvalidPostingTypeErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1887623995 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posts a transfer order (ship/receive, or ship+receive for direct transfers).</source>
@@ -15914,6 +15974,42 @@
           <target>Bókar millifærslupöntun með afhendingu eða móttöku; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Bókar millifærslupöntun með afhendingu eða móttöku; notaðu PreviewPost til að skoða væntanlegar færslur fyrst.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 276225706" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Ship or Receive for a non-direct transfer order.</source>
+          <target>Ship eða Receive fyrir flutningspöntun sem er ekki bein.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType PostingExpectedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 2429512951" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Send postingType="Ship" or postingType="Receive" for the selected transfer order.</source>
+          <target>Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType PostingNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 3680247131" size-unit="char" translate="yes" xml:space="preserve">
+          <source>For a non-direct transfer order, postingType must be "Ship" or "Receive".</source>
+          <target>Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType MissingPostingTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 2336037040" size-unit="char" translate="yes" xml:space="preserve">
+          <source>postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1</source>
+          <target>postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1</target>
+          <note from="Developer" annotates="general" priority="2">%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType InvalidPostingTypeErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 3359697259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer order %1 has no lines to post.</source>
+          <target>Millifærslupöntun %1 hefur engar línur til að bóka.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = order no., is-IS=Millifærslupöntun %1 hefur engar línur til að bóka.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType NoLinesErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1887623995 - Method 3966126217 - NamedType 3511091107" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Add lines to the transfer order before posting it.</source>
+          <target>Bættu línum við millifærslupöntunina áður en hún er bókuð.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bættu línum við millifærslupöntunina áður en hún er bókuð.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Order Post Impl ori - Method ValidateForConfirm - NamedType NoLinesNextLbl</note>
         </trans-unit>
         <trans-unit id="Codeunit 3303258622 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Reopens a transfer order, changing its status from Released to Open.</source>
@@ -15981,42 +16077,6 @@
           <note from="Developer" annotates="general" priority="2">is-IS=expectedCount telur eina bókaða flutningsafhendingarskjalið, alltaf 1, ekki valdar línur eða leiðréttingarfærslur. Þegar uppsetning Bifröst krefst staðfestingar má sleppa expectedCount til að fá fjöldann án þess að breyta gögnum. Annars er aðgerðin framkvæmd án expectedCount.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method CountUnit - NamedType CountLbl</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
-          <source>documentNo is required.</source>
-          <target>documentNo er nauðsynlegt.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=documentNo er nauðsynlegt.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType MissingDocErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posted transfer shipment %1 was not found.</source>
-          <target>Bókuð millifærsluafhending %1 fannst ekki.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType NotFoundErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 3896032790" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Transfer shipment %1 has already been received and cannot be undone.</source>
-          <target>Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType ReceivedErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 716899702" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Create a new transfer order to return the received goods to the original location.</source>
-          <target>Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType ReceivedNextStepTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 2075316304" size-unit="char" translate="yes" xml:space="preserve">
-          <source>A posted shipment whose selected transfer lines have not been received.</source>
-          <target>Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.</target>
-          <note from="Developer" annotates="general" priority="2">is-IS=Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType UnreceivedTxt</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3607684 - Method 3571782927 - NamedType 3359697259" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Posted transfer shipment %1 has no lines to undo.</source>
-          <target>Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.</target>
-          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method ExecuteBifrostTask - NamedType NoLinesErr</note>
-        </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 4077369804 - NamedType 3569966352" size-unit="char" translate="yes" xml:space="preserve">
           <source>Undoes a posted transfer shipment with corrective entries.</source>
           <target>Afturkallar bókaða millifærsluafhendingu með leiðréttingarfærslum.</target>
@@ -16046,6 +16106,42 @@
           <target>Sama aðgerð og Afturkalla afhendingu á bókaðri millifærsluafhendingu.</target>
           <note from="Developer" annotates="general" priority="2">is-IS=Sama aðgerð og Afturkalla afhendingu á bókaðri millifærsluafhendingu.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method GetSelectionDescription - NamedType SelectionDescriptionLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 424003699" size-unit="char" translate="yes" xml:space="preserve">
+          <source>documentNo is required.</source>
+          <target>documentNo er nauðsynlegt.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=documentNo er nauðsynlegt.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType MissingDocErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 3351274" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted transfer shipment %1 was not found.</source>
+          <target>Bókuð millifærsluafhending %1 fannst ekki.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð millifærsluafhending %1 fannst ekki.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType NotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 3896032790" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transfer shipment %1 has already been received and cannot be undone.</source>
+          <target>Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document number, is-IS=Flutningsafhending %1 hefur þegar verið móttekin og er ekki hægt að afturkalla hana.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType ReceivedErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 716899702" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create a new transfer order to return the received goods to the original location.</source>
+          <target>Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Stofnaðu nýja flutningspöntun til að skila mótteknum vörum á upprunalega birgðageymslu.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType ReceivedNextStepTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 2075316304" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A posted shipment whose selected transfer lines have not been received.</source>
+          <target>Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.</target>
+          <note from="Developer" annotates="general" priority="2">is-IS=Bókuð afhending þar sem valdar flutningslínur hafa ekki verið mótteknar.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType UnreceivedTxt</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 3607684 - Method 4292429323 - NamedType 3359697259" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted transfer shipment %1 has no lines to undo.</source>
+          <target>Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.</target>
+          <note from="Developer" annotates="general" priority="2">%1 = document no., is-IS=Bókuð millifærsluafhending %1 hefur engar línur til að afturkalla.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit Transfer Undo Shpt Impl ori - Method PrepareUndo - NamedType NoLinesErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 3607684 - Method 695311439 - NamedType 1468028954" size-unit="char" translate="yes" xml:space="preserve">
           <source>lineNos must contain 1 to 100 distinct positive JSON integers.</source>

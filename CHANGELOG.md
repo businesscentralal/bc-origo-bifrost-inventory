@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Confirmation-gated inventory types validate the document before asking for `expectedCount` (#286). An unknown document returns `RecordNotFound`, and an order with no lines returns the no-lines error, whether or not `expectedCount` was sent. A valid document still returns `ConfirmationRequired` with count 1 when the count is omitted. New codeunit 10076952 `Inv. Doc Confirm ori` is bound as `Msg Confirm ori` on the irreversible types in this app, including `Sales.Shipment.Undo` and `Purchase.Receipt.Undo`. `Inventory.AdjustCost.Run` and `Inventory.CostToGL.Post` still count one run when the filters are valid. Test codeunit 97903 `Inv. Confirm Order Tests ori`.
+
 - Requires Business Central 28.0 or later (was 28.3). (#282)
 - `Price.List.Set` assigns the code of a new price list instead of validating it. On BC 28.0 the native Code validation looks up a blank number series (Source Group is still All) and failed with "The No. Series does not exist"; later versions skip that lookup, so behaviour is unchanged there. (#282)
 

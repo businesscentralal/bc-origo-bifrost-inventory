@@ -12,7 +12,7 @@ enumextension 10076841 "MsgType.PhysInvt.EnumExt ori" extends "Message Type ori"
     value(10076881; "Inventory.PhysInventory.Post")
     {
         Caption = 'Inventory.PhysInventory.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Phys. Invt. Post Impl ori", "Msg Discovery ori" = "Phys. Invt. Post Impl ori", "Msg Contract ori" = "Phys. Invt. Post Impl ori";
+        Implementation = "Msg Interface ori" = "Phys. Invt. Post Impl ori", "Msg Discovery ori" = "Phys. Invt. Post Impl ori", "Msg Contract ori" = "Phys. Invt. Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076884; "Inventory.PhysInventory.Check")
     {
