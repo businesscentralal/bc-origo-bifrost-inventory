@@ -23,7 +23,7 @@ enumextension 10076836 "MsgType.CostGet.EnumExt ori" extends "Message Type ori"
     value(10076866; "Inventory.Revaluation.Post")
     {
         Caption = 'Inventory.Revaluation.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Revaluation Post Impl ori", "Msg Discovery ori" = "Revaluation Post Impl ori", "Msg Contract ori" = "Revaluation Post Impl ori";
+        Implementation = "Msg Interface ori" = "Revaluation Post Impl ori", "Msg Discovery ori" = "Revaluation Post Impl ori", "Msg Contract ori" = "Revaluation Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076864; "Inventory.Revaluation.PreviewPost")
     {

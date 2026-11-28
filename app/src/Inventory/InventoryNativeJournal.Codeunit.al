@@ -1184,4 +1184,66 @@ codeunit 10076840 "Inventory Native Journal ori"
                     (Posting and (ParameterName = 'expectedCount'))) then
                 RaiseRefusal(Argument, "Bifrost Error Code ori"::InvalidParameter, StrSubstNo(RevalParameterErr, ParameterName), ParameterName, RequestValue(Request, ParameterName), AllowedParameterLbl);
     end;
+
+    /// <summary>Validates a physical inventory batch and its lines before confirmation. Does not post.</summary>
+    procedure ConfirmPhysicalPost(var Argument: Record "Message Argument ori"): Boolean
+    var
+        Answered: Boolean;
+    begin
+        if not TryConfirmPhysicalPost(Argument, Answered) then begin
+            RespondWithFailure(Argument);
+            exit(false);
+        end;
+        exit(not Answered);
+    end;
+
+    /// <summary>Validates a revaluation batch and its lines before confirmation. Does not post.</summary>
+    procedure ConfirmRevaluationPost(var Argument: Record "Message Argument ori"): Boolean
+    var
+        Answered: Boolean;
+    begin
+        if not TryConfirmRevaluationPost(Argument, Answered) then begin
+            RespondWithFailure(Argument);
+            exit(false);
+        end;
+        exit(not Answered);
+    end;
+
+    [TryFunction]
+    local procedure TryConfirmPhysicalPost(var Argument: Record "Message Argument ori"; var Answered: Boolean)
+    var
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+    begin
+        Answered := false;
+        CheckParameters(Argument, Argument.GetRequestJson(), '', true);
+        if not ResolveSelection(Argument, "Item Journal Template Type"::"Phys. Inventory", Batch, Line) then begin
+            Answered := true;
+            exit;
+        end;
+        ExcludeEmptyPhysicalLines(Line);
+        if Line.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, EmptyErr, 'journalBatchName', Batch.Name, EmptyExpectedLbl, NextStepLbl);
+            Answered := true;
+            exit;
+        end;
+    end;
+
+    [TryFunction]
+    local procedure TryConfirmRevaluationPost(var Argument: Record "Message Argument ori"; var Answered: Boolean)
+    var
+        Batch: Record "Item Journal Batch";
+        Line: Record "Item Journal Line";
+        LinesToPost: Integer;
+        TotalQuantity: Decimal;
+        TotalAmount: Decimal;
+    begin
+        Answered := false;
+        CheckPostParameters(Argument, Argument.GetRequestJson(), true);
+        if not ResolveRevaluationBatch(Argument, Batch, Line) then begin
+            Answered := true;
+            exit;
+        end;
+        ReadTotals(Argument, Line, LinesToPost, TotalQuantity, TotalAmount);
+    end;
 }

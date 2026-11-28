@@ -133,18 +133,47 @@ codeunit 10077014 "Posted Line Undo ori"
         end;
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-        if not ReadSelection(Argument, DocumentNo, LineNos) then
+        if not ReadSelection(Argument, DocumentNo, LineNos, false) then
             exit;
         if Sales then
-            UndoSales(Argument, DocumentNo, LineNos)
+            UndoSales(Argument, DocumentNo, LineNos, false)
         else
-            UndoPurchase(Argument, DocumentNo, LineNos);
+            UndoPurchase(Argument, DocumentNo, LineNos, false);
+    end;
+
+    /// <summary>Checks the posted document and lines before confirmation. Does not undo.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; Sales: Boolean): Boolean
+    var
+        LineNos: List of [Integer];
+        DocumentNo: Code[20];
+        HeaderTableNo: Integer;
+        PermissionLbl: Label 'Undo requires native posted document write permission and Inv. Posting Gate.', Comment = 'is-IS=Afturköllun krefst innbyggðrar skrifheimildar á bókaða skjalið og Bókunarhlið birgða.';
+        PermissionNextLbl: Label 'Ask an administrator to assign Bifrost Full Access, Inv. Posting Gate and the native posted document permissions.', Comment = 'is-IS=Biddu kerfisstjóra um að úthluta fullum Bifröst aðgangi, Bókunarhlið birgða og innbyggðum heimildum á bókaða skjalið.';
+    begin
+        if Sales then
+            HeaderTableNo := Database::"Sales Shipment Header"
+        else
+            HeaderTableNo := Database::"Purch. Rcpt. Header";
+        if not IsEnabled(HeaderTableNo) then begin
+            Refuse(Argument, "Bifrost Error Code ori"::PermissionDenied, PermissionLbl, '', '', PermissionNextLbl);
+            exit(false);
+        end;
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        if not ReadSelection(Argument, DocumentNo, LineNos, true) then
+            exit(false);
+        if Sales then
+            UndoSales(Argument, DocumentNo, LineNos, true)
+        else
+            UndoPurchase(Argument, DocumentNo, LineNos, true);
+        exit(not Argument.HasCollectedErrors());
     end;
 
     local procedure ReadSelection(
         var Argument: Record "Message Argument ori";
         var DocumentNo: Code[20];
-        var LineNos: List of [Integer]): Boolean
+        var LineNos: List of [Integer];
+        IgnoreExpectedCount: Boolean): Boolean
     var
         Request: JsonObject;
         Token: JsonToken;
@@ -189,17 +218,18 @@ codeunit 10077014 "Posted Line Undo ori"
             Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, InvalidLbl, 'lineNos', '', SelectNextLbl);
             exit(false);
         end;
-        if Request.Get('expectedCount', LineToken) then begin
-            LineToken.WriteTo(RawValue);
-            if not Evaluate(Number, RawValue, 9) then begin
-                Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, InvalidLbl, 'expectedCount', RawValue, CountLbl);
-                exit(false);
+        if not IgnoreExpectedCount then
+            if Request.Get('expectedCount', LineToken) then begin
+                LineToken.WriteTo(RawValue);
+                if not Evaluate(Number, RawValue, 9) then begin
+                    Refuse(Argument, "Bifrost Error Code ori"::InvalidParameter, InvalidLbl, 'expectedCount', RawValue, CountLbl);
+                    exit(false);
+                end;
+                if Number <> 1 then begin
+                    Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, InvalidLbl, 'expectedCount', RawValue, CountLbl);
+                    exit(false);
+                end;
             end;
-            if Number <> 1 then begin
-                Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, InvalidLbl, 'expectedCount', RawValue, CountLbl);
-                exit(false);
-            end;
-        end;
         foreach LineToken in Token.AsArray() do begin
             LineToken.WriteTo(RawValue);
             if not Evaluate(Number, RawValue, 9) then begin
@@ -218,7 +248,8 @@ codeunit 10077014 "Posted Line Undo ori"
     local procedure UndoSales(
         var Argument: Record "Message Argument ori";
         DocumentNo: Code[20];
-        LineNos: List of [Integer])
+        LineNos: List of [Integer];
+        ConfirmOnly: Boolean)
     var
         Header: Record "Sales Shipment Header";
         Line: Record "Sales Shipment Line";
@@ -244,8 +275,11 @@ codeunit 10077014 "Posted Line Undo ori"
                     Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, GetLastErrorText(), 'lineNos', Format(LineNo, 0, 9), CreditNextLbl);
                     exit;
                 end;
-            Line.Mark(true);
+            if not ConfirmOnly then
+                Line.Mark(true);
         end;
+        if ConfirmOnly then
+            exit;
         Line.SetRange("Document No.", DocumentNo);
         Line.MarkedOnly(true);
         // Preserve the native routine's default locking semantics.
@@ -265,7 +299,8 @@ codeunit 10077014 "Posted Line Undo ori"
     local procedure UndoPurchase(
         var Argument: Record "Message Argument ori";
         DocumentNo: Code[20];
-        LineNos: List of [Integer])
+        LineNos: List of [Integer];
+        ConfirmOnly: Boolean)
     var
         Header: Record "Purch. Rcpt. Header";
         Line: Record "Purch. Rcpt. Line";
@@ -291,8 +326,11 @@ codeunit 10077014 "Posted Line Undo ori"
                     Refuse(Argument, "Bifrost Error Code ori"::PreconditionFailed, GetLastErrorText(), 'lineNos', Format(LineNo, 0, 9), CreditNextLbl);
                     exit;
                 end;
-            Line.Mark(true);
+            if not ConfirmOnly then
+                Line.Mark(true);
         end;
+        if ConfirmOnly then
+            exit;
         Line.SetRange("Document No.", DocumentNo);
         Line.MarkedOnly(true);
         // Preserve the native routine's default locking semantics.

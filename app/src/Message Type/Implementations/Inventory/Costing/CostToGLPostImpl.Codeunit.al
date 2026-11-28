@@ -20,19 +20,28 @@ codeunit 10076861 "Cost To GL Post Impl ori" implements "Msg Interface ori", "Ms
 
     /// <summary>Runs the existing costing operation after its domain gate succeeds.</summary>
     /// <param name="Argument">Carries the request and receives the existing response.</param>
-    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    /// <summary>Refuses unsupported filters before confirmation. A valid item filter, including one that matches nothing, counts as one run.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"): Boolean
     var
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Costing, Database::Item, true, true) then
-            exit;
+            exit(false);
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
-        if not CheckUnsupportedParameters(Argument, RequestJson) then
+        exit(CheckUnsupportedParameters(Argument, RequestJson));
+    end;
+
+    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        Process: Codeunit "Inventory Write Process ori";
+        RequestJson: JsonObject;
+    begin
+        if not ValidateForConfirm(Argument) then
             exit;
+        RequestJson := Argument.GetRequestJson();
         Process.SetOperation('CostToGLPost');
         Process.SetCostPostingSelection(ReadText(RequestJson, 'itemNoFilter'), ReadText(RequestJson, 'postingDateFilter'),
             CopyStr(ReadText(RequestJson, 'journalTemplateName'), 1, 10), CopyStr(ReadText(RequestJson, 'journalBatchName'), 1, 10));

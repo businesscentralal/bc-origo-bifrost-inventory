@@ -578,22 +578,32 @@ codeunit 96978 "Inv. Confirmation Tests ori"
                             // An unnamed request is deliberately left to handler validation by Foundation #1278.
                             Response := DispatchWithSubject(MessageType, '', Request);
                             AssertHandlerRanWithoutDomainRefusal(DomainCheck, Response, TypeName);
-                            // [WHEN] A named subject is previewed before the handler or any record lookup.
+                            // [WHEN] A named subject is validated before confirmation (#286).
+                            // Cost runs have no document: a real filter still previews one run.
+                            // Every other irreversible type must refuse the unknown subject instead of asking for a count.
                             Response := Dispatch(MessageType, Request);
-                            if SupportsConfirmation then begin
-                                AssertText(Response, 'code', 'ConfirmationRequired');
-                                AssertText(Response, 'parameter', 'expectedCount');
-                                AssertText(Response, 'expected', '1');
-                                Assert.IsFalse(Response.Contains('postedDocumentNo'), 'Preview must not post.');
-                                // [THEN] A wrong count is refused; a matching count reaches the handler.
-                                Request.Add('expectedCount', 2);
-                                Response := Dispatch(MessageType, Request);
-                                AssertText(Response, 'code', 'ConfirmationMismatch');
-                                AssertText(Response, 'received', '2');
-                                AssertText(Response, 'expected', '1');
-                                Request.Replace('expectedCount', 1);
-                                Response := Dispatch(MessageType, Request);
-                            end;
+                            if SupportsConfirmation then
+                                if TypeName in ['Inventory.AdjustCost.Run', 'Inventory.CostToGL.Post'] then begin
+                                    AssertText(Response, 'code', 'ConfirmationRequired');
+                                    AssertText(Response, 'parameter', 'expectedCount');
+                                    AssertText(Response, 'expected', '1');
+                                    Assert.IsFalse(Response.Contains('postedDocumentNo'), 'Preview must not post.');
+                                    Request.Add('expectedCount', 2);
+                                    Response := Dispatch(MessageType, Request);
+                                    AssertText(Response, 'code', 'ConfirmationMismatch');
+                                    AssertText(Response, 'received', '2');
+                                    AssertText(Response, 'expected', '1');
+                                    Request.Replace('expectedCount', 1);
+                                    Response := Dispatch(MessageType, Request);
+                                end else begin
+                                    AssertNotConfirmation(Response, TypeName);
+                                    Request.Add('expectedCount', 2);
+                                    Response := Dispatch(MessageType, Request);
+                                    AssertNotConfirmation(Response, TypeName);
+                                    Request.Replace('expectedCount', 1);
+                                    Response := Dispatch(MessageType, Request);
+                                    AssertNotConfirmation(Response, TypeName);
+                                end;
                             // Legacy Foundation has no confirmation gate; it reaches this same handler directly.
                             AssertHandlerRanWithoutDomainRefusal(DomainCheck, Response, TypeName);
                             Response.WriteTo(Payload);
@@ -694,6 +704,19 @@ codeunit 96978 "Inv. Confirmation Tests ori"
             EmptyTaskId, GlobalLanguage(), MessageId, ResponseContent, ContentType, ResponseTime);
         ResponseContent.GetSubText(Payload, 1);
         Assert.IsTrue(Response.ReadFrom(Payload), 'Dispatcher returns a JSON response.');
+    end;
+
+    local procedure AssertNotConfirmation(Response: JsonObject; TypeName: Text)
+    var
+        Token: JsonToken;
+        Payload: Text;
+    begin
+        Response.WriteTo(Payload);
+        Assert.IsTrue(Response.Get('status', Token), TypeName + ' returns a status: ' + Payload);
+        Assert.AreEqual('Error', Token.AsValue().AsText(), TypeName + ' refuses an unknown subject before confirmation: ' + Payload);
+        Assert.IsTrue(Response.Get('code', Token), TypeName + ' returns a code: ' + Payload);
+        Assert.AreNotEqual('ConfirmationRequired', Token.AsValue().AsText(), TypeName + ' must not ask for a count before the document is valid.');
+        Assert.AreNotEqual('ConfirmationMismatch', Token.AsValue().AsText(), TypeName + ' must not compare a count before the document is valid.');
     end;
 
     local procedure AssertText(Value: JsonObject; KeyName: Text; Expected: Text)

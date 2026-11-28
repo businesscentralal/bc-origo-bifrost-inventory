@@ -46,7 +46,7 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10076903; "Inventory.TransferOrder.Post")
     {
         Caption = 'Inventory.TransferOrder.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Transfer Order Post Impl ori", "Msg Discovery ori" = "Transfer Order Post Impl ori", "Msg Contract ori" = "Transfer Order Post Impl ori";
+        Implementation = "Msg Interface ori" = "Transfer Order Post Impl ori", "Msg Discovery ori" = "Transfer Order Post Impl ori", "Msg Contract ori" = "Transfer Order Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076901; "Inventory.TransferOrder.PreviewPost")
     {
@@ -81,7 +81,7 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10076855; "Inventory.AssemblyOrder.Post")
     {
         Caption = 'Inventory.AssemblyOrder.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Assembly Order Post Impl ori", "Msg Discovery ori" = "Assembly Order Post Impl ori", "Msg Contract ori" = "Assembly Order Post Impl ori";
+        Implementation = "Msg Interface ori" = "Assembly Order Post Impl ori", "Msg Discovery ori" = "Assembly Order Post Impl ori", "Msg Contract ori" = "Assembly Order Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076849; "Inventory.AssemblyOrder.PreviewPost")
     {
@@ -96,12 +96,12 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10076858; "Inventory.AdjustCost.Run")
     {
         Caption = 'Inventory.AdjustCost.Run', Locked = true;
-        Implementation = "Msg Interface ori" = "Adjust Cost Run Impl ori", "Msg Discovery ori" = "Adjust Cost Run Impl ori", "Msg Contract ori" = "Adjust Cost Run Impl ori";
+        Implementation = "Msg Interface ori" = "Adjust Cost Run Impl ori", "Msg Discovery ori" = "Adjust Cost Run Impl ori", "Msg Contract ori" = "Adjust Cost Run Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076861; "Inventory.CostToGL.Post")
     {
         Caption = 'Inventory.CostToGL.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Cost To GL Post Impl ori", "Msg Discovery ori" = "Cost To GL Post Impl ori", "Msg Contract ori" = "Cost To GL Post Impl ori";
+        Implementation = "Msg Interface ori" = "Cost To GL Post Impl ori", "Msg Discovery ori" = "Cost To GL Post Impl ori", "Msg Contract ori" = "Cost To GL Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076897; "Inventory.Tracking.Assign")
     {
@@ -111,7 +111,7 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10076910; "Inventory.Transfer.UndoShipment")
     {
         Caption = 'Inventory.Transfer.UndoShipment', Locked = true;
-        Implementation = "Msg Interface ori" = "Transfer Undo Shpt Impl ori", "Msg Discovery ori" = "Transfer Undo Shpt Impl ori", "Msg Contract ori" = "Transfer Undo Shpt Impl ori";
+        Implementation = "Msg Interface ori" = "Transfer Undo Shpt Impl ori", "Msg Discovery ori" = "Transfer Undo Shpt Impl ori", "Msg Contract ori" = "Transfer Undo Shpt Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076867; "Inventory.ItemApplication.Get")
     {
@@ -146,12 +146,12 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10076909; "Inventory.Assembly.UndoPost")
     {
         Caption = 'Inventory.Assembly.UndoPost', Locked = true;
-        Implementation = "Msg Interface ori" = "Assembly Undo Post Impl ori", "Msg Discovery ori" = "Assembly Undo Post Impl ori", "Msg Contract ori" = "Assembly Undo Post Impl ori";
+        Implementation = "Msg Interface ori" = "Assembly Undo Post Impl ori", "Msg Discovery ori" = "Assembly Undo Post Impl ori", "Msg Contract ori" = "Assembly Undo Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076888; "Inventory.Reclassification.Post")
     {
         Caption = 'Inventory.Reclassification.Post', Locked = true;
-        Implementation = "Msg Interface ori" = "Reclass Post Impl ori", "Msg Discovery ori" = "Reclass Post Impl ori", "Msg Contract ori" = "Reclass Post Impl ori";
+        Implementation = "Msg Interface ori" = "Reclass Post Impl ori", "Msg Discovery ori" = "Reclass Post Impl ori", "Msg Contract ori" = "Reclass Post Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     value(10076878; "Inventory.Period.Get")
     {
@@ -182,12 +182,12 @@ enumextension 10076837 "MsgType.EnumExt ori" extends "Message Type ori"
     value(10077026; "Inventory.TransferOrder.Ship")
     {
         Caption = 'Inventory.TransferOrder.Ship', Locked = true;
-        Implementation = "Msg Interface ori" = "Transfer Ship Impl ori", "Msg Discovery ori" = "Transfer Ship Impl ori", "Msg Contract ori" = "Transfer Ship Impl ori";
+        Implementation = "Msg Interface ori" = "Transfer Ship Impl ori", "Msg Discovery ori" = "Transfer Ship Impl ori", "Msg Contract ori" = "Transfer Ship Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
     /// <summary>Posts selected transfer receive quantities.</summary>
     value(10077021; "Inventory.TransferOrder.Receive")
     {
         Caption = 'Inventory.TransferOrder.Receive', Locked = true;
-        Implementation = "Msg Interface ori" = "Transfer Receive Impl ori", "Msg Discovery ori" = "Transfer Receive Impl ori", "Msg Contract ori" = "Transfer Receive Impl ori";
+        Implementation = "Msg Interface ori" = "Transfer Receive Impl ori", "Msg Discovery ori" = "Transfer Receive Impl ori", "Msg Contract ori" = "Transfer Receive Impl ori", "Msg Confirm ori" = "Inv. Doc Confirm ori";
     }
 }

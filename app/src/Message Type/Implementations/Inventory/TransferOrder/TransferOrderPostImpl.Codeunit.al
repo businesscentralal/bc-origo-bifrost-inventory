@@ -154,48 +154,43 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
-    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    /// <summary>Checks the order, posting type and lines before confirmation or posting.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; var TransferHeader: Record "Transfer Header"; var PostShipment: Boolean; var PostReceipt: Boolean; var PostTransfer: Boolean; var PostingTypeText: Text; var DocumentNo: Code[20]; var DirectTransfer: Boolean): Boolean
     var
-        TransferHeader: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         DocumentLookup: Codeunit "Document Lookup ori";
         Parts: Codeunit "Inventory Contract Parts ori";
-        TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
-        TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
         PostingGate: Codeunit "Inv. Posting Gate ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        PostingTypeText: Text;
         PostingTypeNormalized: Text;
-        DocumentNo: Code[20];
-        DirectTransfer: Boolean;
-        PostShipment: Boolean;
-        PostReceipt: Boolean;
-        PostTransfer: Boolean;
         PostingExpectedTxt: Label 'Ship or Receive for a non-direct transfer order.', Comment = 'is-IS=Ship eða Receive fyrir flutningspöntun sem er ekki bein.';
         PostingNextStepTxt: Label 'Send postingType="Ship" or postingType="Receive" for the selected transfer order.', Comment = 'is-IS=Sendu postingType="Ship" eða postingType="Receive" fyrir valda flutningspöntun.';
-        NativeExpectedTxt: Label 'A transfer order that passes native posting validation.', Comment = 'is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.';
-        NativeNextStepTxt: Label 'Correct the selected document and inspect its posted state before retrying.', Comment = 'is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.';
         MissingPostingTypeErr: Label 'For a non-direct transfer order, postingType must be "Ship" or "Receive".', Comment = 'is-IS=Fyrir millifærslupöntun sem er ekki bein verður postingType að vera "Ship" eða "Receive".';
         InvalidPostingTypeErr: Label 'postingType must be "Ship" or "Receive". "ShipReceive" is not accepted on a non-direct transfer. Received: %1', Comment = '%1 = received value, is-IS=postingType verður að vera "Ship" eða "Receive". "ShipReceive" er ekki tekið á millifærslu sem er ekki bein. Móttekið: %1';
+        NoLinesErr: Label 'Transfer order %1 has no lines to post.', Comment = '%1 = order no., is-IS=Millifærslupöntun %1 hefur engar línur til að bóka.';
+        NoLinesNextLbl: Label 'Add lines to the transfer order before posting it.', Comment = 'is-IS=Bættu línum við millifærslupöntunina áður en hún er bókuð.';
     begin
+        Clear(PostShipment);
+        Clear(PostReceipt);
+        Clear(PostTransfer);
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
-            exit;
+            exit(false);
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         if not PostingGate.AssertCanPost(Argument) then
-            exit;
+            exit(false);
         RequestJson := Argument.GetRequestJson();
         PostingTypeText := Parts.ReadRequestText(RequestJson, 'postingType', Argument, false, 30);
         if Parts.RespondToProblems(Argument) then
-            exit;
+            exit(false);
         if not DocumentLookup.FindTransferHeader(Argument, TransferHeader) then
-            exit;
-
+            exit(false);
+        TransferHeader.ReadIsolation := IsolationLevel::UpdLock;
+        if not TransferHeader.Get(TransferHeader."No.") then
+            exit(false);
         DocumentNo := TransferHeader."No.";
         DirectTransfer := TransferHeader."Direct Transfer";
-        RequestJson := Argument.GetRequestJson();
-
         if DirectTransfer then begin
             ResolveDirectTransferOptions(TransferHeader, PostShipment, PostReceipt, PostTransfer);
             PostingTypeText := 'DirectTransfer';
@@ -210,17 +205,43 @@ codeunit 10076903 "Transfer Order Post Impl ori" implements "Msg Interface ori",
                     'shipreceive', 'ship+receive':
                         begin
                             Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), 'postingType', PostingTypeText, PostingExpectedTxt, PostingNextStepTxt);
-                            exit;
+                            exit(false);
                         end;
                     else begin
                         Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameter, StrSubstNo(InvalidPostingTypeErr, PostingTypeText), 'postingType', PostingTypeText, PostingExpectedTxt, PostingNextStepTxt);
-                        exit;
+                        exit(false);
                     end;
                 end;
             end else begin
                 Argument.RespondWithError("Bifrost Error Code ori"::MissingParameter, MissingPostingTypeErr, 'postingType', '<missing>', PostingExpectedTxt, PostingNextStepTxt);
-                exit;
+                exit(false);
             end;
+        TransferLine.ReadIsolation := IsolationLevel::UpdLock;
+        TransferLine.SetRange("Document No.", TransferHeader."No.");
+        if TransferLine.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesErr, TransferHeader."No."), 'documentNo', TransferHeader."No.", NoLinesErr, NoLinesNextLbl);
+            exit(false);
+        end;
+        exit(true);
+    end;
+
+    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        TransferHeader: Record "Transfer Header";
+        TransferOrderPostYesNo: Codeunit "TransferOrder-Post (Yes/No)";
+        TransferPostSubscriber: Codeunit "Transfer Post Subscriber ori";
+        ResponseJson: JsonObject;
+        PostingTypeText: Text;
+        DocumentNo: Code[20];
+        DirectTransfer: Boolean;
+        PostShipment: Boolean;
+        PostReceipt: Boolean;
+        PostTransfer: Boolean;
+        NativeExpectedTxt: Label 'A transfer order that passes native posting validation.', Comment = 'is-IS=Flutningspöntun sem stenst innbyggða bókunarprófun.';
+        NativeNextStepTxt: Label 'Correct the selected document and inspect its posted state before retrying.', Comment = 'is-IS=Leiðréttu valda skjalið og skoðaðu bókaða stöðu þess áður en þú reynir aftur.';
+    begin
+        if not ValidateForConfirm(Argument, TransferHeader, PostShipment, PostReceipt, PostTransfer, PostingTypeText, DocumentNo, DirectTransfer) then
+            exit;
 
         TransferHeader.SetHideValidationDialog(true);
         TransferPostSubscriber.SetChoices(PostShipment, PostReceipt, PostTransfer);
