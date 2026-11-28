@@ -9,7 +9,7 @@ codeunit 10076949 "Plan Wksh Calc Impl ori" implements "Msg Interface ori", "Msg
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Replaces suggestion lines for the selected items on one planning worksheet and returns the new lines.', Comment = 'is-IS=Skiptir út tillögum valinna vara á einni áætlunarkeyrslu og skilar nýju línunum.';
+        DescriptionLbl: Label 'Replaces suggestion lines for the selected items on one planning worksheet and returns the new lines.', Comment = 'is-IS=Skiptir út tillögum valinna vara á einni áætlunarkeyrslu og skilar nýju línunum. (áætlunarkeyrsla, reikna áætlun, endurnýjun, nettóbreyting, MRP).';
         SelectionLbl: Label 'Identify one planning worksheet by subject TEMPLATE|NAME or by templateName and worksheetName.', Comment = 'is-IS=Auðkenndu eina áætlunarkeyrslu með subject TEMPLATE|NAME eða með templateName og worksheetName.';
         KeywordsLbl: Label 'planning worksheet, calculate plan, regenerative, net change, MRP', Comment = 'is-IS=áætlunarkeyrsla, reikna áætlun, endurnýjun, nettóbreyting, MRP';
         OverviewLbl: Label 'Replaces suggestion lines for the selected items on one planning worksheet. Nothing is posted. A failure after the first item can leave lines already calculated on that worksheet.', Comment = 'is-IS=Skiptir út tillögum valinna vara á einni áætlunarkeyrslu. Ekkert er bókað. Bilun eftir fyrstu vöru getur skilið eftir línur sem þegar hafa verið reiknaðar á þeirri keyrslu.';

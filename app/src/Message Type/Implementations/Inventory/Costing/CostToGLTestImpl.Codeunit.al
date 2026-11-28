@@ -21,7 +21,7 @@ codeunit 10076862 "Cost To GL Test Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Counts the items that match an item filter before inventory cost is posted to G/L; nothing is posted.', Comment = 'is-IS=Telur vörurnar sem passa við vörusíu áður en birgðakostnaður er bókaður á fjárhag; ekkert er bókað.';
+        DescriptionLbl: Label 'Counts the items that match an item filter before inventory cost is posted to G/L; nothing is posted.', Comment = 'is-IS=Telur vörurnar sem passa við vörusíu áður en birgðakostnaður er bókaður á fjárhag; ekkert er bókað. (prófa bókun birgðakostnaðar í fjárhag, prófun kostnaðarbókunar í fjárhag).';
     begin
         exit(DescriptionLbl);
     end;

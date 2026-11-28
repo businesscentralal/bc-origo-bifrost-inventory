@@ -25,7 +25,7 @@ codeunit 10076902 "Transfer Order Create Impl ori" implements "Msg Interface ori
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.', Comment = 'is-IS=Býr til nýja millifærslupöntun með uppruna- og móttökubirgðageymslum, dagsetningum, valkvæðri beinni millifærslu og valkvæðum línum.';
+        DescriptionLbl: Label 'Creates a new transfer order with from/to locations, dates, optional Direct Transfer and optional lines.', Comment = 'is-IS=Býr til millifærslupöntun með birgðageymslum, dagsetningum og valkvæðum línum. (millifærslupöntun, flytja birgðir, flutningur milli birgðageymslna, flytja vörur í aðra birgðageymslu, birgðaflutningur, færa birgðir til).';
     begin
         exit(DescriptionLbl);
     end;

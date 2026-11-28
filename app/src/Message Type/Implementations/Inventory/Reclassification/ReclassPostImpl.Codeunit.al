@@ -25,7 +25,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Posts an item reclassification journal. This is not a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun.';
+        DescriptionLbl: Label 'Posts an item reclassification journal. This is not a transfer order.', Comment = 'is-IS=Bókar endurflokkunarbók vöru. Þetta er ekki millifærslupöntun. (bóka endurflokkun).';
     begin
         exit(DescriptionLbl);
     end;
@@ -49,14 +49,14 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
-    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    /// <summary>Checks the reclassification template and batch before confirmation or posting.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"): Boolean
     var
         JournalTemplate: Record "Item Journal Template";
         ItemJournalLine: Record "Item Journal Line";
         NativeJournal: Codeunit "Inventory Native Journal ori";
         DomainGate: Codeunit "Inventory Domain Gate ori";
         Parts: Codeunit "Inventory Contract Parts ori";
-        Process: Codeunit "Inventory Write Process ori";
         RequestJson: JsonObject;
         TemplateName: Code[10];
         BatchName: Code[10];
@@ -70,10 +70,10 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
     begin
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Reclassification, Database::"Item Journal Line", false, true) then begin
             Parts.CompleteOlderDomainRefusal(Argument);
-            exit;
+            exit(false);
         end;
         if not NativeJournal.AssertItemPostingPermission(Argument) then
-            exit;
+            exit(false);
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
         RequestJson := Argument.GetRequestJson();
@@ -85,7 +85,7 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             else
                 TemplateName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalTemplateName', Argument, true, 10), 1, 10);
         if Parts.RespondToProblems(Argument) then
-            exit;
+            exit(false);
         if RequestJson.Contains('journalBatchName') then
             BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10)
         else
@@ -94,21 +94,42 @@ codeunit 10076888 "Reclass Post Impl ori" implements "Msg Interface ori", "Msg D
             else
                 BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, true, 10), 1, 10);
         if Parts.RespondToProblems(Argument) then
-            exit;
+            exit(false);
         if not JournalTemplate.Get(TemplateName) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(MissingJournalErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
-            exit;
+            exit(false);
         end;
         if JournalTemplate.Type <> JournalTemplate.Type::Transfer then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(WrongTypeErr, TemplateName), 'journalTemplateName', TemplateName, TransferExpectedLbl, TransferNextLbl);
-            exit;
+            exit(false);
         end;
         ItemJournalLine.SetRange("Journal Template Name", TemplateName);
         ItemJournalLine.SetRange("Journal Batch Name", BatchName);
         if ItemJournalLine.IsEmpty() then begin
             Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(EmptyBatchErr, TemplateName, BatchName), 'journalBatchName', BatchName, BatchExpectedLbl, BatchNextLbl);
-            exit;
+            exit(false);
         end;
+        exit(true);
+    end;
+
+    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        NativeJournal: Codeunit "Inventory Native Journal ori";
+        Parts: Codeunit "Inventory Contract Parts ori";
+        Process: Codeunit "Inventory Write Process ori";
+        RequestJson: JsonObject;
+        BatchExpectedLbl: Label 'a nonempty Transfer journal batch that passes native posting', Comment = 'is-IS=millifærslubókarkeyrsla með línum sem stenst hefðbundna bókun';
+        BatchNextLbl: Label 'Check the selected batch and correct the posting error before retrying.', Comment = 'is-IS=Athugaðu valda bókarkeyrslu og leiðréttu bókunarvilluna áður en reynt er aftur.';
+        BatchName: Code[10];
+    begin
+        if not ValidateForConfirm(Argument) then
+            exit;
+        RequestJson := Argument.GetRequestJson();
+        if RequestJson.Contains('journalBatchName') then
+            BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'journalBatchName', Argument, false, 10), 1, 10)
+        else
+            if RequestJson.Contains('batchName') then
+                BatchName := CopyStr(Parts.ReadRequestText(RequestJson, 'batchName', Argument, false, 10), 1, 10);
         Process.SetJournalType("Item Journal Template Type"::Transfer);
         if Argument."Omit Commit" then
             Process.Run(Argument)

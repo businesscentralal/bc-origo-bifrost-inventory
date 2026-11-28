@@ -30,6 +30,7 @@ permissionsetextension 10076836 "BIFROST InvWrite ori" extends "BIFROST Full ori
         codeunit "Transfer Ship Impl ori" = X,
         codeunit "Transfer Receive Impl ori" = X,
         codeunit "Partial Transfer Mgt ori" = X,
+        codeunit "Inv. Doc Confirm ori" = X,
         codeunit "Partial Transfer Process ori" = X,
         codeunit "Partial Transfer Contract ori" = X,
         codeunit "Requisition Calc Impl ori" = X,

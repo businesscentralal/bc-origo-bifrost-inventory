@@ -173,3 +173,8 @@ README "Objects" lists every object with its ID. In short:
 
 - Codeunit 10076950 `Phys. Count Record Impl ori` provides a distinct RecordCount description and delegates execution to 10076882. Checked main and open Inventory PRs (none) on 19.11.2026.
 - Test codeunit 97900 `Inv. 266 Help Tests ori`, within the second test range allocated in #261.
+
+## Issue 286 object claim (Niði, 27.11.2026)
+
+- Codeunit 10076952 `Inv. Doc Confirm ori` implements `Msg Confirm ori` for the irreversible inventory types. 10076880 stays unused: it was `Phys. Invt. Calc Impl ori` and was deleted. Checked main `9ea4f60` before allocation. 10076952 was free in source.
+- Test codeunit 97903 `Inv. Confirm Order Tests ori` in the 97900 block. 97900–97902 are already used.

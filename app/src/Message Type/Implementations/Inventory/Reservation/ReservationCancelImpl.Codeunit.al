@@ -23,7 +23,7 @@ codeunit 10076892 "Reservation Cancel Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Cancels a reservation entry through Reservation Management.', Comment = 'is-IS=Afturkallar frátekningarfærslu með Reservation Management.';
+        DescriptionLbl: Label 'Cancels a reservation entry through Reservation Management.', Comment = 'is-IS=Afturkallar frátekningarfærslu með Reservation Management. (afturkalla frátekningu, eyða frátekningu).';
     begin
         exit(DescriptionLbl);
     end;

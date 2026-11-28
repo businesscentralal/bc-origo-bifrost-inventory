@@ -9,7 +9,7 @@ codeunit 10076866 "Revaluation Post Impl ori" implements "Msg Interface ori", "M
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Posts all lines of a Revaluation item journal batch.', Comment = 'is-IS=Bókar allar línur í endurmatsbókarkeyrslu vöru.';
+        DescriptionLbl: Label 'Posts all lines of a Revaluation item journal batch.', Comment = 'is-IS=Bókar allar línur í endurmatsbókarkeyrslu vöru. (birgðir, birgðavirði, reikna, forskoða).';
         SelectionLbl: Label 'Identify an existing nonrecurring Revaluation batch. Subject TEMPLATE|BATCH or SystemId takes precedence; otherwise use one SystemId alias or templateName/batchName. A SystemId alias precedes the name pair.', Comment = 'is-IS=Auðkenndu fyrirliggjandi endurmatskeyrslu sem er ekki ítrekunarbók. subject TEMPLATE|BATCH eða SystemId hefur forgang; annars skal nota eitt SystemId auðkenni eða templateName/batchName. SystemId auðkenni hefur forgang yfir nafnaparið.';
         KeywordsLbl: Label 'inventory,revaluation,inventory value,calculate,preview,post', Comment = 'is-IS=birgðir,endurmat,birgðavirði,reikna,forskoða,bóka';
         OverviewLbl: Label 'Posts every line of an existing non-recurring Revaluation item journal batch in one run, and Business Central commits the posting. Name the batch with the subject (TEMPLATE|BATCH or a SystemId), a SystemId key, or templateName and batchName.', Comment = 'is-IS=Bókar allar línur í fyrirliggjandi endurmatsbókarkeyrslu vöru, sem er ekki ítrekunarbók, í einu lagi og Business Central staðfestir bókunina. Auðkenndu keyrsluna með subject (TEMPLATE|BATCH eða SystemId), SystemId-lykli, eða templateName og batchName.';

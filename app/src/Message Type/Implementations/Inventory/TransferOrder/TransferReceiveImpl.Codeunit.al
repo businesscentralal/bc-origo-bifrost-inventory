@@ -25,7 +25,7 @@ codeunit 10077021 "Transfer Receive Impl ori" implements "Msg Interface ori", "M
     /// <summary>Describes the operation.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Receives selected quantities on a transfer order and returns the posted document.', Comment = 'is-IS=Tekur á móti valið magn á flutningspöntun og skilar bókaða skjalinu.';
+        DescriptionLbl: Label 'Receives selected quantities on a transfer order and returns the posted document.', Comment = 'is-IS=Tekur á móti valið magn á flutningspöntun og skilar bókaða skjalinu. (hlutaflutningur, valdar línur).';
     begin
         exit(DescriptionLbl);
     end;

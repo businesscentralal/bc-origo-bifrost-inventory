@@ -21,7 +21,7 @@ codeunit 10076894 "Reservation Get Impl ori" implements "Msg Interface ori", "Ms
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads reservation entries for an item, a source line or one entry number.', Comment = 'is-IS=Les frátekningarfærslur fyrir vöru, upprunalínu eða eitt færslunúmer.';
+        DescriptionLbl: Label 'Reads reservation entries for an item, a source line or one entry number.', Comment = 'is-IS=Les frátekningarfærslur fyrir vöru, upprunalínu eða eitt færslunúmer. (frátekið magn).';
     begin
         exit(DescriptionLbl);
     end;

@@ -23,7 +23,7 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Undoes a posted assembly document through the standard posted assembly undo.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar.';
+        DescriptionLbl: Label 'Undoes a posted assembly document through the standard posted assembly undo.', Comment = 'is-IS=Afturkallar bókað samsetningarskjal með staðlaðri afturköllun bókaðrar samsetningar. (afturkalla samsetningu, bakfæra bókaða samsetningu).';
     begin
         exit(DescriptionLbl);
     end;
@@ -174,18 +174,13 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
-    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    /// <summary>Checks the posted assembly exists before confirmation or undo.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; var DocumentNo: Code[20]; var RecreateOrder: Boolean): Boolean
     var
         PostedAssemblyHeader: Record "Posted Assembly Header";
-        TempProcessArgument: Record "Message Argument ori" temporary;
         DomainGate: Codeunit "Inventory Domain Gate ori";
-        Process: Codeunit "Inventory Write Process ori";
         Parts: Codeunit "Inventory Contract Parts ori";
         RequestJson: JsonObject;
-        ResponseJson: JsonObject;
-        ProcessRequest: JsonObject;
-        DocumentNo: Code[20];
-        RecreateOrder: Boolean;
         Token: JsonToken;
         Serialized: Text;
         BooleanErr: Label 'recreateOrder must be a JSON boolean.', Comment = 'is-IS=recreateOrder verður að vera JSON-rökgildi.';
@@ -195,29 +190,45 @@ codeunit 10076909 "Assembly Undo Post Impl ori" implements "Msg Interface ori", 
         DocumentNextStepTxt: Label 'Send the posted assembly number in documentNo and resolve its native posting constraints.', Comment = 'is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.';
         NotFoundErr: Label 'Posted assembly %1 was not found.', Comment = '%1 = document no., is-IS=Bókuð samsetning %1 fannst ekki.';
     begin
+        RecreateOrder := false;
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, false) then
-            exit;
+            exit(false);
         if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Posted Assembly Header", true, true) then
-            exit;
+            exit(false);
         Argument.AssertIsLicensed();
         Argument.AssertVersion1();
-
         RequestJson := Argument.GetRequestJson();
         DocumentNo := CopyStr(Parts.ReadRequestText(RequestJson, 'documentNo', Argument, true, 20), 1, 20);
         if Parts.RespondToProblems(Argument) then
-            exit;
+            exit(false);
         if RequestJson.Get('recreateOrder', Token) then begin
             Token.WriteTo(Serialized);
             if not (Serialized in ['true', 'false']) then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::InvalidParameterFormat, BooleanErr, 'recreateOrder', Serialized, BooleanExpectedTxt, BooleanNextTxt);
-                exit;
+                exit(false);
             end;
             RecreateOrder := Token.AsValue().AsBoolean();
         end;
         if not PostedAssemblyHeader.Get(DocumentNo) then begin
             Argument.RespondWithError("Bifrost Error Code ori"::RecordNotFound, StrSubstNo(NotFoundErr, DocumentNo), 'documentNo', DocumentNo, DocumentExpectedTxt, DocumentNextStepTxt);
-            exit;
+            exit(false);
         end;
+        exit(true);
+    end;
+
+    procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
+    var
+        TempProcessArgument: Record "Message Argument ori" temporary;
+        Process: Codeunit "Inventory Write Process ori";
+        ResponseJson: JsonObject;
+        ProcessRequest: JsonObject;
+        DocumentNo: Code[20];
+        RecreateOrder: Boolean;
+        DocumentExpectedTxt: Label 'An existing posted assembly document that can be undone.', Comment = 'is-IS=Bókað samsetningarskjal sem er til og hægt er að afturkalla.';
+        DocumentNextStepTxt: Label 'Send the posted assembly number in documentNo and resolve its native posting constraints.', Comment = 'is-IS=Sendu númer bókaðrar samsetningar í documentNo og leystu innbyggðar bókunartakmarkanir þess.';
+    begin
+        if not ValidateForConfirm(Argument, DocumentNo, RecreateOrder) then
+            exit;
 
         // The isolated writer receives only native undo input, never the caller's request.
         ProcessRequest.Add('recreateOrder', RecreateOrder);

@@ -50,7 +50,7 @@ codeunit 10076940 "Avail. By Event Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Supplies localized GetDescription help.</summary>
     procedure GetDescription(): Text[250]
     var
-        HelpLbl: Label 'Reads dated supply and demand events and projected inventory for one item.', Comment = 'is-IS=Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru.';
+        HelpLbl: Label 'Reads dated supply and demand events and projected inventory for one item.', Comment = 'is-IS=Les dagsetta framboðs- og eftirspurnaratburði og áætlaðar birgðir fyrir eina vöru. (atburður, aðföng).';
     begin
         exit(HelpLbl);
     end;

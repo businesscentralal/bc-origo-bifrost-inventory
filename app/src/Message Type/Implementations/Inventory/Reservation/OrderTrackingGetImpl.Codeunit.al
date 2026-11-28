@@ -44,7 +44,7 @@ codeunit 10076890 "Order Tracking Get Impl ori" implements "Msg Interface ori", 
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads the order tracking chain for a line or an item ledger entry.', Comment = 'is-IS=Les pöntunarrakningarkeðju fyrir línu eða birgðafærslu.';
+        DescriptionLbl: Label 'Reads the order tracking chain for a line or an item ledger entry.', Comment = 'is-IS=Les pöntunarrakningarkeðju fyrir línu eða birgðafærslu. (framboð, eftirspurn, frátekningarkeðja).';
     begin
         exit(DescriptionLbl);
     end;

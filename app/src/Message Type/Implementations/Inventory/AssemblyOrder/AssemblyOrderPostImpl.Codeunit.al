@@ -26,7 +26,7 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
 
     procedure GetDescription() Description: Text[250]
     var
-        DescriptionLbl: Label 'Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins.';
+        DescriptionLbl: Label 'Posts an assembly order with the standard Business Central assembly posting and returns the posted assembly document number.', Comment = 'is-IS=Bókar samsetningarpöntun með venjulegri samsetningarbókun Business Central og skilar númeri bókaða samsetningarskjalsins. (bóka samsetningu, ljúka samsetningu, samsett, skila vörusetti, nota íhluti).';
     begin
         exit(DescriptionLbl);
     end;
@@ -143,16 +143,50 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
         exit(Enum::"Msg Direction ori"::Inbound);
     end;
 
+    /// <summary>Checks the assembly order and its lines before confirmation or posting. Does not write quantity.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; var AssemblyHeader: Record "Assembly Header"; var PostingDate: Date; var QuantityToAssemble: Decimal; var ReplacePostingDate: Boolean): Boolean
+    var
+        AssemblyLine: Record "Assembly Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        DocumentLookup: Codeunit "Document Lookup ori";
+        RequestValueReader: Codeunit "Request Value Reader ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        RequestJson: JsonObject;
+        NoLinesErr: Label 'Assembly order %1 has no lines to post.', Comment = '%1 = document no., is-IS=Samsetningarpöntun %1 hefur engar línur til að bóka.';
+        NoLinesNextLbl: Label 'Refresh the assembly lines, then send the call again.', Comment = 'is-IS=Endurnýjaðu samsetningarlínurnar og sendu kallið aftur.';
+    begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true) then
+            exit(false);
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        if not PostingGate.AssertCanPost(Argument) then
+            exit(false);
+        RequestJson := Argument.GetRequestJson();
+        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
+            exit(false);
+        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
+            exit(false);
+        ReplacePostingDate := PostingDate <> 0D;
+        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+            exit(false);
+        AssemblyHeader.ReadIsolation := IsolationLevel::UpdLock;
+        if not AssemblyHeader.Get(AssemblyHeader."Document Type", AssemblyHeader."No.") then
+            exit(false);
+        AssemblyLine.ReadIsolation := IsolationLevel::UpdLock;
+        AssemblyLine.SetRange("Document Type", AssemblyHeader."Document Type");
+        AssemblyLine.SetRange("Document No.", AssemblyHeader."No.");
+        if AssemblyLine.IsEmpty() then begin
+            Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesErr, AssemblyHeader."No."), 'documentNo', AssemblyHeader."No.", NoLinesErr, NoLinesNextLbl);
+            exit(false);
+        end;
+        exit(true);
+    end;
+
     procedure ExecuteBifrostTask(var Argument: Record "Message Argument ori")
     var
         AssemblyHeader: Record "Assembly Header";
         PostedAsmHeader: Record "Posted Assembly Header";
-        DomainGate: Codeunit "Inventory Domain Gate ori";
-        DocumentLookup: Codeunit "Document Lookup ori";
-        RequestValueReader: Codeunit "Request Value Reader ori";
         AssemblyPost: Codeunit "Assembly-Post";
-        PostingGate: Codeunit "Inv. Posting Gate ori";
-        RequestJson: JsonObject;
         ResponseJson: JsonObject;
         PostingDate: Date;
         QuantityToAssemble: Decimal;
@@ -162,19 +196,7 @@ codeunit 10076855 "Assembly Order Post Impl ori" implements "Msg Interface ori",
         PostedDocNo: Code[20];
         AssembleToOrder: Boolean;
     begin
-        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::Assembly, Database::"Assembly Header", false, true) then
-            exit;
-        Argument.AssertIsLicensed();
-        Argument.AssertVersion1();
-        if not PostingGate.AssertCanPost(Argument) then
-            exit;
-        RequestJson := Argument.GetRequestJson();
-        if not DocumentLookup.FindAssemblyHeader(Argument, AssemblyHeader) then
-            exit;
-        if not RequestValueReader.TryReadDate(Argument, RequestJson, 'postingDate', false, PostingDate) then
-            exit;
-        ReplacePostingDate := PostingDate <> 0D;
-        if not RequestValueReader.TryReadDecimal(Argument, RequestJson, 'quantityToAssemble', false, QuantityToAssemble) then
+        if not ValidateForConfirm(Argument, AssemblyHeader, PostingDate, QuantityToAssemble, ReplacePostingDate) then
             exit;
         if QuantityToAssemble > 0 then begin
             AssemblyHeader.SetHideValidationDialog(true);

@@ -28,7 +28,7 @@ codeunit 10077022 "Partial Transfer Mgt ori"
             exit;
         if not Lookup.FindTransferHeader(Argument, Header) then
             exit;
-        if not ValidateRequest(Argument, Header, Ship, Quantities) then
+        if not ValidateRequest(Argument, Header, Ship, Quantities, false) then
             exit;
         Process.Configure(Header."No.", Ship);
         Commit();
@@ -36,8 +36,51 @@ codeunit 10077022 "Partial Transfer Mgt ori"
             Argument.RespondWithError("Bifrost Error Code ori"::BusinessCentralError, GetLastErrorText(), 'documentNo', Header."No.", NativeExpectedLbl, NativeNextLbl);
     end;
 
+    /// <summary>Refuses a missing order or an order with no lines before confirmation counts it.</summary>
+    procedure ValidateForConfirm(var Argument: Record "Message Argument ori"; Ship: Boolean; var DocumentNo: Code[20]): Boolean
+    var
+        Header: Record "Transfer Header";
+        TransferLine: Record "Transfer Line";
+        DomainGate: Codeunit "Inventory Domain Gate ori";
+        PostingGate: Codeunit "Inv. Posting Gate ori";
+        Lookup: Codeunit "Document Lookup ori";
+        Quantities: Dictionary of [Integer, Decimal];
+        NoLinesErr: Label 'Transfer order %1 has no lines to ship.', Comment = '%1 = order no., is-IS=Flutningspöntun %1 hefur engar línur til afhendingar.';
+        NoLinesReceiveErr: Label 'Transfer order %1 has no lines to receive.', Comment = '%1 = order no., is-IS=Flutningspöntun %1 hefur engar línur til móttöku.';
+        NoLinesNextLbl: Label 'Add item lines to the transfer order, then send the call again.', Comment = 'is-IS=Bættu vörulínum við flutningspöntunina og sendu kallið aftur.';
+    begin
+        if not DomainGate.AssertEnabled(Argument, "Inventory Domain ori"::TransferOrders, Database::"Transfer Header", false, true) then
+            exit(false);
+        Argument.AssertIsLicensed();
+        Argument.AssertVersion1();
+        if not PostingGate.AssertCanPost(Argument) then
+            exit(false);
+        if not Lookup.FindTransferHeader(Argument, Header) then
+            exit(false);
+        Header.ReadIsolation := IsolationLevel::UpdLock;
+        if not Header.Get(Header."No.") then
+            exit(false);
+        DocumentNo := Header."No.";
+        TransferLine.ReadIsolation := IsolationLevel::UpdLock;
+        TransferLine.SetRange("Document No.", Header."No.");
+        if TransferLine.IsEmpty() then begin
+            if Ship then
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesErr, Header."No."), 'documentNo', Header."No.", NoLinesErr, NoLinesNextLbl)
+            else
+                Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, StrSubstNo(NoLinesReceiveErr, Header."No."), 'documentNo', Header."No.", NoLinesReceiveErr, NoLinesNextLbl);
+            exit(false);
+        end;
+        exit(ValidateRequest(Argument, Header, Ship, Quantities, true));
+    end;
+
     /// <summary>Validates all lines without writes; repeated under locks immediately before posting.</summary>
     procedure ValidateRequest(var Argument: Record "Message Argument ori"; Header: Record "Transfer Header"; Ship: Boolean; var Quantities: Dictionary of [Integer, Decimal]): Boolean
+    begin
+        exit(ValidateRequest(Argument, Header, Ship, Quantities, false));
+    end;
+
+    /// <summary>Validates all lines without writes. Confirmation skips the expectedCount equality check so a mismatch stays ConfirmationMismatch.</summary>
+    procedure ValidateRequest(var Argument: Record "Message Argument ori"; Header: Record "Transfer Header"; Ship: Boolean; var Quantities: Dictionary of [Integer, Decimal]; IgnoreExpectedCount: Boolean): Boolean
     var
         TransferLine: Record "Transfer Line";
         Request: JsonObject;
@@ -68,7 +111,8 @@ codeunit 10077022 "Partial Transfer Mgt ori"
             QuantityName := 'qtyToShip';
         // The dispatcher checks confirmation first. Also validate a supplied count for direct interface callers.
         Request := Argument.GetRequestJson();
-        if Request.Get('expectedCount', CountToken) then begin
+        if not IgnoreExpectedCount then
+            if Request.Get('expectedCount', CountToken) then begin
             CountToken.WriteTo(CountText);
             if CountText <> '1' then begin
                 Argument.RespondWithError("Bifrost Error Code ori"::PreconditionFailed, CountExpectedLbl, 'expectedCount', CountText, '1', CountNextLbl);

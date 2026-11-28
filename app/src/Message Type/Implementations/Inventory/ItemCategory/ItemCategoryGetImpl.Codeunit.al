@@ -47,7 +47,7 @@ codeunit 10076870 "Item Category Get Impl ori" implements "Msg Interface ori", "
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads item categories and their default attributes.', Comment = 'is-IS=Les vöruflokka og sjálfgefna eiginleika þeirra.';
+        DescriptionLbl: Label 'Reads item categories and their default attributes.', Comment = 'is-IS=Les vöruflokka og sjálfgefna eiginleika þeirra. (vöruflokkur, yfirflokkur, eiginleiki, erft).';
     begin
         exit(DescriptionLbl);
     end;

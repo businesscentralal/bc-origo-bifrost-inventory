@@ -49,7 +49,7 @@ codeunit 10077000 "Avail. To Promise Impl ori" implements "Msg Interface ori", "
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Answers the earliest date a quantity of an item can be promised and the quantity available on the requested date.', Comment = 'is-IS=Svarar fyrstu dagsetningu sem hægt er að lofa magni af vöru og magninu sem er tiltækt á umbeðinni dagsetningu.';
+        DescriptionLbl: Label 'Answers the earliest date a quantity of an item can be promised and the quantity available on the requested date.', Comment = 'is-IS=Svarar fyrstu dagsetningu sem hægt er að lofa magni af vöru og magninu sem er tiltækt á umbeðinni dagsetningu. (tiltækt til loforðs, hægt að lofa, pöntunarloforð, afhendingardagur, framboð).';
     begin
         exit(DescriptionLbl);
     end;

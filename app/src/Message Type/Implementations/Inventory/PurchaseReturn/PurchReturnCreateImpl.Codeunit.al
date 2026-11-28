@@ -68,7 +68,7 @@ codeunit 10076930 "Purch. Return Create Impl ori" implements "Msg Interface ori"
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates a purchase return order or credit memo from posted receipt or invoice lines.', Comment = 'is-IS=Býr til innkaupaskilapöntun eða kreditreikning úr bókuðum vörumóttökum eða reikningslínum.';
+        DescriptionLbl: Label 'Creates a purchase return order or credit memo from posted receipt or invoice lines.', Comment = 'is-IS=Býr til innkaupaskilapöntun eða kreditreikning úr bókuðum vörumóttökum eða reikningslínum. (skil til lánardrottins, kreditreikningur, bakfæra vörumóttöku, bakfæra reikning).';
     begin
         exit(DescriptionLbl);
     end;

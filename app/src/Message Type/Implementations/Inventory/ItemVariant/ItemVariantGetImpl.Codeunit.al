@@ -41,7 +41,7 @@ codeunit 10076990 "Item Variant Get Impl ori" implements "Msg Interface ori", "M
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads the variants of an item.', Comment = 'is-IS=Les afbrigði vöru.';
+        DescriptionLbl: Label 'Reads the variants of an item.', Comment = 'is-IS=Les afbrigði vöru. (vöruafbrigði, afbrigðiskóði, litur, stærð).';
     begin
         exit(DescriptionLbl);
     end;

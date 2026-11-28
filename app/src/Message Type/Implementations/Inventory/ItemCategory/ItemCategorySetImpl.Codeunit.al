@@ -60,7 +60,7 @@ codeunit 10076871 "Item Category Set Impl ori" implements "Msg Interface ori", "
     /// <returns>The translated description.</returns>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Creates or updates an item category and its default attributes.', Comment = 'is-IS=Stofnar eða uppfærir vöruflokk og sjálfgefna eiginleika hans.';
+        DescriptionLbl: Label 'Creates or updates an item category and its default attributes.', Comment = 'is-IS=Stofnar eða uppfærir vöruflokk og sjálfgefna eiginleika hans. (vöruflokkur, yfirflokkur, eiginleiki, sjálfgefið gildi).';
     begin
         exit(DescriptionLbl);
     end;

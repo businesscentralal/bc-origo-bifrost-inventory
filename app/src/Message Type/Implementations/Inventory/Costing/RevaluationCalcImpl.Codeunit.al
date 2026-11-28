@@ -22,7 +22,7 @@ codeunit 10076865 "Revaluation Calc Impl ori" implements "Msg Interface ori", "M
 
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Calculates remaining inventory quantity and value for an item.', Comment = 'is-IS=Reiknar eftirstandandi birgðamagn og birgðavirði vöru.';
+        DescriptionLbl: Label 'Calculates remaining inventory quantity and value for an item.', Comment = 'is-IS=Reiknar eftirstandandi birgðamagn og birgðavirði vöru. (endurmat, reikna birgðavirði).';
     begin
         exit(DescriptionLbl);
     end;

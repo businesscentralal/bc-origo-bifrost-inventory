@@ -145,6 +145,12 @@ codeunit 10076963 "Phys Order Process ori"
         exit(true);
     end;
 
+    /// <summary>Validates the order for posting without the expectedCount equality check.</summary>
+    procedure ValidatePostForConfirm(var Argument: Record "Message Argument ori"): Boolean
+    begin
+        exit(PrepareDocument(Argument, 'Post'));
+    end;
+
     /// <summary>Validates the one-order posting selector and any explicit confirmation count.</summary>
     procedure PreparePost(var Argument: Record "Message Argument ori"): Boolean
     var

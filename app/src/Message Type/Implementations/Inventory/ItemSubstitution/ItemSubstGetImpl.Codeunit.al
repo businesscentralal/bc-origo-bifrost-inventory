@@ -44,7 +44,7 @@ codeunit 10077020 "Item Subst. Get Impl ori" implements "Msg Interface ori", "Ms
     /// <summary>Returns the localized discovery description.</summary>
     procedure GetDescription(): Text[250]
     var
-        DescriptionLbl: Label 'Reads direct item substitutes and their current on-hand inventory.', Comment = 'is-IS=Les beina staðgengla vöru og núverandi birgðir þeirra.';
+        DescriptionLbl: Label 'Reads direct item substitutes and their current on-hand inventory.', Comment = 'is-IS=Les beina staðgengla vöru og núverandi birgðir þeirra. (vöruskipti, staðgengill, afbrigði).';
     begin
         exit(DescriptionLbl);
     end;

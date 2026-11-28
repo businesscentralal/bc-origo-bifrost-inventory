@@ -9,7 +9,7 @@ codeunit 10076883 "Phys. Inv. Calc Impl ori" implements "Msg Interface ori", "Ms
     Access = Internal;
 
     var
-        DescriptionLbl: Label 'Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.', Comment = 'is-IS=Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir.';
+        DescriptionLbl: Label 'Fills an empty physical inventory journal with the expected stock per item, using the Calculate Inventory function.', Comment = 'is-IS=Fyllir tóma talningarbók með væntum birgðum á hverja vöru með aðgerðinni Reikna birgðir. (birgðatalning, vörutalning, fylla talningarbók).';
         SelectionLbl: Label 'Identify one existing nonrecurring Phys. Inventory journal batch using templateName/batchName or subject TEMPLATE|BATCH or SystemId. All supplied selectors must agree.', Comment = 'is-IS=Veldu eina fyrirliggjandi bókarkeyrslu af gerðinni Phys. Inventory sem er ekki ítrekunarbók, með templateName/batchName eða subject TEMPLATE|BATCH eða SystemId. Öll auðkenni verða að vísa á sömu keyrslu.';
         KeywordsLbl: Label 'calculate inventory, physical count, stock take, count journal, fill count journal', Comment = 'is-IS=reikna birgðir, birgðatalning, vörutalning, talningarbók, fylla talningarbók';
         OverviewLbl: Label 'Fills an empty Phys. Inventory journal batch with one line per eligible item, using the Calculate Inventory function; nothing is posted. postingDate and documentNo are required.', Comment = 'is-IS=Fyllir tóma bókarkeyrslu af gerðinni Phys. Inventory (talningarbók) með einni línu fyrir hverja gjaldgenga vöru með aðgerðinni Reikna birgðir; ekkert er bókað. postingDate og documentNo eru nauðsynleg.';
